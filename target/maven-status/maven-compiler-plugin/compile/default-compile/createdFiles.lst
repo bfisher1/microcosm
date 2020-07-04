@@ -1,0 +1,16 @@
+util/IntLoc.class
+world/block/WaterBlock.class
+world/block/SandBlock.class
+world/block/BlockFactory$1.class
+world/block/ZincBlock.class
+world/WorldGenerator.class
+world/block/CopperBlock.class
+world/block/UnknownBlock.class
+basics/GameApp.class
+world/block/SiliconBlock.class
+world/block/StoneBlock.class
+world/block/CoalBlock.class
+world/block/GrassBlock.class
+world/block/NickelBlock.class
+world/block/IronBlock.class
+world/block/TreeBlock.class

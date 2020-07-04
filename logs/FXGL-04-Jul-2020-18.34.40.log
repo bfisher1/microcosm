@@ -1,0 +1,587 @@
+18:34:36.809 [main                     ] DEBUG GameApplication      - Logger initialized
+18:34:36.841 [main                     ] DEBUG GameApplication      - Logging settings
+Title: Untitled
+Version: 0.0
+Width: 800
+Height: 600
+Fullscreen: false
+Intro: false
+Profiling: false
+Single step:false
+App Mode: DEVELOPER
+Menu Key: ESCAPE
+Stage Style: DECORATED
+Scene Factory: class com.almasb.fxgl.app.scene.SceneFactory
+
+18:34:37.103 [JavaFX Application Thread] DEBUG GameApplication      - Initializing FXGL
+18:34:37.116 [JavaFX Application Thread] INFO  Engine               - FXGL-11.9 (27.05.2020 17.06) on LINUX (J:11.0.5 FX:10.0.2-internal)
+18:34:37.116 [JavaFX Application Thread] DEBUG Engine               - JRE Vendor Name: JetBrains s.r.o
+18:34:37.117 [JavaFX Application Thread] DEBUG Engine               - Running on OS: Linux version 4.15.0-106-generic
+18:34:37.117 [JavaFX Application Thread] DEBUG Engine               - Architecture: amd64
+18:34:37.117 [JavaFX Application Thread] INFO  Engine               - Source code and latest versions at: https://github.com/AlmasB/FXGL
+18:34:37.117 [JavaFX Application Thread] INFO  Engine               -              Join the FXGL chat at: https://gitter.im/AlmasB/FXGL
+18:34:37.265 [JavaFX Application Thread] DEBUG MainWindow           - Creating a JavaFX scene
+18:34:37.391 [JavaFX Application Thread] DEBUG MainWindow           - Target settings size: 800.0 x 600.0
+18:34:37.392 [JavaFX Application Thread] DEBUG MainWindow           - Scaled scene size:    800.0 x 600.0
+18:34:37.392 [JavaFX Application Thread] DEBUG MainWindow           - Scaled ratio: (1.0, 1.0)
+18:34:37.394 [JavaFX Application Thread] DEBUG MainWindow           - Set initial scene to FXGLStartupScene
+18:34:37.405 [JavaFX Application Thread] DEBUG MainWindow           - Opening main window
+18:34:37.469 [JavaFX Application Thread] DEBUG MainWindow           - Window border size: (2.0, 29.0)
+18:34:37.469 [JavaFX Application Thread] DEBUG MainWindow           - Scaled size: 800.0 x 600.0
+18:34:37.469 [JavaFX Application Thread] DEBUG MainWindow           - Scaled ratio: (1.0, 1.0)
+18:34:37.470 [JavaFX Application Thread] DEBUG MainWindow           - Scene size: 800.0 x 600.0
+18:34:37.470 [JavaFX Application Thread] DEBUG MainWindow           - Stage size: 802.0 x 629.0
+18:34:37.481 [FXGL Background Thread 1 ] DEBUG Engine               - Initializing environment variables
+18:34:37.526 [FXGL Background Thread 1 ] DEBUG WindowService        - Applying CSS: fxgl_dark.css
+18:34:37.527 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/css/fxgl_dark.css
+18:34:37.649 [FXGL Background Thread 1 ] DEBUG WindowService        - Initializing application scenes
+18:34:37.783 [FXGL Background Thread 1 ] DEBUG GameWorld            - Game world initialized
+18:34:37.843 [FXGL Background Thread 1 ] DEBUG PhysicsWorld         - Physics world initialized: appHeight=600, physics.ppm=50.0
+18:34:37.847 [FXGL Background Thread 1 ] DEBUG GameScene            - Game scene initialized: 800x600
+18:34:37.884 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/particles/trace_horizontal.png
+18:34:37.947 [FXGL Background Thread 1 ] DEBUG FXGL.DefaultMenu     - createMenuBodyGameMenu()
+18:34:37.966 [FXGL Background Thread 1 ] DEBUG FXGL.DefaultMenu     - createOptionsMenu()
+18:34:37.971 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/particles/smoke.png
+18:34:38.041 [FXGL Background Thread 1 ] DEBUG WindowService        - Application scenes initialized
+18:34:38.052 [FXGL Background Thread 1 ] DEBUG SystemBundleService  - Loading FXGL system data
+18:34:38.056 [FXGL Background Thread 1 ] DEBUG FileSystemAccess     - Reading from: /home/ben/Downloads/Slick3/system/fxgl.bundle
+18:34:38.064 [FXGL Background Thread 1 ] DEBUG SystemBundleService  - Bundle FXGL: {}
+18:34:38.064 [FXGL Background Thread 1 ] INFO  Engine               - FXGL initialization took: 0.579 sec
+18:34:38.066 [FXGL Background Thread 1 ] DEBUG GameApplication      - Loading localizations
+18:34:38.067 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/languages/english.lang
+18:34:38.080 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/languages/french.lang
+18:34:38.083 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/languages/german.lang
+18:34:38.085 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/languages/hungarian.lang
+18:34:38.090 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/languages/russian.lang
+18:34:38.093 [FXGL Background Thread 1 ] DEBUG GameApplication      - Registering font factories with UI factory
+18:34:38.093 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/fonts/VarelaRound-Regular.ttf
+18:34:38.114 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/fonts/Abel-Regular.ttf
+18:34:38.117 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/fonts/lucida_console.ttf
+18:34:38.120 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/fonts/Courier-Prime.ttf
+18:34:38.124 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/fxgl_icon.png
+18:34:38.161 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from file system: /assets/ui/cursors/fxgl_default.png
+18:34:38.172 [JavaFX Application Thread] DEBUG Input                - Registered new binding: Screenshot - P
+18:34:38.173 [JavaFX Application Thread] DEBUG Input                - Registered new binding: System info dump - CTRL+9
+18:34:38.174 [JavaFX Application Thread] DEBUG Input                - Registered new binding: Restart - CTRL+R
+18:34:38.175 [JavaFX Application Thread] DEBUG LoopRunner           - Starting loop
+18:34:38.186 [JavaFX Application Thread] DEBUG FXGLStartupScene     - STARTUP
+18:34:38.186 [JavaFX Application Thread] DEBUG WindowService        - Starting new game
+18:34:38.187 [JavaFX Application Thread] DEBUG Input                - Clearing active input actions
+18:34:38.207 [JavaFX Application Thread] DEBUG WindowService        - Removing overlay from FXGLStartupScene and adding to FXGLLoadingScene
+18:34:38.207 [JavaFX Application Thread] DEBUG MainWindow           - FXGLStartupScene -> FXGLLoadingScene
+18:34:38.208 [JavaFX Application Thread] DEBUG WindowService        - Clearing previous game
+18:34:38.208 [JavaFX Application Thread] DEBUG GameScene            - Clearing game scene
+18:34:38.208 [JavaFX Application Thread] DEBUG GameWorld            - Clearing game world
+18:34:38.208 [JavaFX Application Thread] DEBUG PhysicsWorld         - Clearing physics world
+18:34:38.210 [FXGL Background Thread 1 ] DEBUG GameApplication      - Initializing game
+18:34:38.259 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/silicon.png
+18:34:38.264 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/copper.png
+18:34:38.267 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/coal.png
+18:34:38.269 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/stone.png
+18:34:38.271 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.272 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.273 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.274 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.275 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.276 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.277 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.278 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.279 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.280 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.281 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/zinc.png
+18:34:38.283 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.285 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.286 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.287 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.288 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.289 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.290 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.291 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.292 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.293 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.295 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.296 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.296 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.297 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.298 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.299 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.300 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.301 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.302 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.303 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.304 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.306 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.307 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.308 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.309 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.310 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.311 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.312 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.313 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.315 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.316 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.317 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.318 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.319 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.320 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.321 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.322 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.323 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.324 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.325 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.326 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.327 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.328 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.329 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.330 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.331 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.332 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.334 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.338 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.339 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.340 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.341 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.342 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.343 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.344 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.345 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.346 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.347 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.348 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.349 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.350 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.351 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.351 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.351 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.352 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.352 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.353 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.354 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.355 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.356 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.356 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.357 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.358 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.359 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.360 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.360 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.361 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.362 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.363 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.364 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.365 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.367 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.369 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.370 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.370 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.398 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.398 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.400 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.402 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.403 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.403 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.404 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.404 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/iron.png
+18:34:38.406 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.406 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.407 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.407 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.408 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.409 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.409 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/nickel.png
+18:34:38.411 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.412 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.413 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.413 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.414 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.415 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.416 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.417 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.418 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.419 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.420 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.421 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.422 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.423 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.423 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.424 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.424 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.425 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.426 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.426 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.427 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.428 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.428 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.429 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.430 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.430 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.431 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.432 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.433 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.434 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.435 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.436 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.436 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.437 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.437 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.438 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.438 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.439 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.440 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.441 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.441 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.442 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.443 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.443 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.443 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.444 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.444 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.444 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.445 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.445 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.446 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.446 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.447 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.447 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.448 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.448 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.449 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.450 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.450 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.451 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.451 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.452 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.473 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.474 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.474 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.475 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.476 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.476 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.477 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.477 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.478 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.479 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.479 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.479 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.480 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.481 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.482 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.482 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.483 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.483 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.484 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.484 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.485 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.485 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.485 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.514 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.515 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.515 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.516 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.516 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.516 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.517 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.517 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.518 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.518 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.519 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.519 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.520 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.520 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.521 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.521 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.521 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.522 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.523 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.523 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.524 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.524 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.525 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.525 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.525 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.526 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.527 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.527 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.528 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.528 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.529 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.529 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.529 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.530 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.531 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.532 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.532 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.533 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.533 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.534 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.534 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.534 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.535 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.535 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.535 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.536 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.536 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.537 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.537 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.537 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.538 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.538 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.539 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.539 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.540 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.540 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.540 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.541 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.541 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.541 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.542 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.542 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.543 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.543 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.544 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.544 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.545 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.545 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.546 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.546 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.546 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.547 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.548 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.549 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.549 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.549 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.550 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.550 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.551 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.551 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.551 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.552 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.552 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.552 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.553 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.553 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.553 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.554 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.554 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.554 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.555 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.555 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:38.555 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.556 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.556 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.556 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.557 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.557 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.558 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.558 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.579 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.580 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.581 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.581 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.581 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.582 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.582 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.583 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.583 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.583 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.583 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.584 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.584 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.584 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.584 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.585 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.585 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.585 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.585 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.586 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.586 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.587 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.587 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.587 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.587 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.587 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.588 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.588 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.588 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.588 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.589 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.589 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.589 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.589 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.589 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.590 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.590 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.590 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.590 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.591 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.591 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.591 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.591 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.591 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.592 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.592 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.592 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.592 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.593 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.593 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.593 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.594 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.594 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.594 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.594 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:38.595 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.595 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.595 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.595 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.596 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.596 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.596 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.597 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.597 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.598 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.598 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.598 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.599 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.599 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.599 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.599 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.599 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.600 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.600 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.600 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.600 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.601 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.601 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.601 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.601 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.601 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.602 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:38.602 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.602 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.603 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.603 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.604 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.604 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.604 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.605 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:38.605 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.606 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.606 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.606 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.607 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.607 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.607 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.608 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:38.608 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:38.608 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:38.611 [FXGL Background Thread 1 ] DEBUG AssetLoaderService   - Loading from file system: /assets/textures/bot2.png
+18:34:38.613 [FXGL Background Thread 1 ] INFO  GameApplication      - Game initialization took: 0.403 sec
+18:34:38.615 [JavaFX Application Thread] DEBUG Input                - Clearing active input actions
+18:34:38.723 [JavaFX Application Thread] DEBUG WindowService        - Removing overlay from FXGLLoadingScene and adding to GameScene
+18:34:38.724 [JavaFX Application Thread] DEBUG MainWindow           - FXGLLoadingScene -> GameScene
+18:34:39.793 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.794 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.794 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.794 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.795 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.795 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.795 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.795 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.796 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.796 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.796 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.796 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.797 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.797 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.797 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.797 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.797 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.798 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.798 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.798 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.798 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.799 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.799 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.799 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.799 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.800 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.800 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.800 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.800 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.800 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.801 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.801 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.801 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.801 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.802 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.802 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.802 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.802 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:39.802 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.803 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.803 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.803 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.804 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.804 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.804 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.805 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.805 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.805 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.805 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:39.806 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.806 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.806 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.806 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.807 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.807 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.807 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.807 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.808 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:39.808 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.808 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.808 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.809 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.809 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.809 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/silicon.png
+18:34:39.809 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.810 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.810 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.810 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.810 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.811 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.811 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.811 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.811 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.812 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.812 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.812 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.812 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.813 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.813 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.813 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.814 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.814 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.814 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/zinc.png
+18:34:39.814 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.815 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.815 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.815 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.815 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/copper.png
+18:34:39.816 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.816 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.816 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.817 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.817 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.817 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.817 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.818 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/iron.png
+18:34:39.818 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/stone.png
+18:34:39.818 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/nickel.png
+18:34:39.818 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:39.819 [JavaFX Application Thread] DEBUG AssetLoaderService   - Loading from cache: /assets/textures/coal.png
+18:34:40.524 [JavaFX Application Thread] DEBUG GameApplication      - Exiting FXGL
+18:34:40.524 [JavaFX Application Thread] DEBUG LoopRunner           - Stopping loop
+18:34:40.524 [JavaFX Application Thread] DEBUG SystemBundleService  - Saving FXGL system data
+18:34:40.526 [JavaFX Application Thread] DEBUG FileSystemAccess     - Writing to: /home/ben/Downloads/Slick3/system/fxgl.bundle
+18:34:40.529 [JavaFX Application Thread] DEBUG GameApplication      - Shutting down background threads
+18:34:40.529 [JavaFX Application Thread] DEBUG GameApplication      - Closing logger and exiting JavaFX
