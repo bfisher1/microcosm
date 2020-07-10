@@ -9,41 +9,41 @@ public class BlockFactory {
         Block block = null;
         switch(type) {
             case Grass:
-                block = new GrassBlock(x, y);
+                block = new GrassBlock(x, y, world);
                 break;
             case Water:
-                block = new WaterBlock(x, y);
+                block = new WaterBlock(x, y, world);
                 break;
             case Coal:
-                block = new CoalBlock(x, y);
+                block = new CoalBlock(x, y, world);
                 break;
             case Stone:
-                block = new StoneBlock(x, y);
+                block = new StoneBlock(x, y, world);
                 break;
             case Sand:
-                block = new SandBlock(x, y);
+                block = new SandBlock(x, y, world);
                 break;
             case Tree:
-                block = new TreeBlock(x, y);
+                block = new TreeBlock(x, y, world);
                 break;
             case Copper:
-                block = new CopperBlock(x, y);
+                block = new CopperBlock(x, y, world);
                 break;
             case Zinc:
-                block = new ZincBlock(x, y);
+                block = new ZincBlock(x, y, world);
                 break;
             case Silicon:
-                block = new SiliconBlock(x, y);
+                block = new SiliconBlock(x, y, world);
                 break;
             case Nickel:
-                block = new NickelBlock(x, y);
+                block = new NickelBlock(x, y, world);
                 break;
             case Iron:
-                block = new IronBlock(x, y);
+                block = new IronBlock(x, y, world);
                 break;
             case Unknown:
             default:
-                block = new UnknownBlock(x, y);
+                block = new UnknownBlock(x, y, world);
         }
         block.setType(type);
         return block;

@@ -1,8 +1,10 @@
 package world.block;
 
+import world.World;
+
 public class CoalBlock extends Block {
-    public CoalBlock(int x, int y) {
-        super(x, y);
+    public CoalBlock(int x, int y, World world) {
+        super(x, y, world);
         setAnimName("coal.png");
     }
 }

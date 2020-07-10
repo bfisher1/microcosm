@@ -1,8 +1,10 @@
 package world.block;
 
+import world.World;
+
 public class IronBlock extends Block {
-    public IronBlock(int x, int y) {
-        super(x, y);
+    public IronBlock(int x, int y, World world) {
+        super(x, y, world);
         setAnimName("iron.png");
     }
 }

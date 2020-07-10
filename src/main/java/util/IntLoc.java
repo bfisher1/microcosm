@@ -14,7 +14,25 @@ public class IntLoc {
         this.y = y;
     }
 
-    public IntLoc(float x, float y) {
+    public IntLoc(double x, double y) {
         this((int) x, (int) y);
+    }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof IntLoc) {
+            IntLoc otherLoc = (IntLoc) other;
+            return x == otherLoc.x && y == otherLoc.y;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (x + "" + y).hashCode();
     }
 }

@@ -4,12 +4,13 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import lombok.Getter;
 import lombok.Setter;
+import microcosm.Mob;
 import util.Loc;
 import world.block.Block;
 
 @Getter
 @Setter
-public class Robot {
+public class Robot extends Mob {
     private Entity entity;
     private double speed;
     private double direction;
@@ -17,7 +18,7 @@ public class Robot {
     public Robot(double x, double y) {
         entity = FXGL.entityBuilder()
                 .at(x * Block.BLOCK_WIDTH, y * Block.BLOCK_WIDTH)
-                .view("bot2.png")
+                .view("wizard_anims/grape still left.png")
                 .buildAndAttach();
         direction = 0;
         speed = 2.5;

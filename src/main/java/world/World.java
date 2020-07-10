@@ -2,14 +2,11 @@ package world;
 
 import lombok.Getter;
 import lombok.Setter;
+import player.Camera;
 import util.IntLoc;
-import util.Loc;
 import world.block.Block;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
@@ -18,15 +15,18 @@ public class World {
 
     private double x;
     private double y;
+    private List<Camera> cameras;
 
     public World(double x, double y) {
         this.x = x;
         this.y = y;
+        cameras = new ArrayList<>();
+        chunks = new HashMap<>();
+    }
 
+    public void loadInitialChunks() {
         int startIdx = (int) (-x / Block.BLOCK_WIDTH) / Chunk.CHUNK_SIZE;
         int startIdy = (int) (-y / Block.BLOCK_WIDTH) / Chunk.CHUNK_SIZE;
-
-        chunks = new HashMap<>();
         for(int i = startIdx - 2; i < 2 + startIdx; i++) {
             for(int j = startIdy - 2; j < 2 + startIdy; j++) {
                 IntLoc loc = new IntLoc(i, j);
@@ -65,5 +65,67 @@ public class World {
         });
     }
 
+    public Chunk getChunkForBlockAt(int x, int y) {
+        // Chunks are stored 0,0 is x=-10 to -1  0,0 is x=0-9, y=0-9
+        if( x < 0)
+            x += Chunk.CHUNK_SIZE - 1;
+        if(y < 0)
+            y += Chunk.CHUNK_SIZE - 1;
+
+        IntLoc loc = new IntLoc(x / Chunk.CHUNK_SIZE, y / Chunk.CHUNK_SIZE);
+        if (chunks.containsKey(loc))
+            return chunks.get(loc);
+        throw new IllegalArgumentException("No chunk for block at " + loc);
+    }
+
+    public boolean isBlockLoaded(int x, int y) {
+        try {
+            getBlockAt(x, y);
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+    public Block getBlockAt(int x, int y) {
+        // goto chunk map, grab block from there
+        try {
+            Chunk chunk = getChunkForBlockAt(x, y);
+            //not getting RIGHT chunk here
+            // x = -9 y = 0
+            // returning chunk 0,0
+            return chunk.getBlocks().get(new IntLoc(x, y));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not find block at " + x + ", " + y);
+        }
+    }
+
+    public Block replaceBlockAt(int x, int y, Block newBlock) {
+        // goto chunk map, grab block from there
+        try {
+            IntLoc loc = new IntLoc(x, y);
+            Chunk chunk = getChunkForBlockAt(x, y);
+            Block oldBlock = chunk.getBlocks().get(loc);
+            chunk.getBlocks().put(loc, newBlock);
+            // TEMPORARY, move this elsewhere or TODO make a sprite update method
+            newBlock.addToScreen();
+            oldBlock.removeFromScreen();
+            return oldBlock;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not set block at " + x + ", " + y);
+        }
+    }
+
+    public void addRenderedBlock(Block block) {
+        cameras.forEach(camera -> {
+            camera.addRenderedBlock(block);
+        });
+    }
+
+    public void removeRenderedBlock(Block block) {
+        cameras.forEach(camera -> {
+            camera.removeRenderedBlock(block);
+        });
+    }
 
 }

@@ -3,12 +3,11 @@ package world;
 import lombok.Getter;
 import lombok.Setter;
 import util.IntLoc;
+import util.LocComparator;
 import world.block.Block;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -18,6 +17,7 @@ public class Chunk {
     private int xId;
     private int yId;
     private Map<IntLoc, Block> blocks;
+    private List<IntLoc> sortedLocs;
     private World world;
 
     public Chunk(int xId, int yId, World world) {
@@ -35,9 +35,11 @@ public class Chunk {
             // generate using perlin noise
             blocks = WorldGenerator.generateBlocks(xId * CHUNK_SIZE, yId * CHUNK_SIZE, xId * CHUNK_SIZE + CHUNK_SIZE, yId * CHUNK_SIZE + CHUNK_SIZE, world);
             blocks.forEach((loc, block) -> {
-                block.loadOnScreen();
+                block.addToScreen();
                 block.move(world.getX(), world.getY());
             });
         }
+        sortedLocs = getBlocks().keySet().stream().collect(Collectors.toList());
+        sortedLocs.sort(new LocComparator());
     }
 }
