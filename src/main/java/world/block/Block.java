@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Collidable;
+import microcosm.Mob;
 import util.IntLoc;
 import util.Loc;
 import world.World;
@@ -18,6 +19,10 @@ public class Block implements Collidable {
     @Override
     public boolean isCollidingWith(Collidable otherMob) {
         return false;
+    }
+
+    public void handleCollision(Mob mob) {
+        mob.handleCollision(this);
     }
 
 
@@ -65,6 +70,17 @@ public class Block implements Collidable {
                 .view(animName)
                 .buildAndAttach();
         world.addRenderedBlock(this);
+    }
+
+    public void changeEntity(String animName) {
+        this.animName = animName;
+        double x = entity.getX();
+        double y = entity.getY();
+        entity.removeFromWorld();
+        entity = FXGL.entityBuilder()
+                .at(x, y)
+                .view(animName)
+                .buildAndAttach();
     }
 
     public Loc getScreenLoc() {

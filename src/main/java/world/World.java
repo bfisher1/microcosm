@@ -51,7 +51,7 @@ public class World {
                 blocks.add(block);
             });
         });
-        System.out.println("Block lens: " + blocks.size());
+        //System.out.println("Block lens: " + blocks.size());
         return blocks;
     }
 
@@ -68,9 +68,9 @@ public class World {
     public Chunk getChunkForBlockAt(int x, int y) {
         // Chunks are stored 0,0 is x=-10 to -1  0,0 is x=0-9, y=0-9
         if( x < 0)
-            x += Chunk.CHUNK_SIZE - 1;
+            x -= Chunk.CHUNK_SIZE + 1;
         if(y < 0)
-            y += Chunk.CHUNK_SIZE - 1;
+            y -= Chunk.CHUNK_SIZE + 1;
 
         IntLoc loc = new IntLoc(x / Chunk.CHUNK_SIZE, y / Chunk.CHUNK_SIZE);
         if (chunks.containsKey(loc))
@@ -91,10 +91,11 @@ public class World {
         // goto chunk map, grab block from there
         try {
             Chunk chunk = getChunkForBlockAt(x, y);
-            //not getting RIGHT chunk here
-            // x = -9 y = 0
-            // returning chunk 0,0
-            return chunk.getBlocks().get(new IntLoc(x, y));
+            Block block = chunk.getBlocks().get(new IntLoc(x, y));
+            if(block == null) {
+                throw new IllegalArgumentException("Could not find block at " + x + ", " + y);
+            }
+            return block;
         } catch (Exception e) {
             throw new IllegalArgumentException("Could not find block at " + x + ", " + y);
         }

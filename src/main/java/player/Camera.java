@@ -4,6 +4,7 @@ import com.almasb.fxgl.entity.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import microcosm.Mob;
 import util.IntLoc;
 import world.World;
 import world.block.Block;
@@ -18,12 +19,14 @@ public class Camera {
     private World world;
 
     private Set<IntLoc> renderedBlocks;
+    private Set<Mob> renderedMobs;
 
     public Camera(int x, int y, World world) {
         this.x = x;
         this.y = y;
         this.world = world;
         this.renderedBlocks = new HashSet<>();
+        this.renderedMobs = new HashSet<>();
     }
 
     public void setX(int x) {
@@ -34,6 +37,11 @@ public class Camera {
     public void setY(int y) {
         this.y = y;
         updateVisibleBlocks();
+        updateVisibleMobs();
+    }
+
+    private void updateVisibleMobs() {
+        //
     }
 
     private void updateVisibleBlocks() {
@@ -57,5 +65,13 @@ public class Camera {
 
     public void removeRenderedBlock(Block block) {
         renderedBlocks.remove(block.getIntLoc());
+    }
+
+    public void addRenderedMob(Mob mob) {
+        renderedMobs.add(mob);
+    }
+
+    public void removeRenderedMob(Mob mob) {
+        renderedBlocks.remove(mob);
     }
 }

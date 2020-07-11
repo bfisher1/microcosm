@@ -1,5 +1,6 @@
 package microcosm;
 
+import com.almasb.fxgl.dsl.FXGL;
 import lombok.Getter;
 import lombok.Setter;
 import util.IntLoc;
@@ -25,6 +26,12 @@ public class Galaxy {
     public Galaxy() {
         mobs = new HashMap<>();
         worlds = new ArrayList<>();
+        // background
+        FXGL.entityBuilder()
+            .at(0, 0)
+            .view("galaxies.jpg")
+            .buildAndAttach()
+            .setZ(0);
     }
 
     public void runMobCollisions() {
@@ -55,7 +62,9 @@ public class Galaxy {
 
                     if(mob.getCurrentWorld().isBlockLoaded(x, y)) {
                         Block block = mob.getCurrentWorld().getBlockAt(x, y);
-                        mob.handleCollision(block);
+
+                        block.handleCollision(mob);
+                        //mob.handleCollision(block);
                     }
                 }
             });
