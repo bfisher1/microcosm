@@ -22,6 +22,9 @@ import world.World;
 import world.block.Block;
 import world.block.BlockFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Shows how to use textures to draw entities.
  *
@@ -62,18 +65,9 @@ public class GameApp extends GameApplication {
         galaxy.getWorlds().add(world);
         galaxy.addMob(robot);
 
-        final int[] lastLoaded = {0};
+        //ChunkLoader chunkLoader = new ChunkLoader(camera, world);
 
-//        FXGL.getGameTimer().runAtInterval(new Runnable() {
-//            @Override
-//            public void run() {
-//                lastLoaded[0] -= 1;
-//                world.loadChunk(lastLoaded[0], lastLoaded[0]);
-////                world.loadChunk(lastLoaded[0], lastLoaded[0] - 1);
-////                world.loadChunk(lastLoaded[0] - 1, lastLoaded[0]);
-//
-//            }
-//        }, Duration.seconds(1));
+        //FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
 
 
 
@@ -82,6 +76,20 @@ public class GameApp extends GameApplication {
             public void run() {
                 robot.move();
                 galaxy.runMobCollisions();
+                List<Block> blocksToRemove= new ArrayList<>();
+                camera.getRenderedBlocks().forEach(loc -> {
+                    if(world.isBlockLoaded(loc.getX(), loc.getY())) {
+                        Block block = world.getBlockAt(loc.getX(), loc.getY());
+                        if (!block.onScreen()) {
+                            blocksToRemove.add(block);
+                        }
+                    }
+                });
+                blocksToRemove.forEach(block -> {
+                    block.removeFromScreen();
+                });
+
+                //TODO find chunks near camera center and load if not onscreen and should be
 
             }
         }, Duration.seconds(0));

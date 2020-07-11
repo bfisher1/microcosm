@@ -36,7 +36,6 @@ public class Robot extends Mob {
         Block.Type type = block.getType();
         if(Block.Type.Stone.equals(block.getType())) {
             setDirection(getDirection() + 2);
-            block.changeEntity("select-green.png");
         }
     }
 }

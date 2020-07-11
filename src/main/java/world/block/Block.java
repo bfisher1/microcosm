@@ -102,6 +102,10 @@ public class Block implements Collidable {
         setScreenLoc(loc);
     }
 
+    public boolean onScreen() {
+        return entity != null && entity.getX() > 0 && entity.getY() >  0 && entity.getX() < FXGL.getAppWidth() && entity.getY() < FXGL.getAppHeight();
+    }
+
     public void move(double x, double y) {
         move(new Loc(x, y));
     }

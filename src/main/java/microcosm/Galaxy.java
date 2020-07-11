@@ -55,14 +55,15 @@ public class Galaxy {
                 //
                 if(mob.isOnWorld()) {
                     // find which block the mob is on
-                    double dx = mob.getCurrentWorld().getX() - mob.getX();
-                    double dy = mob.getCurrentWorld().getY() - mob.getY();
+                    double dx = mob.getX() - mob.getCurrentWorld().getX() + Block.BLOCK_WIDTH / 2;
+                    double dy = mob.getY() - mob.getCurrentWorld().getY() + Block.BLOCK_WIDTH / 2;
                     int x = (int) (dx / Block.BLOCK_WIDTH);
                     int y = (int) (dy / Block.BLOCK_WIDTH);
 
                     if(mob.getCurrentWorld().isBlockLoaded(x, y)) {
                         Block block = mob.getCurrentWorld().getBlockAt(x, y);
 
+                        block.changeEntity("select-green.png");
                         block.handleCollision(mob);
                         //mob.handleCollision(block);
                     }
