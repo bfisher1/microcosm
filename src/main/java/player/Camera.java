@@ -1,5 +1,6 @@
 package player;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,23 +10,28 @@ import util.IntLoc;
 import world.World;
 import world.block.Block;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class Camera {
     private int x;
     private int y;
-    private World world;
 
-    private Set<IntLoc> renderedBlocks;
+    private Map<World, Set<IntLoc>> renderedBlocks;
     private Set<Mob> renderedMobs;
 
-    public Camera(int x, int y, World world) {
+    private static Camera instance;
+
+    public static Camera getInstance() {
+        if(instance == null)
+            instance = new Camera(0, 0);
+        return instance;
+    }
+
+    private Camera(int x, int y) {
         this.x = x;
         this.y = y;
-        this.world = world;
-        this.renderedBlocks = new HashSet<>();
+        this.renderedBlocks = new HashMap<>();
         this.renderedMobs = new HashSet<>();
     }
 
@@ -45,26 +51,65 @@ public class Camera {
     }
 
     private void updateVisibleBlocks() {
-        renderedBlocks.forEach(loc -> {
-            if(world.isBlockLoaded(loc.getX(), loc.getY())) {
-                Block block = world.getBlockAt(loc.getX(), loc.getY());
-                if (block != null) {
-                    Entity entity = block.getEntity();
-                    if (entity != null) {
-                        entity.setX(world.getX() + loc.getX() * block.BLOCK_WIDTH - x);
-                        entity.setY(world.getY() + loc.getY() * block.BLOCK_WIDTH - y);
+        renderedBlocks.forEach((world, locs) -> {
+            locs.forEach(loc -> {
+                if (world.isBlockLoaded(loc.getX(), loc.getY())) {
+                    Block block = world.getBlockAt(loc.getX(), loc.getY());
+                    if (block != null) {
+                        Entity entity = block.getEntity();
+                        if (entity != null) {
+                            entity.setX(world.getX() + loc.getX() * block.BLOCK_WIDTH - x);
+                            entity.setY(world.getY() + loc.getY() * block.BLOCK_WIDTH - y);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    public void renderBlocksThatShouldBeOnScreen() {
+        // camera x,y = top left of camera
+        renderedBlocks.forEach((world, locs) -> {
+            int startX = (int) (-world.getX() + getX()) / Block.BLOCK_WIDTH - 2;
+            int startY = (int) (-world.getY() + getY()) / Block.BLOCK_WIDTH - 2;
+
+            int endX = startX + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
+            int endY = startY + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
+
+            List<Block> blocksToAdd = new ArrayList<>();
+            int numAdded = 0;
+
+            for(int x =  startX; x < endX; x++) {
+                for(int y =  startY; y < endY; y++) {
+                    IntLoc loc = new IntLoc(x, y);
+                    if(!renderedBlocks.get(world).contains(loc)) {
+                        if(world.isBlockLoaded(x, y)) {
+                            Block block = world.getBlockAt(x, y);
+                            if (!block.onScreen()) {
+                                block.addToScreen(this);
+                                blocksToAdd.add(block);
+                                numAdded++;
+                            }
+                        }
                     }
                 }
             }
+            System.out.println("Added " + numAdded);
         });
     }
 
     public void addRenderedBlock(Block block) {
-        renderedBlocks.add(block.getIntLoc());
+        if (!renderedBlocks.containsKey(block.getWorld()))
+            renderedBlocks.put(block.getWorld(), new HashSet<>());
+        renderedBlocks.get(block.getWorld()).add(block.getIntLoc());
     }
 
     public void removeRenderedBlock(Block block) {
-        renderedBlocks.remove(block.getIntLoc());
+        renderedBlocks.get(block.getWorld()).remove(block.getIntLoc());
+    }
+
+    public void addWorldToRender(World world) {
+        renderedBlocks.put(world, new HashSet<>());
     }
 
     public void addRenderedMob(Mob mob) {
@@ -73,5 +118,22 @@ public class Camera {
 
     public void removeRenderedMob(Mob mob) {
         renderedBlocks.remove(mob);
+    }
+
+    public void removeBlocksThatShouldNotBeOnScreen() {
+        List<Block> blocksToRemove= new ArrayList<>();
+        getRenderedBlocks().forEach((world, locs) -> {
+            locs.forEach(loc -> {
+                if(world.isBlockLoaded(loc.getX(), loc.getY())) {
+                    Block block = world.getBlockAt(loc.getX(), loc.getY());
+                    if (!block.onScreen()) {
+                        blocksToRemove.add(block);
+                    }
+                }
+            });
+        });
+        blocksToRemove.forEach(block -> {
+            block.removeFromScreen();
+        });
     }
 }

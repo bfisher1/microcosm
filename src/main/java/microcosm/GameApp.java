@@ -11,6 +11,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.texture.Texture;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import player.Camera;
@@ -36,17 +37,22 @@ public class GameApp extends GameApplication {
     private World world;
     Player player;
 
+    public static Texture water;
+
     @Override
     protected void initSettings(GameSettings settings) { }
 
     @Override
     protected void initGame() {
 
+        water  = FXGL.getAssetLoader().loadTexture("water.png");
+
         Galaxy galaxy = new Galaxy();
         world = new World(0, 0);
 
 
-        camera = new Camera(0, 0, world);
+        camera = Camera.getInstance();
+        camera.addWorldToRender(world);
         world.getCameras().add(camera);
         world.loadInitialChunks();;
 
@@ -76,23 +82,18 @@ public class GameApp extends GameApplication {
             public void run() {
                 robot.move();
                 galaxy.runMobCollisions();
-                List<Block> blocksToRemove= new ArrayList<>();
-                camera.getRenderedBlocks().forEach(loc -> {
-                    if(world.isBlockLoaded(loc.getX(), loc.getY())) {
-                        Block block = world.getBlockAt(loc.getX(), loc.getY());
-                        if (!block.onScreen()) {
-                            blocksToRemove.add(block);
-                        }
-                    }
-                });
-                blocksToRemove.forEach(block -> {
-                    block.removeFromScreen();
-                });
-
-                //TODO find chunks near camera center and load if not onscreen and should be
 
             }
         }, Duration.seconds(0));
+
+        FXGL.getGameTimer().runAtInterval(new Runnable() {
+            @Override
+            public void run() {
+                camera.removeBlocksThatShouldNotBeOnScreen();
+
+                camera.renderBlocksThatShouldBeOnScreen();
+            }
+        }, new Duration(250));
 
         robot.setDirection(Math.PI / 2.0);
 //

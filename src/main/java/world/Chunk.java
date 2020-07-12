@@ -35,8 +35,8 @@ public class Chunk {
             // generate using perlin noise
             blocks = WorldGenerator.generateBlocks(xId * CHUNK_SIZE, yId * CHUNK_SIZE, xId * CHUNK_SIZE + CHUNK_SIZE, yId * CHUNK_SIZE + CHUNK_SIZE, world);
             blocks.forEach((loc, block) -> {
-                block.addToScreen();
-                block.move(world.getX(), world.getY());
+                //block.addToScreen();
+                //block.move(world.getX(), world.getY());
             });
         }
         sortedLocs = getBlocks().keySet().stream().collect(Collectors.toList());

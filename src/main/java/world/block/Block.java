@@ -2,10 +2,13 @@ package world.block;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.texture.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Collidable;
+import microcosm.GameApp;
 import microcosm.Mob;
+import player.Camera;
 import util.IntLoc;
 import util.Loc;
 import world.World;
@@ -64,15 +67,29 @@ public class Block implements Collidable {
         world.removeRenderedBlock(this);
     }
 
-    public void addToScreen() {
+    public void addToScreen(Camera camera) {
         entity = FXGL.entityBuilder()
-                .at(x * BLOCK_WIDTH, y * BLOCK_WIDTH)
+                .at(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY())
                 .view(animName)
                 .buildAndAttach();
         world.addRenderedBlock(this);
     }
 
     public void changeEntity(String animName) {
+        if(entity == null)
+            return;
+
+//        double x = entity.getX();
+//        double y = entity.getY();
+//
+//        Object children = entity.getViewComponent().getChildren();
+//        entity.getViewComponent().clearChildren();
+//        entity.getViewComponent().addChild(GameApp.water);
+//        entity.setX(x);
+//        entity.setY(y);
+//
+//        if(true)
+//            return;
         this.animName = animName;
         double x = entity.getX();
         double y = entity.getY();
