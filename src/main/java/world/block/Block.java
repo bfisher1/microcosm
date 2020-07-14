@@ -41,6 +41,7 @@ public class Block implements Collidable {
         Silicon,
         Nickel,
         Iron,
+        Sun,
         Unknown
     };
 
@@ -72,6 +73,7 @@ public class Block implements Collidable {
                 .at(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY())
                 .view(animName)
                 .buildAndAttach();
+        entity.setZ(1);
         world.addRenderedBlock(this);
     }
 

@@ -16,7 +16,7 @@ public class Robot extends Mob {
     public Robot(double x, double y) {
         super(x, y, "bot2.png");
         direction = 0;
-        speed = 2.5;
+        speed = 1;
     }
 
 

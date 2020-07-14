@@ -13,27 +13,39 @@ public class WorldGenerator {
 
     public static Map<IntLoc, Block> generateBlocks(int startX, int startY, int endX, int endY, World world) {
         Map<IntLoc, Block> blocks = new HashMap<>();
+        if (world instanceof Sun) {
+            for(int x = startX; x < endX; x++) {
+                for(int y = startY; y < endY; y++) {
+                    if(Math.sqrt(x  * x + y * y) <= world.getRadius())
+                        blocks.put(new IntLoc(x, y), BlockFactory.create(x, y, Block.Type.Sun, world));
+                }
+            }
+            return blocks;
+        }
 
         for(int x = startX; x < endX; x++) {
             for(int y = startY; y < endY; y++) {
-                blocks.put(new IntLoc(x, y), BlockFactory.create(x, y, Block.Type.Grass, world));
+                if(Math.sqrt(x  * x + y * y) <= world.getRadius())
+                    blocks.put(new IntLoc(x, y), BlockFactory.create(x, y, Block.Type.Grass, world));
             }
         }
 
         for(int x = startX; x < endX; x++) {
             for(int y = startY; y < endY; y++) {
-                createResources(blocks, Block.Type.Stone, Block.Type.Grass, .54, 1, .04, 8, world);
-                createResources(blocks, Block.Type.Sand, Block.Type.Grass, .55, 3, .04, 8, world);
-                createResources(blocks, Block.Type.Water, Block.Type.Sand, .65, 3, .04, 8, world);
+                if(Math.sqrt(x  * x + y * y) <= world.getRadius()) {
+                    createResources(blocks, Block.Type.Stone, Block.Type.Grass, .54, 1, .04, 8, world);
+                    createResources(blocks, Block.Type.Sand, Block.Type.Grass, .55, 3, .04, 8, world);
+                    createResources(blocks, Block.Type.Water, Block.Type.Sand, .65, 3, .04, 8, world);
 
-                createResources(blocks, Block.Type.Tree, Block.Type.Grass, .65, 4, .04, 8, world, true);
+                    createResources(blocks, Block.Type.Tree, Block.Type.Grass, .65, 4, .04, 8, world, true);
 
-                createResources(blocks, Block.Type.Coal, Block.Type.Stone, ORE_CUTOFF, 5, .05125, 8, world);
-                createResources(blocks, Block.Type.Copper, Block.Type.Stone, ORE_CUTOFF, 6, .05125, 8, world);
-                createResources(blocks, Block.Type.Zinc, Block.Type.Stone, ORE_CUTOFF, 7, .05125, 8, world);
-                createResources(blocks, Block.Type.Silicon, Block.Type.Stone, ORE_CUTOFF, 8, .05125, 8, world);
-                createResources(blocks, Block.Type.Nickel, Block.Type.Stone, ORE_CUTOFF, 9, .05125, 8, world);
-                createResources(blocks, Block.Type.Iron, Block.Type.Stone, ORE_CUTOFF, 10, .05125, 8, world);
+                    createResources(blocks, Block.Type.Coal, Block.Type.Stone, ORE_CUTOFF, 5, .05125, 8, world);
+                    createResources(blocks, Block.Type.Copper, Block.Type.Stone, ORE_CUTOFF, 6, .05125, 8, world);
+                    createResources(blocks, Block.Type.Zinc, Block.Type.Stone, ORE_CUTOFF, 7, .05125, 8, world);
+                    createResources(blocks, Block.Type.Silicon, Block.Type.Stone, ORE_CUTOFF, 8, .05125, 8, world);
+                    createResources(blocks, Block.Type.Nickel, Block.Type.Stone, ORE_CUTOFF, 9, .05125, 8, world);
+                    createResources(blocks, Block.Type.Iron, Block.Type.Stone, ORE_CUTOFF, 10, .05125, 8, world);
+                }
             }
         }
         return blocks;

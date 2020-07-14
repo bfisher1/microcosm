@@ -1,11 +1,13 @@
 package microcosm;
 
+import com.almasb.fxgl.dsl.FXGL;
 import lombok.Getter;
 import lombok.Setter;
 import player.Camera;
 import util.IntLoc;
 import world.Chunk;
 import world.World;
+import world.block.Block;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,30 +38,47 @@ public class ChunkLoader implements Runnable {
 
         if (locsToLoad == null || locsToLoad.size() == 0 || lastX != camera.getX() || lastY != camera.getY()) {
             locsToLoad = new ArrayList<>();
-            for(int i = -LOAD_RADIUS; i < LOAD_RADIUS; i++) {
-                for(int j = -LOAD_RADIUS; j < LOAD_RADIUS; j++) {
-                    locsToLoad.add(new IntLoc(i, j));
+
+
+            // divide by block size
+            IntLoc start = camera.startBlockLoc(world);
+            IntLoc end = camera.endBlockLoc(world);
+
+            start.setX(start.getX() / Chunk.CHUNK_SIZE);
+            start.setY(start.getY() / Chunk.CHUNK_SIZE);
+
+            end.setX(end.getX() / Chunk.CHUNK_SIZE);
+            end.setY(end.getY() / Chunk.CHUNK_SIZE);
+
+
+            for(int i = start.getX() - LOAD_RADIUS; i < end.getX() + LOAD_RADIUS; i++) {
+                for(int j = start.getY() - LOAD_RADIUS; j < end.getY() + LOAD_RADIUS; j++) {
+                    IntLoc loc = new IntLoc(i, j);
+                    if(!world.getChunks().containsKey(loc))
+                        locsToLoad.add(loc);
                 }
             }
-//            locsToLoad.sort(new Comparator<IntLoc>() {
-//                @Override
-//                public int compare(IntLoc intLoc, IntLoc t1) {
-//                    double distance1 =  Math.sqrt(Math.pow((double) intLoc.getX() - lastX, 2) +  Math.pow((double) intLoc.getY() - lastY, 2));
-//                    double distance2 =  Math.sqrt(Math.pow((double) t1.getX() - lastX, 2) +  Math.pow((double) t1.getY() - lastY, 2));
-//                    return (int) (distance1 - distance2);
-//                }
-//            });
+            locsToLoad.sort(new Comparator<IntLoc>() {
+                @Override
+                public int compare(IntLoc intLoc, IntLoc t1) {
+                    double distance1 =  Math.sqrt(Math.pow((double) intLoc.getX() - lastX, 2) +  Math.pow((double) intLoc.getY() - lastY, 2));
+                    double distance2 =  Math.sqrt(Math.pow((double) t1.getX() - lastX, 2) +  Math.pow((double) t1.getY() - lastY, 2));
+                    return (int) (distance1 - distance2) / 10;
+                }
+            });
         }
 
 //        locsToLoad = new ArrayList<>();
 //        IntLoc locToAdd = new IntLoc(1, 1);
 //        locsToLoad.add(locToAdd);
 
-        IntLoc loc = locsToLoad.remove(0);
-        if (!world.getChunks().containsKey(loc)) {
-            Chunk chunk = new Chunk(loc.getX(), loc.getY(), world);
-            world.getChunks().put(loc, chunk);
-            chunk.load();;
+        if(locsToLoad.size() > 0) {
+            IntLoc loc = locsToLoad.remove(0);
+            if (!world.getChunks().containsKey(loc)) {
+                Chunk chunk = new Chunk(loc.getX(), loc.getY(), world);
+                world.getChunks().put(loc, chunk);
+                chunk.load();;
+            }
         }
 
 //        for(int i = 0; i < 10; i++) {

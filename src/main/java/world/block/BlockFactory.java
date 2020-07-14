@@ -41,6 +41,9 @@ public class BlockFactory {
             case Iron:
                 block = new IronBlock(x, y, world);
                 break;
+            case Sun:
+                block = new SunBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

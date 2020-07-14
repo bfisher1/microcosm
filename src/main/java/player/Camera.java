@@ -67,20 +67,31 @@ public class Camera {
         });
     }
 
+    public IntLoc startBlockLoc(World world) {
+        int startX = (int) (-world.getX() + getX()) / Block.BLOCK_WIDTH - 2;
+        int startY = (int) (-world.getY() + getY()) / Block.BLOCK_WIDTH - 2;
+        return new IntLoc(startX, startY);
+    }
+
+    public IntLoc endBlockLoc(World world) {
+        IntLoc start = startBlockLoc(world);
+        int endX = start.getX() + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
+        int endY = start.getY() + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
+        return new IntLoc(endX, endY);
+    }
+
     public void renderBlocksThatShouldBeOnScreen() {
         // camera x,y = top left of camera
         renderedBlocks.forEach((world, locs) -> {
-            int startX = (int) (-world.getX() + getX()) / Block.BLOCK_WIDTH - 2;
-            int startY = (int) (-world.getY() + getY()) / Block.BLOCK_WIDTH - 2;
+            IntLoc start = startBlockLoc(world);
+            IntLoc end = endBlockLoc(world);
 
-            int endX = startX + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
-            int endY = startY + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
 
             List<Block> blocksToAdd = new ArrayList<>();
             int numAdded = 0;
 
-            for(int x =  startX; x < endX; x++) {
-                for(int y =  startY; y < endY; y++) {
+            for(int x =  start.getX(); x < end.getX(); x++) {
+                for(int y =  start.getY(); y < end.getY(); y++) {
                     IntLoc loc = new IntLoc(x, y);
                     if(!renderedBlocks.get(world).contains(loc)) {
                         if(world.isBlockLoaded(x, y)) {

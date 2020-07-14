@@ -15,21 +15,21 @@ public class World {
 
     private double x;
     private double y;
-    private List<Camera> cameras;
     private static int WORLD_COUNT = 0;
-    private static int id;
+    private int id;
+    private int radius;
 
     public World(double x, double y) {
         this.x = x;
         this.y = y;
-        cameras = new ArrayList<>();
         chunks = new HashMap<>();
         id = WORLD_COUNT;
         WORLD_COUNT++;
+        radius = 10;
     }
 
     public void loadInitialChunks() {
-        int START_CHUNKS = 7;
+        int START_CHUNKS = 2;//4;
         int startIdx = (int) (-x / Block.BLOCK_WIDTH) / Chunk.CHUNK_SIZE;
         int startIdy = (int) (-y / Block.BLOCK_WIDTH) / Chunk.CHUNK_SIZE;
         for(int i = startIdx - START_CHUNKS; i < START_CHUNKS + startIdx; i++) {
@@ -73,9 +73,9 @@ public class World {
     public Chunk getChunkForBlockAt(int x, int y) {
         // Chunks are stored 0,0 is x=-10 to -1  0,0 is x=0-9, y=0-9
         if( x < 0)
-            x -= Chunk.CHUNK_SIZE + 1;
+            x =  x - Chunk.CHUNK_SIZE + 1;
         if(y < 0)
-            y -= Chunk.CHUNK_SIZE + 1;
+            y = y - Chunk.CHUNK_SIZE + 1;
 
         IntLoc loc = new IntLoc(x / Chunk.CHUNK_SIZE, y / Chunk.CHUNK_SIZE);
         if (chunks.containsKey(loc))
@@ -114,7 +114,7 @@ public class World {
             Block oldBlock = chunk.getBlocks().get(loc);
             chunk.getBlocks().put(loc, newBlock);
             // TEMPORARY, move this elsewhere or TODO make a sprite update method
-            newBlock.addToScreen(cameras.get(0));
+            newBlock.addToScreen(Camera.getInstance());
             oldBlock.removeFromScreen();
             return oldBlock;
         } catch (Exception e) {
@@ -123,15 +123,11 @@ public class World {
     }
 
     public void addRenderedBlock(Block block) {
-        cameras.forEach(camera -> {
-            camera.addRenderedBlock(block);
-        });
+        Camera.getInstance().addRenderedBlock(block);
     }
 
     public void removeRenderedBlock(Block block) {
-        cameras.forEach(camera -> {
-            camera.removeRenderedBlock(block);
-        });
+        Camera.getInstance().removeRenderedBlock(block);
     }
 
     @Override

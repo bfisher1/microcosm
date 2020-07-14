@@ -38,6 +38,7 @@ public class Mob implements Collidable {
                 .at(x , y)
                 .view(animName)
                 .buildAndAttach());
+        entity.setZ(3);
         setX(x);
         setY(y);
     }

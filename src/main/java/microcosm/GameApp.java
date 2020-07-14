@@ -19,6 +19,7 @@ import player.Player;
 import robot.Robot;
 import util.IntLoc;
 import world.Chunk;
+import world.Sun;
 import world.World;
 import world.block.Block;
 import world.block.BlockFactory;
@@ -35,6 +36,7 @@ public class GameApp extends GameApplication {
 
     private Camera camera;
     private World world;
+    private Sun sun;
     Player player;
 
     public static Texture water;
@@ -49,17 +51,19 @@ public class GameApp extends GameApplication {
 
         Galaxy galaxy = new Galaxy();
         world = new World(0, 0);
+        sun = new Sun(40 * Block.BLOCK_WIDTH, 10);
+
 
 
         camera = Camera.getInstance();
         camera.addWorldToRender(world);
-        world.getCameras().add(camera);
-        world.loadInitialChunks();;
+        camera.addWorldToRender(sun);
+        world.loadInitialChunks();
+        sun.loadInitialChunks();
 
-        Robot robot = new Robot(60, 60);
+        Robot robot = new Robot(0, 0);
         robot.setCurrentWorld(world);
 
-        world.getCameras().add(camera);
         robot.setCamera(camera);
 
         Player player = new Player(camera);
@@ -69,11 +73,14 @@ public class GameApp extends GameApplication {
         //world.replaceBlockAt(0, 0, BlockFactory.create(0, 0, Block.Type.Sand, world));
 
         galaxy.getWorlds().add(world);
+        galaxy.getWorlds().add(sun);
         galaxy.addMob(robot);
 
-        //ChunkLoader chunkLoader = new ChunkLoader(camera, world);
+        ChunkLoader chunkLoader = new ChunkLoader(camera, world);
+        ChunkLoader chunkLoader2 = new ChunkLoader(camera, sun);
 
-        //FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
+        FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
+        FXGL.getGameTimer().runAtInterval(chunkLoader2, Duration.seconds(.1));
 
 
 
