@@ -6,6 +6,7 @@ import world.block.BlockFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class WorldGenerator {
 
@@ -16,8 +17,13 @@ public class WorldGenerator {
         if (world instanceof Sun) {
             for(int x = startX; x < endX; x++) {
                 for(int y = startY; y < endY; y++) {
-                    if(Math.sqrt(x  * x + y * y) <= world.getRadius())
-                        blocks.put(new IntLoc(x, y), BlockFactory.create(x, y, Block.Type.Sun, world));
+                    if(Math.sqrt(x  * x + y * y) <= world.getRadius()) {
+                        Block block = BlockFactory.create(x, y, Block.Type.Uranium, world);
+                        blocks.put(new IntLoc(x, y), block);
+//                        if((new Random()).nextDouble() > .2)
+//                            block.stack(BlockFactory.create(x, y, Block.Type.Sun, world));
+                    }
+
                 }
             }
             return blocks;

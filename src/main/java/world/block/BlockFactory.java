@@ -44,6 +44,9 @@ public class BlockFactory {
             case Sun:
                 block = new SunBlock(x, y, world);
                 break;
+            case Uranium:
+                block = new UraniumBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

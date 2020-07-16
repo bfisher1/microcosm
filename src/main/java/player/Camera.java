@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import microcosm.Mob;
 import util.IntLoc;
+import util.Loc;
 import world.World;
 import world.block.Block;
 
@@ -58,8 +59,7 @@ public class Camera {
                     if (block != null) {
                         Entity entity = block.getEntity();
                         if (entity != null) {
-                            entity.setX(world.getX() + loc.getX() * block.BLOCK_WIDTH - x);
-                            entity.setY(world.getY() + loc.getY() * block.BLOCK_WIDTH - y);
+                            block.setScreenLoc(new Loc(world.getX() + loc.getX() * block.BLOCK_WIDTH - x, world.getY() + loc.getY() * block.BLOCK_WIDTH - y));
                         }
                     }
                 }
