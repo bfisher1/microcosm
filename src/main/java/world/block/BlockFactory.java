@@ -47,6 +47,12 @@ public class BlockFactory {
             case Uranium:
                 block = new UraniumBlock(x, y, world);
                 break;
+            case Wire:
+                block = new WireBlock(x, y, world);
+                break;
+            case Generator:
+                block = new GeneratorBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

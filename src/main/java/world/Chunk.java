@@ -17,7 +17,6 @@ public class Chunk {
     private int xId;
     private int yId;
     private Map<IntLoc, Block> blocks;
-    private List<IntLoc> sortedLocs;
     private World world;
 
     public Chunk(int xId, int yId, World world) {
@@ -39,7 +38,5 @@ public class Chunk {
                 //block.move(world.getX(), world.getY());
             });
         }
-        sortedLocs = getBlocks().keySet().stream().collect(Collectors.toList());
-        sortedLocs.sort(new LocComparator());
     }
 }

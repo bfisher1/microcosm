@@ -13,9 +13,9 @@ public class TreeBlock extends Block {
         super(x, y, world);
         double rand = (new Random()).nextDouble();
         if (rand < .5)
-            setAnimName("wizard_anims/tree.png");
+            setAnimation("wizard_anims/tree.png");
         else
-            setAnimName("tree-big.png");
+            setAnimation("tree-big.png");
 
         setXSpriteOffset((new Random()).nextInt(SPRITE_OFFSET_MAX) - SPRITE_OFFSET_MAX / 2);
         setYSpriteOffset((new Random()).nextInt(SPRITE_OFFSET_MAX) - SPRITE_OFFSET_MAX / 2 - 100);

@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Animation;
+import microcosm.AnimationClip;
 import microcosm.Collidable;
 import microcosm.Mob;
 import player.Camera;
@@ -12,9 +13,12 @@ import util.IntLoc;
 import util.Loc;
 import world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
-public class Block implements Collidable {
+public abstract class Block implements Collidable {
 
     public static int BLOCK_WIDTH = 32;
 
@@ -26,8 +30,6 @@ public class Block implements Collidable {
     public void handleCollision(Mob mob) {
         mob.handleCollision(this);
     }
-
-    private Animation anim = null;
 
     public enum Type {
         Grass,
@@ -43,6 +45,8 @@ public class Block implements Collidable {
         Iron,
         Sun,
         Uranium,
+        Wire,
+        Generator,
         Plutonium,
         Unknown
     };
@@ -51,95 +55,83 @@ public class Block implements Collidable {
     private int y;
     private int z;
 
-    private int animFrames;
-    private double animDelay;
-    private boolean isAnim;
-
     private int xSpriteOffset;
     private int ySpriteOffset;
     private Type type;
     private  Block above = null;
-    private String animName;
+    private Animation animation;
     private Entity entity;
     private World world;
+    private boolean loaded;
 
     public Block(int x, int y, World world) {
+        loaded = true;
         this.x = x;
         this.y = y;
         this.world = world;
         z = 1;
         xSpriteOffset = 0;
         ySpriteOffset = 0;
-        isAnim = false;
+        // add method to destroy block and remove it from list when block is removed, replaced
+        // add events that occur every x seconds and update blocks in thread
     }
+
+    public void setType(Type type) {
+        // if the block is being initialized still
+        if (this.type == null) {
+            // add block to dictionary of block types in chunk
+            if (!world.getBlocksByType().containsKey(type)) {
+                world.getBlocksByType().put(type, new ArrayList<>());
+            }
+            world.getBlocksByType().get(type).add(this);
+        }
+        this.type = type;
+    }
+
     public void stack(Block block) {
         block.setZ(getZ() + 1);
         this.above = block;
     }
 
     public void setAnimation(String animName) {
-        setAnimName(animName);
+        animation = new Animation(animName);
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public void updateAnimation() {
+        if (!animation.isAnim() && entity != null) {
+            removeFromScreen();
+            addToScreen(Camera.getInstance());
+        }
+    }
+
+    public void destroy() {
+        // flag to remove from list of blocksByType eventually
+        loaded = false;
     }
 
     public void setAnimation(String animName, int frames, double delay) {
         //TODO refactor and don't use animDelay or animFrames, redundant
-        setAnimName(animName);
-        isAnim = true;
-        animDelay = delay;
-        animFrames = frames;
+        animation = new Animation(animName, frames, delay);
     }
 
 
     public void removeFromScreen() {
         entity.removeFromWorld();
-        anim = null;
         world.removeRenderedBlock(this);
         if(above != null)
             above.removeFromScreen();
     }
 
     public void addToScreen(Camera camera) {
-        if (isAnim) {
-            setAnim(new Animation(animName, animFrames, animDelay));
-            entity = FXGL.entityBuilder()
-                    .at(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY())
-                    .with(anim)
-                    .buildAndAttach();
-        } else {
-            entity = FXGL.entityBuilder()
-                    .at(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY())
-                    .view(animName)
-                    .buildAndAttach();
-        }
+        entity = animation.createEntity(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY());
         entity.setZ(getZ());
         world.addRenderedBlock(this);
         if(above != null)
             above.addToScreen(camera);
-    }
-
-    public void changeEntity(String animName) {
-        if(entity == null)
-            return;
-
-//        double x = entity.getX();
-//        double y = entity.getY();
-//
-//        Object children = entity.getViewComponent().getChildren();
-//        entity.getViewComponent().clearChildren();
-//        entity.getViewComponent().addChild(GameApp.water);
-//        entity.setX(x);
-//        entity.setY(y);
-//
-//        if(true)
-//            return;
-        this.animName = animName;
-        double x = entity.getX();
-        double y = entity.getY();
-        entity.removeFromWorld();
-        entity = FXGL.entityBuilder()
-                .at(x, y)
-                .view(animName)
-                .buildAndAttach();
     }
 
     public Loc getScreenLoc() {
@@ -148,6 +140,40 @@ public class Block implements Collidable {
 
     public IntLoc getIntLoc(){
         return new IntLoc(x, y);
+    }
+
+    public boolean hasNeighborBlock(int offsetX, int offsetY) {
+        if (world.isBlockLoaded(x + offsetX, y + offsetY)) {
+            Block block = world.getBlockAt(x + offsetX, y + offsetY);
+            while(block != null && block.getZ() != z)
+                block = block.getAbove();
+            return block != null;
+        }
+        return false;
+    }
+
+    public Block getNeighborBlock(int offsetX, int offsetY) {
+        Block block = world.getBlockAt(x + offsetX, y + offsetY);
+        while(block != null && block.getZ() != z)
+            block = block.getAbove();
+        return block;
+    }
+
+    public List<Block> getNeighbors() {
+        List<Block> neighbors = new ArrayList<>();
+        if(hasNeighborBlock(0, -1))
+            neighbors.add(getNeighborBlock(0, -1));
+        if(hasNeighborBlock(-1, 0))
+            neighbors.add(getNeighborBlock(-1, 0));
+        if(hasNeighborBlock(1, 0))
+            neighbors.add(getNeighborBlock(1, 0));
+        if(hasNeighborBlock(0, 1))
+            neighbors.add(getNeighborBlock(0, 1));
+        return neighbors;
+    }
+
+    public boolean isElectronicDevice() {
+        return Type.Generator.equals(type) || Type.Wire.equals(type);
     }
 
     public void setScreenLoc(Loc loc) {

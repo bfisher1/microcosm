@@ -20,8 +20,6 @@ public class WorldGenerator {
                     if(Math.sqrt(x  * x + y * y) <= world.getRadius()) {
                         Block block = BlockFactory.create(x, y, Block.Type.Uranium, world);
                         blocks.put(new IntLoc(x, y), block);
-//                        if((new Random()).nextDouble() > .2)
-//                            block.stack(BlockFactory.create(x, y, Block.Type.Sun, world));
                     }
 
                 }
@@ -51,6 +49,15 @@ public class WorldGenerator {
                     createResources(blocks, Block.Type.Silicon, Block.Type.Stone, ORE_CUTOFF, 8, .05125, 8, world);
                     createResources(blocks, Block.Type.Nickel, Block.Type.Stone, ORE_CUTOFF, 9, .05125, 8, world);
                     createResources(blocks, Block.Type.Iron, Block.Type.Stone, ORE_CUTOFF, 10, .05125, 8, world);
+
+                    if( y == 2 ) {
+                        if (x == 1)
+                            blocks.get(new IntLoc(x, y)).stack(BlockFactory.create(x, y, Block.Type.Wire, world));
+                        else if (x == 2)
+                            blocks.get(new IntLoc(x, y)).stack(BlockFactory.create(x, y, Block.Type.Generator, world));
+//                    else
+//                        block.stack(BlockFactory.create(x, y, Block.Type.Wire, world));
+                    }
                 }
             }
         }

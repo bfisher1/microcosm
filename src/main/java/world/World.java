@@ -12,6 +12,7 @@ import java.util.*;
 @Setter
 public class World {
     private Map<IntLoc, Chunk> chunks;
+    private Map<Block.Type, List<Block>> blocksByType;
 
     private double x;
     private double y;
@@ -23,6 +24,7 @@ public class World {
         this.x = x;
         this.y = y;
         chunks = new HashMap<>();
+        blocksByType = new HashMap<>();
         id = WORLD_COUNT;
         WORLD_COUNT++;
         radius = 10;
@@ -68,6 +70,13 @@ public class World {
             if(block.getEntity() != null)
                 block.move(x, y);
         });
+    }
+
+    public List<Block> getLoadedBlocksOfType(Block.Type type) {
+        if (blocksByType.containsKey(type)) {
+            return blocksByType.get(type);
+        }
+        return new ArrayList<>();
     }
 
     public Chunk getChunkForBlockAt(int x, int y) {

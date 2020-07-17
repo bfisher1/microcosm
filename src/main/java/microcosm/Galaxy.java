@@ -63,7 +63,7 @@ public class Galaxy {
                     if(mob.getCurrentWorld().isBlockLoaded(x, y)) {
                         Block block = mob.getCurrentWorld().getBlockAt(x, y);
 
-                        block.changeEntity("select-green.png");
+                        //block.changeEntity("select-green.png");
                         block.handleCollision(mob);
                         //mob.handleCollision(block);
                     }

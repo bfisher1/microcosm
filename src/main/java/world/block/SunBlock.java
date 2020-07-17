@@ -9,12 +9,12 @@ public class SunBlock extends Block {
         super(x, y, world);
         double rand = (new Random()).nextDouble();
         if (rand < .3)
-            setAnimName("sunblock.png");
+            setAnimation("sunblock.png");
         else if (rand < .5)
-            setAnimName("red-starblock.png");
+            setAnimation("red-starblock.png");
         else if (rand < .7)
-            setAnimName("red-starblock.png");
+            setAnimation("red-starblock.png");
         else
-            setAnimName("sunblock.png");
+            setAnimation("sunblock.png");
     }
 }

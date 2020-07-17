@@ -23,6 +23,7 @@ import world.Sun;
 import world.World;
 import world.block.Block;
 import world.block.BlockFactory;
+import world.block.GeneratorBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,16 @@ public class GameApp extends GameApplication {
 
             }
         }, Duration.seconds(0));
+
+        FXGL.getGameTimer().runAtInterval(new Runnable() {
+            @Override
+            public void run() {
+                world.getLoadedBlocksOfType(Block.Type.Generator).forEach(block -> {
+                    GeneratorBlock generator = (GeneratorBlock) block;
+                    generator.setOn(true);
+                });
+            }
+        }, Duration.seconds(1.0));
 
         FXGL.getGameTimer().runAtInterval(new Runnable() {
             @Override

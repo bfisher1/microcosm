@@ -5,6 +5,6 @@ import world.World;
 public class SandBlock extends Block {
     public SandBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimName("sand.png");
+        setAnimation("sand.png");
     }
 }
