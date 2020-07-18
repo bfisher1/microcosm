@@ -16,19 +16,29 @@ public class Animation {
     private double animDelay;
     private String animName;
     private int animFrames;
+    private double scaleX;
+    private double scaleY;
 
 
-    public Animation(String animName, int frames, double delay) {
+    public Animation(String animName, int frames, double delay, double scaleX, double scaleY) {
         //TODO refactor and don't use animDelay or animFrames, redundant
         setAnimName(animName);
         isAnim = true;
         animDelay = delay;
         animFrames = frames;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+    }
+
+    public Animation(String animName, int frames, double delay) {
+        this(animName, frames, delay, 1.0, 1.0);
     }
 
     public Animation(String animName) {
         setAnimName(animName);
         isAnim = false;
+        this.scaleX = 1.0;
+        this.scaleY = 1.0;
     }
 
 
@@ -37,11 +47,13 @@ public class Animation {
         if (isAnim) {
             return  FXGL.entityBuilder()
                     .at(x, y)
+                    .scale(scaleX, scaleY)
                     .with(new AnimationClip(animName, animFrames, animDelay))
                     .buildAndAttach();
         } else {
             return FXGL.entityBuilder()
                     .at(x, y)
+                    .scale(scaleX, scaleY)
                     .view(animName)
                     .buildAndAttach();
         }

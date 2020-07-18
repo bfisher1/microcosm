@@ -32,4 +32,15 @@ public class WireBlock extends ElectronicDevice {
         return new Animation("wire-horizontal.png");
     }
 
+    public void setOn(boolean on) {
+        super.setOn(on);
+        getNeighbors().forEach(block -> {
+            if(Type.Treadmill.equals(block.getType())) {
+                TreadmillBlock treadmill = (TreadmillBlock) block;
+                if(!treadmill.isOn())
+                    treadmill.setOn(true);
+            }
+        });
+    }
+
 }

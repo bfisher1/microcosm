@@ -53,6 +53,9 @@ public class BlockFactory {
             case Generator:
                 block = new GeneratorBlock(x, y, world);
                 break;
+            case Treadmill:
+                block = new TreadmillBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

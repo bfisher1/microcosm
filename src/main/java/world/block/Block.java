@@ -2,6 +2,7 @@ package world.block;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Animation;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class Block implements Collidable {
+public abstract class Block implements Collidable, Itemable {
 
     public static int BLOCK_WIDTH = 32;
 
@@ -48,6 +49,7 @@ public abstract class Block implements Collidable {
         Wire,
         Generator,
         Plutonium,
+        Treadmill,
         Unknown
     };
 
