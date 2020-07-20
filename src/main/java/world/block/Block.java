@@ -1,7 +1,6 @@
 package world.block;
 
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
 import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,14 +13,24 @@ import util.IntLoc;
 import util.Loc;
 import world.World;
 
+import java.io.Serializable;
+
+import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "block")
 public abstract class Block implements Collidable, Itemable {
 
     public static int BLOCK_WIDTH = 32;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Override
     public boolean isCollidingWith(Collidable otherMob) {
@@ -60,10 +69,18 @@ public abstract class Block implements Collidable, Itemable {
     private int xSpriteOffset;
     private int ySpriteOffset;
     private Type type;
+    @Transient
     private  Block above = null;
+    @Transient
     private Animation animation;
-    private Entity entity;
+    @Transient
+    private com.almasb.fxgl.entity.Entity entity;
+
+    @ManyToOne
+    @JoinColumn(name = "world_id")
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private World world;
+
     private boolean loaded;
 
     public Block(int x, int y, World world) {

@@ -5,8 +5,12 @@ import lombok.Setter;
 import microcosm.Animation;
 import world.World;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 @Getter
 @Setter
+@Entity
 public class WireBlock extends ElectronicDevice {
 
     private enum Direction {

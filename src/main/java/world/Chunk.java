@@ -3,20 +3,28 @@ package world;
 import lombok.Getter;
 import lombok.Setter;
 import util.IntLoc;
-import util.LocComparator;
+import util.DbClient;
 import world.block.Block;
 
+import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "chunk")
 public class Chunk {
     public static int CHUNK_SIZE = 10;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private int xId;
     private int yId;
+    @Transient
     private Map<IntLoc, Block> blocks;
+    @Transient
     private World world;
 
     public Chunk(int xId, int yId, World world) {
@@ -36,6 +44,7 @@ public class Chunk {
             blocks.forEach((loc, block) -> {
                 //block.addToScreen();
                 //block.move(world.getX(), world.getY());
+                DbClient.save(block);
             });
         }
     }

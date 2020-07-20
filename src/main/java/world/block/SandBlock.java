@@ -2,6 +2,9 @@ package world.block;
 
 import world.World;
 
+import javax.persistence.Entity;
+
+@Entity
 public class SandBlock extends Block {
     public SandBlock(int x, int y, World world) {
         super(x, y, world);

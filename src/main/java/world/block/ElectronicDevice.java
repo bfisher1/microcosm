@@ -5,8 +5,11 @@ import lombok.Setter;
 import microcosm.Animation;
 import world.World;
 
+import javax.persistence.Entity;
+
 @Getter
 @Setter
+@Entity
 public abstract class ElectronicDevice extends Block {
 
     private boolean on;

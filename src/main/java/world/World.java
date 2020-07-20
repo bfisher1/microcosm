@@ -6,19 +6,39 @@ import player.Camera;
 import util.IntLoc;
 import world.block.Block;
 
+import javax.persistence.*;
 import java.util.*;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "world")
 public class World {
+
+    enum Type {
+        World,
+        Sun,
+        Moon,
+        Asteroid
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Transient
     private Map<IntLoc, Chunk> chunks;
+    @Transient
     private Map<Block.Type, List<Block>> blocksByType;
 
     private double x;
     private double y;
-    private static int WORLD_COUNT = 0;
-    private int id;
+
+    private static long WORLD_COUNT = 0;
+
     private int radius;
+
+    private Type type;
 
     public World(double x, double y) {
         this.x = x;
@@ -28,6 +48,7 @@ public class World {
         id = WORLD_COUNT;
         WORLD_COUNT++;
         radius = 10;
+        type = Type.World;
     }
 
     public void loadInitialChunks() {
@@ -150,7 +171,7 @@ public class World {
 
     @Override
     public int hashCode() {
-        return id;
+        return Math.toIntExact(id);
     }
 
 }

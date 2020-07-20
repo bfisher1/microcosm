@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import player.Camera;
 import player.Player;
 import robot.Robot;
+import util.DbClient;
 import util.IntLoc;
 import world.Chunk;
 import world.Sun;
@@ -25,6 +26,8 @@ import world.block.Block;
 import world.block.BlockFactory;
 import world.block.GeneratorBlock;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +55,7 @@ public class GameApp extends GameApplication {
 
         Galaxy galaxy = new Galaxy();
         world = new World(0, 0);
+        DbClient.save(world);
         sun = new Sun(40 * Block.BLOCK_WIDTH, 10);
 
 

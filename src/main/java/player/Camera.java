@@ -2,12 +2,11 @@ package player;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import microcosm.Mob;
 import util.IntLoc;
 import util.Loc;
+import util.DbClient;
 import world.World;
 import world.block.Block;
 

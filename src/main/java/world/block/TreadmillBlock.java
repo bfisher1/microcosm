@@ -1,12 +1,29 @@
 package world.block;
 
+import item.Container;
+import item.Item;
+import lombok.Getter;
+import lombok.Setter;
 import microcosm.Animation;
 import world.World;
 
-public class TreadmillBlock extends ElectronicDevice {
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@Entity
+public class TreadmillBlock extends ElectronicDevice implements Container {
+
+    @Transient
+    private List<Item> items;
+
     public TreadmillBlock(int x, int y, World world) {
         super(x, y, world);
         setAnimation(getOffAnimation());
+        items = new ArrayList<>();
     }
 
     @Override

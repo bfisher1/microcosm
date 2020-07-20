@@ -3,8 +3,10 @@ package world.block;
 import util.Loc;
 import world.World;
 
+import javax.persistence.Entity;
 import java.util.Random;
 
+@Entity
 public class TreeBlock extends Block {
 
     public static int SPRITE_OFFSET_MAX = BLOCK_WIDTH / 2;

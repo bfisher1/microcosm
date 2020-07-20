@@ -5,8 +5,11 @@ import lombok.Setter;
 import microcosm.Animation;
 import world.World;
 
+import javax.persistence.Entity;
+
 @Getter
 @Setter
+@Entity
 public class GeneratorBlock extends ElectronicDevice {
 
     public GeneratorBlock(int x, int y, World world) {

@@ -2,8 +2,10 @@ package world.block;
 
 import world.World;
 
+import javax.persistence.Entity;
 import java.util.Random;
 
+@Entity
 public class SunBlock extends Block {
     public SunBlock(int x, int y, World world) {
         super(x, y, world);
