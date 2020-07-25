@@ -1,6 +1,7 @@
 package world;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import player.Camera;
 import util.IntLoc;
@@ -13,9 +14,10 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "world")
+//@NoArgsConstructor
 public class World {
 
-    enum Type {
+    public enum Type {
         World,
         Sun,
         Moon,
@@ -40,15 +42,19 @@ public class World {
 
     private Type type;
 
-    public World(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public World() {
+        id = WORLD_COUNT;
+
         chunks = new HashMap<>();
         blocksByType = new HashMap<>();
-        id = WORLD_COUNT;
-        WORLD_COUNT++;
         radius = 10;
         type = Type.World;
+    }
+
+    public World(double x, double y) {
+        this();
+        this.x = x;
+        this.y = y;
     }
 
     public void loadInitialChunks() {

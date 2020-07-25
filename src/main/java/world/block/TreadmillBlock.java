@@ -8,6 +8,7 @@ import microcosm.Animation;
 import world.World;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Table(name = "treadmill_block")
 public class TreadmillBlock extends ElectronicDevice implements Container {
 
     @Transient

@@ -3,9 +3,11 @@ package world.block;
 import world.World;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Random;
 
 @Entity
+@Table(name = "sun_block")
 public class SunBlock extends Block {
     public SunBlock(int x, int y, World world) {
         super(x, y, world);

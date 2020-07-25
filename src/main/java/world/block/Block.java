@@ -23,6 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "block")
 public abstract class Block implements Collidable, Itemable {
 
@@ -76,11 +77,13 @@ public abstract class Block implements Collidable, Itemable {
     @Transient
     private com.almasb.fxgl.entity.Entity entity;
 
-    @ManyToOne
-    @JoinColumn(name = "world_id")
+    @Transient
+//    @ManyToOne
+//    @JoinColumn(name = "world_id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private World world;
 
+    @Transient
     private boolean loaded;
 
     public Block(int x, int y, World world) {

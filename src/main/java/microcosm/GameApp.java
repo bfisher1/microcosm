@@ -8,42 +8,26 @@ package microcosm;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.texture.Texture;
-import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import player.Camera;
 import player.Player;
 import robot.Robot;
 import util.DbClient;
-import util.IntLoc;
-import world.Chunk;
 import world.Sun;
 import world.World;
 import world.block.Block;
-import world.block.BlockFactory;
 import world.block.GeneratorBlock;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-/**
- * Shows how to use textures to draw entities.
- *
- * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- */
 public class GameApp extends GameApplication {
 
     private Camera camera;
     private World world;
     private Sun sun;
-    Player player;
 
-    public static Texture water;
 
     @Override
     protected void initSettings(GameSettings settings) { }
@@ -51,11 +35,11 @@ public class GameApp extends GameApplication {
     @Override
     protected void initGame() {
 
-        water  = FXGL.getAssetLoader().loadTexture("water.png");
+        Collection<World> worlds = DbClient.findAll(World.class);
+
+        world = worlds.stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
 
         Galaxy galaxy = new Galaxy();
-        world = new World(0, 0);
-        DbClient.save(world);
         sun = new Sun(40 * Block.BLOCK_WIDTH, 10);
 
 

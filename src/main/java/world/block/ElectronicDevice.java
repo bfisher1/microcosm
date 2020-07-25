@@ -1,18 +1,25 @@
 package world.block;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import world.World;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "electronic_device_block")
 public abstract class ElectronicDevice extends Block {
 
+    @Transient
     private boolean on;
+
+    @Transient
     private String onAnim;
 
     public ElectronicDevice(int x, int y, World world) {

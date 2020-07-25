@@ -6,10 +6,12 @@ import microcosm.Animation;
 import world.World;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "generator_block")
 public class GeneratorBlock extends ElectronicDevice {
 
     public GeneratorBlock(int x, int y, World world) {

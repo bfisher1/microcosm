@@ -22,6 +22,7 @@ world/Chunk.class
 microcosm/ChunkLoader$1.class
 world/block/IronBlock.class
 util/Loc.class
+repository/BlockRepository.class
 world/block/BlockFactory$1.class
 microcosm/GameApp$1.class
 microcosm/Galaxy.class

@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
+@Table(name = "wire_block")
 public class WireBlock extends ElectronicDevice {
 
     private enum Direction {

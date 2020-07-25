@@ -8,6 +8,9 @@ import javafx.scene.input.MouseButton;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import util.DbClient;
+
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -28,6 +31,9 @@ public class Player {
         @Override
         protected void onAction() {
             camera.setY(camera.getY() - cameraSpeed);
+//            camera.getRenderedBlocks().forEach((world, locs) -> {
+//                DbClient.saveList(locs.stream().map(loc -> world.getBlockAt(loc.getX(), loc.getY())).collect(Collectors.toList()));
+//            });
         }
     };
 
