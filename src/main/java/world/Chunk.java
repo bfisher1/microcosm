@@ -5,6 +5,7 @@ import lombok.Setter;
 import util.IntLoc;
 import util.DbClient;
 import world.block.Block;
+import world.block.BlockFactory;
 
 import javax.persistence.*;
 import java.util.*;
@@ -25,10 +26,17 @@ public class Chunk {
     private int yId;
     @Transient
     private Map<IntLoc, Block> blocks;
-    @Transient
+
+    @ManyToOne
+    @JoinColumn(name = "world_id")
     private World world;
 
     private static int count = 0;
+
+    public Chunk() {
+        //
+    }
+
 
     public Chunk(int xId, int yId, World world) {
         this.xId = xId;
@@ -38,26 +46,38 @@ public class Chunk {
     }
 
     public void load() {
-        boolean chunkHasBeenLoadedBefore = false;
-        if(chunkHasBeenLoadedBefore) {
+        Optional<Chunk> dbChunk = DbClient.findAllWhere(Chunk.class, String.format("where world_id = %d and xId = %d and yId = %d", getWorld().getId(), xId, yId)).stream().findFirst();
+        if(dbChunk.isPresent()) {
+            setId(dbChunk.get().getId());
             // load from persistent memory
+            Collection<Block> dbBlocks = DbClient.findAllWhere(Block.class, String.format("where chunk_id = %d", id));
+            blocks = new HashMap<>();
+            dbBlocks.stream().forEach(dbBlock -> {
+                Block block = Block.copy(dbBlock);
+                blocks.put(new IntLoc(dbBlock.getX(), dbBlock.getY()), block);
+                block.setChunk(this);
+            });
+            int n = 2;
+            n++;
         } else {
             count++;
-            // generate using perlin noise
+            DbClient.save(this);
+            // generate using world generator
             blocks = WorldGenerator.generateBlocks(xId * CHUNK_SIZE, yId * CHUNK_SIZE, xId * CHUNK_SIZE + CHUNK_SIZE, yId * CHUNK_SIZE + CHUNK_SIZE, world);
 
-            // throw saving these off to a new thread
-//            blocks.forEach((loc, block) -> {
-//                //block.addToScreen();
-//                //block.move(world.getX(), world.getY());
-//                DbClient.save(block);
-//            });
-            (new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    DbClient.saveList(blocks.values().stream().collect(Collectors.toList()));
-                }
-            })).start();
+            blocks.forEach((loc, block) -> {
+                block.setChunk(this);
+            });
+
+
+            if (!blocks.isEmpty()) {
+                (new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DbClient.saveBlocks(blocks.values().stream().collect(Collectors.toList()));
+                    }
+                })).start();
+            }
 
         }
     }

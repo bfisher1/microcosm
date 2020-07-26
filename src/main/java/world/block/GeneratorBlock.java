@@ -1,6 +1,7 @@
 package world.block;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import world.World;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "generator_block")
 public class GeneratorBlock extends ElectronicDevice {
 

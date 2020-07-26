@@ -11,6 +11,7 @@ import microcosm.Mob;
 import player.Camera;
 import util.IntLoc;
 import util.Loc;
+import world.Chunk;
 import world.World;
 
 import java.io.Serializable;
@@ -32,6 +33,14 @@ public abstract class Block implements Collidable, Itemable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public static Block copy(Block dbBlock) {
+        Block block = BlockFactory.create(dbBlock.getX(), dbBlock.getY(), dbBlock.getType(), dbBlock.getWorld());
+        block.setId(dbBlock.getId());
+        if (dbBlock.getAbove() != null)
+            block.setAbove(Block.copy(dbBlock.getAbove()));
+        return block;
+    }
 
     @Override
     public boolean isCollidingWith(Collidable otherMob) {
@@ -70,32 +79,41 @@ public abstract class Block implements Collidable, Itemable {
     private int xSpriteOffset;
     private int ySpriteOffset;
     private Type type;
-    @Transient
+
+    @OneToOne
+    @JoinColumn(name = "above_id")
     private  Block above = null;
     @Transient
     private Animation animation;
     @Transient
     private com.almasb.fxgl.entity.Entity entity;
 
-    @Transient
-//    @ManyToOne
-//    @JoinColumn(name = "world_id")
+    @ManyToOne
+    @JoinColumn(name = "world_id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private World world;
+
+    @ManyToOne
+    @JoinColumn(name = "chunk_id")
+    private Chunk chunk;
 
     @Transient
     private boolean loaded;
 
     public Block(int x, int y, World world) {
-        loaded = true;
+        this();
         this.x = x;
         this.y = y;
         this.world = world;
+        // add method to destroy block and remove it from list when block is removed, replaced
+        // add events that occur every x seconds and update blocks in thread
+    }
+
+    public Block() {
+        loaded = true;
         z = 1;
         xSpriteOffset = 0;
         ySpriteOffset = 0;
-        // add method to destroy block and remove it from list when block is removed, replaced
-        // add events that occur every x seconds and update blocks in thread
     }
 
     public void setType(Type type) {
@@ -117,6 +135,12 @@ public abstract class Block implements Collidable, Itemable {
 
     public void setAnimation(String animName) {
         animation = new Animation(animName);
+//        int b = 6;
+//        double scale = Math.abs(-getZ() + 1 + b) / b;
+//        scale = .95;
+//        animation.setScaleX(scale);
+//        animation.setScaleY(scale);
+//        animation.setBackGround("black.png");
     }
 
     public void setAnimation(Animation animation) {

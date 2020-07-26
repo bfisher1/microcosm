@@ -20,6 +20,9 @@ public class WorldGenerator {
                     if(Math.sqrt(x  * x + y * y) <= world.getRadius()) {
                         Block block = BlockFactory.create(x, y, Block.Type.Uranium, world);
                         blocks.put(new IntLoc(x, y), block);
+                        if((new Random()).nextDouble() > .5) {
+                            block.stack(BlockFactory.create(x, y, Block.Type.Sun, world));
+                        }
                     }
 
                 }

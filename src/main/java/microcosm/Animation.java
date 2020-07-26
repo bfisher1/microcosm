@@ -18,6 +18,7 @@ public class Animation {
     private int animFrames;
     private double scaleX;
     private double scaleY;
+    private String backGround;
 
 
     public Animation(String animName, int frames, double delay, double scaleX, double scaleY) {
@@ -41,6 +42,13 @@ public class Animation {
         this.scaleY = 1.0;
     }
 
+    public Animation(String animName, double scale) {
+        setAnimName(animName);
+        isAnim = false;
+        this.scaleX = scale;
+        this.scaleY = scale;
+    }
+
 
 
     public Entity createEntity(int x, int y) {
@@ -51,6 +59,14 @@ public class Animation {
                     .with(new AnimationClip(animName, animFrames, animDelay))
                     .buildAndAttach();
         } else {
+            if (backGround != null) {
+                return FXGL.entityBuilder()
+                        .at(x, y)
+                        .scale(scaleX, scaleY)
+                        .view(backGround)
+                        .view(animName)
+                        .buildAndAttach();
+            }
             return FXGL.entityBuilder()
                     .at(x, y)
                     .scale(scaleX, scaleY)

@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "electronic_device_block")
 public abstract class ElectronicDevice extends Block {

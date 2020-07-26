@@ -1,8 +1,3 @@
-/*
- * FXGL - JavaFX Game Library. The MIT License (MIT).
- * Copyright (c) AlmasB (almaslvl@gmail.com).
- * See LICENSE for details.
- */
 package microcosm;
 
 import com.almasb.fxgl.app.GameApplication;
@@ -16,17 +11,17 @@ import robot.Robot;
 import util.DbClient;
 import world.Sun;
 import world.World;
+import world.WorldFactory;
 import world.block.Block;
 import world.block.GeneratorBlock;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class GameApp extends GameApplication {
 
     private Camera camera;
-    private World world;
-    private Sun sun;
+    private Map<Long, World> worlds;
+    //private Sun sun;
 
 
     @Override
@@ -35,41 +30,37 @@ public class GameApp extends GameApplication {
     @Override
     protected void initGame() {
 
-        Collection<World> worlds = DbClient.findAll(World.class);
+        Collection<World> dbWorlds = DbClient.findAll(World.class);
 
-        world = worlds.stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
+        worlds = new HashMap<>();
+        dbWorlds.forEach(dbWorld -> {
+            worlds.put(dbWorld.getId(), WorldFactory.create(dbWorld));
+        });
+
 
         Galaxy galaxy = new Galaxy();
-        sun = new Sun(40 * Block.BLOCK_WIDTH, 10);
-
-
-
         camera = Camera.getInstance();
-        camera.addWorldToRender(world);
-        camera.addWorldToRender(sun);
-        world.loadInitialChunks();
-        sun.loadInitialChunks();
+        worlds.forEach((id, world) -> {
+            camera.addWorldToRender(world);
+            world.loadInitialChunks();
+            galaxy.getWorlds().add(world);
+        });
 
+        World world = worlds.values().stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
+
+        // robot
         Robot robot = new Robot(0, 0);
         robot.setCurrentWorld(world);
-
         robot.setCamera(camera);
+        galaxy.addMob(robot);
 
         Player player = new Player(camera);
         player.initializeInput();
 
 
-        //world.replaceBlockAt(0, 0, BlockFactory.create(0, 0, Block.Type.Sand, world));
-
-        galaxy.getWorlds().add(world);
-        galaxy.getWorlds().add(sun);
-        galaxy.addMob(robot);
-
-        ChunkLoader chunkLoader = new ChunkLoader(camera, world);
-        ChunkLoader chunkLoader2 = new ChunkLoader(camera, sun);
+        ChunkLoader chunkLoader = new ChunkLoader(camera, worlds);
 
         FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
-        FXGL.getGameTimer().runAtInterval(chunkLoader2, Duration.seconds(.1));
 
 
 

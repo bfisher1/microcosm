@@ -78,6 +78,21 @@ public class DbClient {
     }
 
 
-
-
+    public static void saveBlocks(List<Block> blocks) {
+        try {
+            EntityManager manager = managerFactory.createEntityManager();
+            EntityTransaction transaction = manager.getTransaction();
+            transaction.begin();
+            blocks.forEach(block -> {
+                while(block != null) {
+                    manager.persist(block);
+                    block = block.getAbove();
+                }
+            });
+            transaction.commit();
+        }
+        catch (Exception e) {
+            throw e;
+        }
+    }
 }

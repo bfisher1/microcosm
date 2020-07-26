@@ -1,5 +1,6 @@
 package world.block;
 
+import lombok.NoArgsConstructor;
 import util.Loc;
 import world.World;
 
@@ -9,6 +10,7 @@ import java.util.Random;
 
 @Entity
 @Table(name = "tree_block")
+@NoArgsConstructor
 public class TreeBlock extends Block {
 
     public static int SPRITE_OFFSET_MAX = BLOCK_WIDTH / 2;

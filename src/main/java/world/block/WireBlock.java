@@ -1,6 +1,7 @@
 package world.block;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import world.World;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "wire_block")
+@NoArgsConstructor
 public class WireBlock extends ElectronicDevice {
 
     private enum Direction {

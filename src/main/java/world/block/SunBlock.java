@@ -1,5 +1,6 @@
 package world.block;
 
+import lombok.NoArgsConstructor;
 import world.World;
 
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import java.util.Random;
 
 @Entity
 @Table(name = "sun_block")
+@NoArgsConstructor
 public class SunBlock extends Block {
     public SunBlock(int x, int y, World world) {
         super(x, y, world);

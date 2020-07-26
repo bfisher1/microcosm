@@ -3,6 +3,7 @@ package world.block;
 import item.Container;
 import item.Item;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import world.World;
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "treadmill_block")
+@NoArgsConstructor
 public class TreadmillBlock extends ElectronicDevice implements Container {
 
     @Transient
