@@ -106,7 +106,7 @@ public class World {
         return new ArrayList<>();
     }
 
-    public Chunk getChunkForBlockAt(int x, int y) {
+    public IntLoc getChunkLocForBlockAt(int x, int y) {
         // Chunks are stored 0,0 is x=-10 to -1  0,0 is x=0-9, y=0-9
         if( x < 0)
             x =  x - Chunk.CHUNK_SIZE + 1;
@@ -114,6 +114,11 @@ public class World {
             y = y - Chunk.CHUNK_SIZE + 1;
 
         IntLoc loc = new IntLoc(x / Chunk.CHUNK_SIZE, y / Chunk.CHUNK_SIZE);
+        return loc;
+    }
+
+    public Chunk getChunkForBlockAt(int x, int y) {
+        IntLoc loc = getChunkLocForBlockAt(x, y);
         if (chunks.containsKey(loc))
             return chunks.get(loc);
         throw new IllegalArgumentException("No chunk for block at " + loc);

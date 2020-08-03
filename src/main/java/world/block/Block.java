@@ -37,6 +37,7 @@ public abstract class Block implements Collidable, Itemable {
     public static Block copy(Block dbBlock) {
         Block block = BlockFactory.create(dbBlock.getX(), dbBlock.getY(), dbBlock.getType(), dbBlock.getWorld());
         block.setId(dbBlock.getId());
+        block.setZ(dbBlock.getZ());
         if (dbBlock.getAbove() != null)
             block.setAbove(Block.copy(dbBlock.getAbove()));
         return block;
@@ -78,6 +79,11 @@ public abstract class Block implements Collidable, Itemable {
 
     private int xSpriteOffset;
     private int ySpriteOffset;
+
+    // just for debugging purposes in DB, couldn't get EnumType.STRING working :/
+    private String typeName;
+
+    @Enumerated(EnumType.ORDINAL)
     private Type type;
 
     @OneToOne
@@ -126,11 +132,18 @@ public abstract class Block implements Collidable, Itemable {
             world.getBlocksByType().get(type).add(this);
         }
         this.type = type;
+        this.typeName = type.toString();
     }
 
     public void stack(Block block) {
-        block.setZ(getZ() + 1);
-        this.above = block;
+        // if there is a block above this, try to stack the new block above that one
+        if (this.above == null) {
+            block.setZ(getZ() + 1);
+            this.above = block;
+        }
+        else {
+            this.above.stack(block);
+        }
     }
 
     public void setAnimation(String animName) {
@@ -205,6 +218,24 @@ public abstract class Block implements Collidable, Itemable {
         return block;
     }
 
+    public List<Block> getHorizontalNeighbors() {
+        List<Block> neighbors = new ArrayList<>();
+        if(hasNeighborBlock(-1, 0))
+            neighbors.add(getNeighborBlock(-1, 0));
+        if(hasNeighborBlock(1, 0))
+            neighbors.add(getNeighborBlock(1, 0));
+        return neighbors;
+    }
+
+    public List<Block> getVerticalNeighbors() {
+        List<Block> neighbors = new ArrayList<>();
+        if(hasNeighborBlock(0, -1))
+            neighbors.add(getNeighborBlock(0, -1));
+        if(hasNeighborBlock(0, 1))
+            neighbors.add(getNeighborBlock(0, 1));
+        return neighbors;
+    }
+
     public List<Block> getNeighbors() {
         List<Block> neighbors = new ArrayList<>();
         if(hasNeighborBlock(0, -1))
@@ -219,7 +250,7 @@ public abstract class Block implements Collidable, Itemable {
     }
 
     public boolean isElectronicDevice() {
-        return Type.Generator.equals(type) || Type.Wire.equals(type);
+        return Type.Generator.equals(type) || Type.Wire.equals(type) || Type.Treadmill.equals(type);
     }
 
     public void setScreenLoc(Loc loc) {

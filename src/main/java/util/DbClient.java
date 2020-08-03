@@ -11,17 +11,19 @@ public class DbClient {
 
     public static EntityManager manager = managerFactory.createEntityManager();
 
-    public static void save(Object object) {
-        try {
-            EntityTransaction transaction = manager.getTransaction();
-            transaction.begin();
-            manager.persist(object);
-            transaction.commit();
-        }
-        catch (Exception e) {
-            throw e;
-        }
+    public static Object lock = new Object();
 
+    public static void save(Object object) {
+        synchronized (lock) {
+            try {
+                EntityTransaction transaction = manager.getTransaction();
+                transaction.begin();
+                manager.persist(object);
+                transaction.commit();
+            } catch (Exception e) {
+                throw e;
+            }
+        }
     }
 
     public static <T> T find(Class<T> type, long id) {
@@ -35,25 +37,31 @@ public class DbClient {
     }
 
     public static <T> Collection<T> findAllWhere(Class<T> type, String criteria) {
-        Query query = manager.createQuery("SELECT e FROM " + type.getName() + " e " + criteria);
-        return (Collection<T>) query.getResultList();
+        synchronized (lock) {
+            Query query = manager.createQuery("SELECT e FROM " + type.getName() + " e " + criteria);
+            return (Collection<T>) query.getResultList();
+        }
     }
 
     public static <T> void delete(Class<T> type, long id) {
-        T object = manager.find(type, id);
+        synchronized (lock) {
+            T object = manager.find(type, id);
 
-        manager.getTransaction().begin();
-        manager.remove(object);
-        manager.getTransaction().commit();
+            manager.getTransaction().begin();
+            manager.remove(object);
+            manager.getTransaction().commit();
+        }
     }
 
     public static <T> void deleteAll(Class<T> type) {
-        Collection<T> objects = findAll(type);
-        manager.getTransaction().begin();
-        objects.forEach(object -> {
-            manager.remove(object);
-        });
-        manager.getTransaction().commit();
+        synchronized (lock) {
+            Collection<T> objects = findAll(type);
+            manager.getTransaction().begin();
+            objects.forEach(object -> {
+                manager.remove(object);
+            });
+            manager.getTransaction().commit();
+        }
     }
 
 
@@ -63,36 +71,38 @@ public class DbClient {
 //    }
 
     public static void saveList(Collection<Object> objects) {
-        try {
-            EntityManager manager = managerFactory.createEntityManager();
-            EntityTransaction transaction = manager.getTransaction();
-            transaction.begin();
-            objects.forEach(object -> {
-                manager.persist(object);
-            });
-            transaction.commit();
-        }
-        catch (Exception e) {
-            throw e;
+        synchronized (lock) {
+            try {
+                EntityManager manager = managerFactory.createEntityManager();
+                EntityTransaction transaction = manager.getTransaction();
+                transaction.begin();
+                objects.forEach(object -> {
+                    manager.persist(object);
+                });
+                transaction.commit();
+            } catch (Exception e) {
+                throw e;
+            }
         }
     }
 
 
     public static void saveBlocks(List<Block> blocks) {
-        try {
-            EntityManager manager = managerFactory.createEntityManager();
-            EntityTransaction transaction = manager.getTransaction();
-            transaction.begin();
-            blocks.forEach(block -> {
-                while(block != null) {
-                    manager.persist(block);
-                    block = block.getAbove();
-                }
-            });
-            transaction.commit();
-        }
-        catch (Exception e) {
-            throw e;
+        synchronized (lock) {
+            try {
+                EntityManager manager = managerFactory.createEntityManager();
+                EntityTransaction transaction = manager.getTransaction();
+                transaction.begin();
+                blocks.forEach(block -> {
+                    while (block != null) {
+                        manager.persist(block);
+                        block = block.getAbove();
+                    }
+                });
+                transaction.commit();
+            } catch (Exception e) {
+                throw e;
+            }
         }
     }
 }

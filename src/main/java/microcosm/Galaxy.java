@@ -29,7 +29,7 @@ public class Galaxy {
         // background
         FXGL.entityBuilder()
             .at(0, 0)
-            .view("galaxies.jpg")
+            .view("purple-background.png")
             .buildAndAttach()
             .setZ(0);
     }

@@ -30,6 +30,9 @@ public class GameApp extends GameApplication {
     @Override
     protected void initGame() {
 
+        // thread to save blocks to DB
+        (new Thread(new BlockSaver(false))).start();
+
         Collection<World> dbWorlds = DbClient.findAll(World.class);
 
         worlds = new HashMap<>();
@@ -61,6 +64,14 @@ public class GameApp extends GameApplication {
         ChunkLoader chunkLoader = new ChunkLoader(camera, worlds);
 
         FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
+
+        // ASYNC VERSION
+//        FXGL.getGameTimer().runAtInterval(new Runnable() {
+//            @Override
+//            public void run() {
+//                (new Thread(chunkLoader)).start();
+//            }
+//        }, Duration.seconds(.1));
 
 
 

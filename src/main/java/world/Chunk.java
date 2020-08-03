@@ -2,6 +2,7 @@ package world;
 
 import lombok.Getter;
 import lombok.Setter;
+import microcosm.BlockSaver;
 import util.IntLoc;
 import util.DbClient;
 import world.block.Block;
@@ -35,6 +36,20 @@ public class Chunk {
 
     public Chunk() {
         //
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof Chunk) {
+            Chunk otherChunk = (Chunk) other;
+            return xId == otherChunk.xId && yId == otherChunk.yId;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (xId + "" + yId).hashCode();
     }
 
 
@@ -71,12 +86,14 @@ public class Chunk {
 
 
             if (!blocks.isEmpty()) {
-                (new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        DbClient.saveBlocks(blocks.values().stream().collect(Collectors.toList()));
-                    }
-                })).start();
+                // IS THIS WOKRING? See other loc in structure generator?
+                BlockSaver.add(blocks.values().stream().collect(Collectors.toList()));
+//                (new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DbClient.saveBlocks();
+//                    }
+//                })).start();
             }
 
         }

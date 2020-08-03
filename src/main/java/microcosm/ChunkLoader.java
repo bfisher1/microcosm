@@ -80,7 +80,13 @@ public class ChunkLoader implements Runnable {
                 if (!world.getChunks().containsKey(loc)) {
                     Chunk chunk = new Chunk(loc.getX(), loc.getY(), world);
                     world.getChunks().put(loc, chunk);
-                    chunk.load();;
+                    (new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Loading chunk " + chunk.getXId() + " " + chunk.getYId() );
+                            chunk.load();
+                        }
+                    })).start();
                 }
             }
 

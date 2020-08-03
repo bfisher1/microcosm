@@ -42,10 +42,10 @@ public class WireBlock extends ElectronicDevice {
     public void setOn(boolean on) {
         super.setOn(on);
         getNeighbors().forEach(block -> {
-            if(Type.Treadmill.equals(block.getType())) {
-                TreadmillBlock treadmill = (TreadmillBlock) block;
-                if(!treadmill.isOn())
-                    treadmill.setOn(true);
+            if(block.isElectronicDevice()) {
+                ElectronicDevice electronicDevice = (ElectronicDevice) block;
+                if(!electronicDevice.isOn())
+                    electronicDevice.setOn(true);
             }
         });
     }

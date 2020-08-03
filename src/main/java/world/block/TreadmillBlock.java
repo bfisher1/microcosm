@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -39,4 +40,19 @@ public class TreadmillBlock extends ElectronicDevice implements Container {
     public Animation getOffAnimation() {
         return new Animation("treadmill-up-still.png");
     }
+
+    public List<TreadmillBlock> getAlignedTreadmillBlocks() {
+        // TODO, add support for horizontal and vertical treadmill blocks
+        return getVerticalNeighbors().stream().filter(block -> Type.Treadmill.equals(block.getType())).map(block -> (TreadmillBlock) block).collect(Collectors.toList());
+    }
+
+    public void setOn(boolean on) {
+        super.setOn(on);
+        getAlignedTreadmillBlocks().forEach(treadmillBlock -> {
+            if(!treadmillBlock.isOn()) {
+                treadmillBlock.setOn(true);
+            }
+        });
+    }
+
 }
