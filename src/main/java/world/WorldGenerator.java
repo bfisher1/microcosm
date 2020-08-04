@@ -44,7 +44,7 @@ public class WorldGenerator {
                     createResources(blocks, Block.Type.Sand, Block.Type.Grass, .55, 3, .04, 8, world);
                     createResources(blocks, Block.Type.Water, Block.Type.Sand, .65, 3, .04, 8, world);
 
-                    createResources(blocks, Block.Type.Tree, Block.Type.Grass, .65, 4, .04, 8, world, true);
+                    //createResources(blocks, Block.Type.Tree, Block.Type.Grass, .65, 4, .04, 8, world, true);
 
                     createResources(blocks, Block.Type.Coal, Block.Type.Stone, ORE_CUTOFF, 5, .05125, 8, world);
                     createResources(blocks, Block.Type.Copper, Block.Type.Stone, ORE_CUTOFF, 6, .05125, 8, world);

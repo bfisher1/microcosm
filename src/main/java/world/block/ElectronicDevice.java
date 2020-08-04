@@ -31,6 +31,10 @@ public abstract class ElectronicDevice extends Block {
 
     public abstract Animation getOffAnimation();
 
+    public void whileOn() {
+        // nothing as default
+    }
+
     public void setOn(boolean on) {
         this.on = on;
         if (on)

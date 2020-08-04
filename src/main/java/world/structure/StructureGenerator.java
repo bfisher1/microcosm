@@ -1,11 +1,13 @@
 package world.structure;
 
+import item.Item;
 import microcosm.BlockSaver;
 import util.IntLoc;
 import world.Chunk;
 import world.World;
 import world.block.Block;
 import world.block.BlockFactory;
+import world.block.TreadmillBlock;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,12 +48,11 @@ public class StructureGenerator {
                 "T",
                 "T",
         };
+
         saveBlocks(world, stringsToBlock(rows, x, y, world), stack);
     }
 
     private void saveBlocks(World world, List<Block> blocks, boolean stack) {
-
-
         if (stack) {
             List<Chunk> chunks = new ArrayList<>();
             // get all chunks
@@ -64,6 +65,17 @@ public class StructureGenerator {
                 }
             });
 
+            int worldChunkRadius = world.getRadius() / Chunk.CHUNK_SIZE + 1;
+
+            // TEMPORARY load other blocks in world
+            for(int x = -worldChunkRadius; x < worldChunkRadius; x++) {
+                for(int y = -worldChunkRadius; y < worldChunkRadius; y++) {
+                    Chunk chunkAt = new Chunk(x, y, world);
+                    if (chunks.stream().filter(chunk -> chunk.equals(chunkAt)).collect(Collectors.toList()).isEmpty()) {
+                        chunks.add(chunkAt);
+                    }
+                }
+            }
 
 
             chunks.stream().forEach(chunk -> {

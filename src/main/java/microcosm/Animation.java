@@ -19,6 +19,7 @@ public class Animation {
     private double scaleX;
     private double scaleY;
     private String backGround;
+    private Entity entity;
 
 
     public Animation(String animName, int frames, double delay, double scaleX, double scaleY) {
@@ -49,30 +50,33 @@ public class Animation {
         this.scaleY = scale;
     }
 
-
-
     public Entity createEntity(int x, int y) {
+        return createEntity(x, y, scaleX, scaleY);
+    }
+
+    public Entity createEntity(int x, int y, double scaleX, double scaleY) {
         if (isAnim) {
-            return  FXGL.entityBuilder()
+            entity = FXGL.entityBuilder()
                     .at(x, y)
                     .scale(scaleX, scaleY)
                     .with(new AnimationClip(animName, animFrames, animDelay))
                     .buildAndAttach();
         } else {
             if (backGround != null) {
-                return FXGL.entityBuilder()
+                entity = FXGL.entityBuilder()
                         .at(x, y)
                         .scale(scaleX, scaleY)
                         .view(backGround)
                         .view(animName)
                         .buildAndAttach();
             }
-            return FXGL.entityBuilder()
+            entity = FXGL.entityBuilder()
                     .at(x, y)
                     .scale(scaleX, scaleY)
                     .view(animName)
                     .buildAndAttach();
         }
+        return entity;
     }
 
 }

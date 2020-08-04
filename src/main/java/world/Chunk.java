@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "chunk")
 public class Chunk {
+    // BLOCKS_PER_CHUNK
     public static int CHUNK_SIZE = 10;
 
     @Id

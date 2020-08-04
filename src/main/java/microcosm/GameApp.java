@@ -4,16 +4,20 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.texture.Texture;
+import item.Item;
 import javafx.util.Duration;
 import player.Camera;
 import player.Player;
 import robot.Robot;
 import util.DbClient;
+import util.IntLoc;
 import world.Sun;
 import world.World;
 import world.WorldFactory;
 import world.block.Block;
+import world.block.BlockFactory;
 import world.block.GeneratorBlock;
+import world.block.TreadmillBlock;
 
 import java.util.*;
 
@@ -51,6 +55,10 @@ public class GameApp extends GameApplication {
 
         World world = worlds.values().stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
 
+
+        TreadmillBlock treadmillBlock = (TreadmillBlock) world.getBlockAt(0, 6, 2);
+        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8))); //layout offset of 8 to center it
+
         // robot
         Robot robot = new Robot(0, 0);
         robot.setCurrentWorld(world);
@@ -80,6 +88,11 @@ public class GameApp extends GameApplication {
             public void run() {
                 robot.move();
                 galaxy.runMobCollisions();
+
+                world.getBlocksByType().get(Block.Type.Treadmill).forEach(block -> {
+                    TreadmillBlock treadmillBlock = (TreadmillBlock) block;
+                    treadmillBlock.whileOn();
+                });
 
             }
         }, Duration.seconds(0));

@@ -3,6 +3,7 @@ package util;
 import world.Sun;
 import world.World;
 import world.block.Block;
+import world.block.TreadmillBlock;
 import world.structure.StructureGenerator;
 
 /**

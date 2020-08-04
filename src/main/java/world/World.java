@@ -147,6 +147,17 @@ public class World {
         }
     }
 
+    public Block getBlockAt(int x, int y, int z) {
+        Block block = getBlockAt(x, y);
+        for(int i = 1; i < z; i++) {
+            if (block == null) {
+                throw new IllegalArgumentException("Could not find block at " + x + ", " + y + ", " + z);
+            }
+            block = block.getAbove();
+        }
+        return block;
+    }
+
     public Block replaceBlockAt(int x, int y, Block newBlock) {
         // goto chunk map, grab block from there
         try {
