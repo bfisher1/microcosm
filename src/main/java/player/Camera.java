@@ -24,7 +24,7 @@ public class Camera {
 
     public static Camera getInstance() {
         if(instance == null)
-            instance = new Camera(0, 0);
+            instance = new Camera(-60, -60);
         return instance;
     }
 
@@ -50,7 +50,7 @@ public class Camera {
         //
     }
 
-    private void updateVisibleBlocks() {
+    public void updateVisibleBlocks() {
         renderedBlocks.forEach((world, locs) -> {
             locs.forEach(loc -> {
                 if (world.isBlockLoaded(loc.getX(), loc.getY())) {
@@ -104,7 +104,7 @@ public class Camera {
                     }
                 }
             }
-            System.out.println("Added " + numAdded);
+            //System.out.println("Added " + numAdded);
         });
     }
 

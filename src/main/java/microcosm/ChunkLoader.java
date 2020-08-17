@@ -83,7 +83,7 @@ public class ChunkLoader implements Runnable {
                     (new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println("Loading chunk " + chunk.getXId() + " " + chunk.getYId() );
+                            // System.out.println("Loading chunk " + chunk.getXId() + " " + chunk.getYId() );
                             chunk.load();
                         }
                     })).start();

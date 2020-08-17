@@ -57,7 +57,9 @@ public class GameApp extends GameApplication {
 
 
         TreadmillBlock treadmillBlock = (TreadmillBlock) world.getBlockAt(0, 6, 2);
-        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8))); //layout offset of 8 to center it
+        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8), treadmillBlock)); //layout offset of 8 to center it
+        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Iron, world), new IntLoc(2, 8), treadmillBlock));
+        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Sand, world), new IntLoc(2, 2), treadmillBlock));
 
         // robot
         Robot robot = new Robot(0, 0);
@@ -93,6 +95,8 @@ public class GameApp extends GameApplication {
                     TreadmillBlock treadmillBlock = (TreadmillBlock) block;
                     treadmillBlock.whileOn();
                 });
+
+                Camera.getInstance().updateVisibleBlocks();
 
             }
         }, Duration.seconds(0));

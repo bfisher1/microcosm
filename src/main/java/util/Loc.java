@@ -22,4 +22,9 @@ public class Loc {
         this.x += diff.x;
         this.y += diff.y;
     }
+
+    public String toString() {
+        return "(" + getX() + ", " + getY() + ")";
+    }
+
 }

@@ -1,12 +1,12 @@
 package world.block;
 
-import item.Container;
 import item.Item;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import player.Camera;
+import util.IntLoc;
 import util.Loc;
 import world.World;
 
@@ -22,15 +22,14 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "treadmill_block")
 @NoArgsConstructor
-public class TreadmillBlock extends ElectronicDevice implements Container {
+public class TreadmillBlock extends ElectronicDevice {
 
     @Transient
-    private List<Item> items;
+    private int width = Block.BLOCK_WIDTH;
 
     public TreadmillBlock(int x, int y, World world) {
         super(x, y, world);
         setAnimation(getOffAnimation());
-        items = new ArrayList<>();
     }
 
     @Override
@@ -57,55 +56,84 @@ public class TreadmillBlock extends ElectronicDevice implements Container {
         });
     }
 
+    public void clearRemovedItems() {
+        List<Item> remove = new ArrayList<>();
+        getItems().forEach(item -> {
+            if(item.isMarkedAsRemoved(this)) {
+                remove.add(item);
+            }
+        });
+        remove.forEach(item -> {
+            getItems().remove(item);
+        });
+    }
+
     public void whileOn() {
-        items.forEach(item -> {
+        clearRemovedItems();
+        getItems().forEach(item -> {
             item.move(0, -.5);
-        });
-    }
-
-
-    @Override
-    public void addToScreen(Camera camera) {
-        super.addToScreen(camera);
-        getItems().forEach(item -> {
-            item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
-            // 1 above the block it's on
-            item.getItem().getAnimation().getEntity().setZ(getZ() + 1);
-        });
-    }
-
-    @Override
-    public void removeFromScreen() {
-        super.removeFromScreen();
-        getItems().forEach(item -> {
-            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
-            if (entity != null) {
-                entity.removeFromWorld();
-                item.getItem().getAnimation().setEntity(null);
+            if (outsideContainer(item)) {
+                moveToNeighboringBlock(item);
             }
+            // System.out.println("--- " + item.getLocInContainer());
+            // pop from treadmill and set on other one after some point
         });
     }
 
-    @Override
-    public void setScreenLoc(Loc loc) {
-        super.setScreenLoc(loc);
-        getItems().forEach(item -> {
-            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
-            if (entity != null) {
-                entity.setX(loc.getX() + getXSpriteOffset() + item.getLayoutOffset().getX() + item.getLocInContainer().getX());
-                entity.setY(loc.getY() + getYSpriteOffset() + item.getLayoutOffset().getY() + item.getLocInContainer().getY());
+    private void moveToNeighboringBlock(Item item) {
+        System.out.println("++++" + item.getLocInContainer());
+        item.markAsRemoved(this);
+        Block neighbor = null;
+        if (Math.abs(item.getLocInContainer().getX()) > Math.abs(item.getLocInContainer().getY()) ) {
+            // x is greater, so move horizontally
+            if (item.getLocInContainer().getX() > 0) {
+                // positive x
+                neighbor = getNeighborBlock(1, 0);
+            } else {
+                // negative x
+                neighbor = getNeighborBlock(-1, 0);
             }
-        });
+        } else {
+            // y is greater, so move vertically
+            if (item.getLocInContainer().getY() > 0) {
+                // positive y
+                neighbor = getNeighborBlock(0, 1);
+            } else {
+                // negative y
+                neighbor = getNeighborBlock(0, -1);
+            }
+        }
+        item.setLocInContainer(new Loc(0, 0));
+        neighbor.addItem(item);
+        item.move(0,0);
+        System.out.println(this + " neighbor " + neighbor);
+    }
+
+    private boolean outsideContainer(Item item) {
+        return Math.abs(item.getLocInContainer().getX()) > width || Math.abs(item.getLocInContainer().getY()) > width;
     }
 
 
-    @Override
-    public void addItem(Item item) {
-        getItems().add(item);
-    }
+//    @Override
+//    public void addToScreen(Camera camera) {
+//        super.addToScreen(camera);
+//
+//    }
+//
+//    @Override
+//    public void removeFromScreen() {
+//        super.removeFromScreen();
+//    }
 
-    @Override
-    public void removeItem(Item item) {
-        getItems().remove(item);
-    }
+//    @Override
+//    public void setScreenLoc(Loc loc) {
+//        super.setScreenLoc(loc);
+//        getItems().forEach(item -> {
+//            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
+//            if (entity != null) {
+//                entity.setX(loc.getX() + getXSpriteOffset() + item.getLayoutOffset().getX() + item.getLocInContainer().getX());
+//                entity.setY(loc.getY() + getYSpriteOffset() + item.getLayoutOffset().getY() + item.getLocInContainer().getY());
+//            }
+//        });
+//    }
 }

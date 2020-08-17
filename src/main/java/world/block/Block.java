@@ -1,6 +1,8 @@
 package world.block;
 
 import com.almasb.fxgl.dsl.FXGL;
+import item.Container;
+import item.Item;
 import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +28,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "block")
-public abstract class Block implements Collidable, Itemable {
+public abstract class Block implements Collidable, Itemable, Container {
 
     public static int BLOCK_WIDTH = 32;
 
@@ -85,6 +87,9 @@ public abstract class Block implements Collidable, Itemable {
 
     @Enumerated(EnumType.ORDINAL)
     private Type type;
+
+    @Transient
+    private List<Item> items = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "above_id")
@@ -183,6 +188,14 @@ public abstract class Block implements Collidable, Itemable {
         world.removeRenderedBlock(this);
         if(above != null)
             above.removeFromScreen();
+
+        getItems().forEach(item -> {
+            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
+            if (entity != null) {
+                entity.removeFromWorld();
+                item.getItem().getAnimation().setEntity(null);
+            }
+        });
     }
 
     public void addToScreen(Camera camera) {
@@ -191,6 +204,11 @@ public abstract class Block implements Collidable, Itemable {
         world.addRenderedBlock(this);
         if(above != null)
             above.addToScreen(camera);
+        getItems().forEach(item -> {
+            item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
+            // 1 above the block it's on
+            item.getItem().getAnimation().getEntity().setZ(getZ() + 1);
+        });
     }
 
     public Loc getScreenLoc() {
@@ -212,27 +230,40 @@ public abstract class Block implements Collidable, Itemable {
     }
 
     public Block getNeighborBlock(int offsetX, int offsetY) {
+        return getNeighborBlock(offsetX, offsetY, false);
+    }
+
+    public Block getNeighborBlock(int offsetX, int offsetY, boolean highest) {
         Block block = world.getBlockAt(x + offsetX, y + offsetY);
+        //get block at same z
         while(block != null && block.getZ() != z)
             block = block.getAbove();
+        if (block == null) {
+            block = world.getBlockAt(x + offsetX, y + offsetY);
+            if (highest) {
+                while(block != null && block.getAbove() != null)
+                    block = block.getAbove();
+            }
+        }
         return block;
     }
+
 
     public List<Block> getHorizontalNeighbors() {
         List<Block> neighbors = new ArrayList<>();
         if(hasNeighborBlock(-1, 0))
-            neighbors.add(getNeighborBlock(-1, 0));
+            neighbors.add(getNeighborBlock(-1, 0, true));
         if(hasNeighborBlock(1, 0))
-            neighbors.add(getNeighborBlock(1, 0));
+            neighbors.add(getNeighborBlock(1, 0, true));
         return neighbors;
     }
 
     public List<Block> getVerticalNeighbors() {
         List<Block> neighbors = new ArrayList<>();
         if(hasNeighborBlock(0, -1))
-            neighbors.add(getNeighborBlock(0, -1));
+            neighbors.add(getNeighborBlock(0, -1, true));
         if(hasNeighborBlock(0, 1))
-            neighbors.add(getNeighborBlock(0, 1));
+            neighbors.add(getNeighborBlock(0, 1, true));
         return neighbors;
     }
 
@@ -253,11 +284,31 @@ public abstract class Block implements Collidable, Itemable {
         return Type.Generator.equals(type) || Type.Wire.equals(type) || Type.Treadmill.equals(type);
     }
 
+    public Block top() {
+        Block block = this;
+        while (block.getAbove() != null) {
+            block = block.getAbove();
+        }
+        return block;
+    }
+
     public void setScreenLoc(Loc loc) {
         entity.setX(loc.getX() + xSpriteOffset);
         entity.setY(loc.getY() + ySpriteOffset);
         if(above != null)
             above.setScreenLoc(loc);
+        //System.out.println("setting screen loc");
+        getItems().forEach(item -> {
+            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
+            if (entity != null) {
+                entity.setX(loc.getX() + item.getLayoutOffset().getX() + item.getLocInContainer().getX());
+                entity.setY(loc.getY() + item.getLayoutOffset().getY() + item.getLocInContainer().getY());
+            }
+        });
+    }
+
+    public String toString() {
+        return "{" + type.toString() + ": (" + getX() + "," + getY() + ")}";
     }
 
     public void move(Loc diff) {
@@ -274,6 +325,14 @@ public abstract class Block implements Collidable, Itemable {
         move(new Loc(x, y));
         if(above != null)
             above.move(x, y);
+    }
+
+    public void addItem(Item item) {
+        getItems().add(item);
+    }
+
+    public void removeItem(Item item) {
+        getItems().remove(item);
     }
 
 }
