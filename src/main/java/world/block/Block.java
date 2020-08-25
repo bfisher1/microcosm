@@ -70,6 +70,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         Uranium,
         Wire,
         Generator,
+        Injector,
         Plutonium,
         Treadmill,
         Unknown
@@ -81,6 +82,8 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     private int xSpriteOffset;
     private int ySpriteOffset;
+    @Transient
+    private boolean displayItems;
 
     // just for debugging purposes in DB, couldn't get EnumType.STRING working :/
     private String typeName;
@@ -125,6 +128,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         z = 1;
         xSpriteOffset = 0;
         ySpriteOffset = 0;
+        displayItems = true;
     }
 
     public void setType(Type type) {
@@ -166,7 +170,7 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void updateAnimation() {
-        if (!animation.isAnim() && entity != null) {
+        if (entity != null) {
             removeFromScreen();
             addToScreen(Camera.getInstance());
         }
@@ -184,11 +188,19 @@ public abstract class Block implements Collidable, Itemable, Container {
 
 
     public void removeFromScreen() {
+        if (entity == null) {
+            return;
+        }
         entity.removeFromWorld();
         world.removeRenderedBlock(this);
         if(above != null)
             above.removeFromScreen();
+        if (displayItems) {
+            hideItems();
+        }
+    }
 
+    private void hideItems() {
         getItems().forEach(item -> {
             com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
             if (entity != null) {
@@ -204,6 +216,16 @@ public abstract class Block implements Collidable, Itemable, Container {
         world.addRenderedBlock(this);
         if(above != null)
             above.addToScreen(camera);
+        if (this instanceof InjectorBlock) {
+            System.out.println("---------++++++++++++++++++++++-" + displayItems);
+        }
+        if (displayItems) {
+            showItems();
+        }
+    }
+
+    private void showItems() {
+        Camera camera = Camera.getInstance();
         getItems().forEach(item -> {
             item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
             // 1 above the block it's on
@@ -329,10 +351,16 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     public void addItem(Item item) {
         getItems().add(item);
+        if (!displayItems) {
+            hideItems();
+        }
     }
 
     public void removeItem(Item item) {
         getItems().remove(item);
+        if (displayItems) {
+            showItems();
+        }
     }
 
 }

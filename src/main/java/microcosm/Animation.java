@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class Animation {
     private boolean isAnim;
+    private double angle;
     private double animDelay;
     private String animName;
     private int animFrames;
@@ -22,7 +23,7 @@ public class Animation {
     private Entity entity;
 
 
-    public Animation(String animName, int frames, double delay, double scaleX, double scaleY) {
+    public Animation(String animName, int frames, double delay, double scaleX, double scaleY, double angle) {
         //TODO refactor and don't use animDelay or animFrames, redundant
         setAnimName(animName);
         isAnim = true;
@@ -30,6 +31,11 @@ public class Animation {
         animFrames = frames;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
+        this.angle = angle;
+    }
+
+    public Animation(String animName, int frames, double delay, double scaleX, double scaleY) {
+        this(animName, frames, delay, scaleX, scaleY, 0);
     }
 
     public Animation(String animName, int frames, double delay) {
@@ -59,6 +65,7 @@ public class Animation {
             entity = FXGL.entityBuilder()
                     .at(x, y)
                     .scale(scaleX, scaleY)
+                    .rotate(angle)
                     .with(new AnimationClip(animName, animFrames, animDelay))
                     .buildAndAttach();
         } else {
@@ -66,6 +73,7 @@ public class Animation {
                 entity = FXGL.entityBuilder()
                         .at(x, y)
                         .scale(scaleX, scaleY)
+                        .rotate(angle)
                         .view(backGround)
                         .view(animName)
                         .buildAndAttach();
@@ -73,6 +81,7 @@ public class Animation {
             entity = FXGL.entityBuilder()
                     .at(x, y)
                     .scale(scaleX, scaleY)
+                    .rotate(angle)
                     .view(animName)
                     .buildAndAttach();
         }

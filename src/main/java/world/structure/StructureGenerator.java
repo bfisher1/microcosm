@@ -35,11 +35,14 @@ public class StructureGenerator {
         key.put('G', Block.Type.Generator);
         key.put('p', Block.Type.Plutonium);
         key.put('T', Block.Type.Treadmill);
+        key.put('/', Block.Type.Injector);
     }
 
 
     public void generateFactoryV1(World world, int x, int y, boolean stack) {
         String rows[] = {
+                "T",
+                "/",
                 "TwwwwwG",
                 "T",
                 "T",

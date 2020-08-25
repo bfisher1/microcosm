@@ -56,6 +56,9 @@ public class BlockFactory {
             case Treadmill:
                 block = new TreadmillBlock(x, y, world);
                 break;
+            case Injector:
+                block = new InjectorBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);
