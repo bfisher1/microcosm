@@ -224,7 +224,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         }
     }
 
-    private void showItems() {
+    public void showItems() {
         Camera camera = Camera.getInstance();
         getItems().forEach(item -> {
             item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);

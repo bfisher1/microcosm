@@ -59,7 +59,8 @@ public class CastItem implements Itemable {
                 break;
         }
         String animDir = directory + animName;
-        return new Animation(animDir);
+        Animation anim = new Animation(animDir);
+        return anim;
     }
 
     @Override

@@ -85,7 +85,8 @@ public class InjectorBlock extends ElectronicDevice {
                     Block neighbor = getNeighborBlock(0, -1, true);
                     neighbor.addItem(new Item(castItem, new IntLoc(0, 0), neighbor));
                     // TODO, create entity without passing in coords
-                    castItem.getAnimation().createEntity(0, 0).setZ(neighbor.getZ() + 1);
+                    //castItem.getAnimation().createEntity(0, 0).setZ(neighbor.getZ() + 1);
+                    neighbor.showItems();
                 }
             }, Duration.seconds(2));
         }

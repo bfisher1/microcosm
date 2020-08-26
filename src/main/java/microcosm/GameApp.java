@@ -85,6 +85,7 @@ public class GameApp extends GameApplication {
 
 
 
+        
         FXGL.getGameTimer().runAtInterval(new Runnable() {
             @Override
             public void run() {
@@ -93,7 +94,8 @@ public class GameApp extends GameApplication {
 
                 world.getBlocksByType().get(Block.Type.Treadmill).forEach(block -> {
                     TreadmillBlock treadmillBlock = (TreadmillBlock) block;
-                    treadmillBlock.whileOn();
+                    if(treadmillBlock.isOn())
+                        treadmillBlock.whileOn();
                 });
 
                 Camera.getInstance().updateVisibleBlocks();

@@ -25,18 +25,68 @@ public class WireBlock extends ElectronicDevice {
 
     public WireBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("wire-horizontal.png");
+        setAnimation(getAnimationName());
         direction = Direction.Horizontal;
     }
 
     @Override
     public Animation getOnAnimation() {
-        return new Animation("wire-horizontal-on.png");
+        return new Animation(getAnimationName());
+    }
+
+    private String getAnimationName() {
+        String on = isOn() ? "on" : "off";
+        boolean left = false;
+        boolean right = false;
+        boolean up = false;
+        boolean down = false;
+        if(hasNeighborBlock(-1, 0)) {
+            if(getNeighborBlock(-1, 0).getType().equals(Type.Wire)) {
+                left = true;
+            }
+        }
+        if(hasNeighborBlock(1, 0)) {
+            if(getNeighborBlock(1, 0).getType().equals(Type.Wire)) {
+                right = true;
+            }
+        }
+        if(hasNeighborBlock(0, -1)) {
+            if(getNeighborBlock(0, -1).getType().equals(Type.Wire)) {
+                up = true;
+            }
+        }
+        if(hasNeighborBlock(0, 1)) {
+            if(getNeighborBlock(0, 1).getType().equals(Type.Wire)) {
+                down = true;
+            }
+        }
+        if (left) {
+            if (up) {
+                return "wire up left " + on + ".png";
+            } else if (down) {
+                return"wire down left " + on + ".png";
+            } else {
+                return "wire-horizontal-" + on + ".png";
+            }
+        }
+        else if (right) {
+            if (up) {
+                return "wire up right " + on + ".png";
+            } else if (down) {
+                return "wire down right " + on + ".png";
+            } else {
+                return "wire-horizontal-" + on + ".png";
+            }
+        }
+        else if(up || down) {
+            return "wire-vertical-" + on + ".png";
+        }
+        return "wire no dir " + on + ".png";
     }
 
     @Override
     public Animation getOffAnimation() {
-        return new Animation("wire-horizontal.png");
+        return new Animation(getAnimationName());
     }
 
     public void setOn(boolean on) {

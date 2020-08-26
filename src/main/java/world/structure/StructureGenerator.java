@@ -41,8 +41,10 @@ public class StructureGenerator {
 
     public void generateFactoryV1(World world, int x, int y, boolean stack) {
         String rows[] = {
-                "T",
-                "/",
+                "Twwwwww",
+                "T     w",
+                "/wwwwww",
+                "T     w",
                 "TwwwwwG",
                 "T",
                 "T",
@@ -108,8 +110,10 @@ public class StructureGenerator {
         List<Block> blocks = new ArrayList<>();
         for(int j = 0; j < rows.length; j++) {
             for(int i = 0; i < rows[j].length(); i++) {
-                Block.Type type = key.get(rows[j].charAt(i));
-                blocks.add(BlockFactory.create(i + startX, j + startY, type, world));
+                if(rows[j].charAt(i) != ' ') {
+                    Block.Type type = key.get(rows[j].charAt(i));
+                    blocks.add(BlockFactory.create(i + startX, j + startY, type, world));
+                }
             }
         }
         return blocks;
