@@ -73,6 +73,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         Injector,
         Plutonium,
         Treadmill,
+        Computer,
         Unknown
     };
 
@@ -217,7 +218,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         if(above != null)
             above.addToScreen(camera);
         if (this instanceof InjectorBlock) {
-            System.out.println("---------++++++++++++++++++++++-" + displayItems);
+            //System.out.println("---------++++++++++++++++++++++-" + displayItems);
         }
         if (displayItems) {
             showItems();

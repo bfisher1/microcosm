@@ -36,6 +36,7 @@ public class Item {
         if (entity != null) {
             entity.setX(container.getScreenLoc().getX() + locInContainer.getX() + layoutOffset.getX());
             entity.setY(container.getScreenLoc().getY() + locInContainer.getY() + layoutOffset.getY());
+            entity.setZ(getContainer().getZ() + 1);
         }
     }
 

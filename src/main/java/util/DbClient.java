@@ -3,6 +3,7 @@ package util;
 import world.block.Block;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 

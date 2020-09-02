@@ -59,6 +59,9 @@ public class BlockFactory {
             case Injector:
                 block = new InjectorBlock(x, y, world);
                 break;
+            case Computer:
+                block = new ComputerBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

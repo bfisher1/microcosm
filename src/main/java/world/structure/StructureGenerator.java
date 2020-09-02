@@ -36,16 +36,17 @@ public class StructureGenerator {
         key.put('p', Block.Type.Plutonium);
         key.put('T', Block.Type.Treadmill);
         key.put('/', Block.Type.Injector);
+        key.put('<', Block.Type.Computer);
     }
 
 
     public void generateFactoryV1(World world, int x, int y, boolean stack) {
         String rows[] = {
-                "Twwwwww",
-                "T     w",
-                "/wwwwww",
-                "T     w",
-                "TwwwwwG",
+                "Twwww",
+                "T   w",
+                "/<www",
+                "T   w",
+                "TwwwwG",
                 "T",
                 "T",
                 "T",

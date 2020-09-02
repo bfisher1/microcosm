@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import microcosm.Animation;
 import util.IntLoc;
+import util.Rand;
 import world.World;
 import world.resource.CastItem;
 import world.resource.Mold;
@@ -74,6 +75,7 @@ public class InjectorBlock extends ElectronicDevice {
     public void startInjectingNextMaterialIfPossible() {
         if (fuel > 0 && !itemsToInject.isEmpty()) {
             fuel--;
+            InjectorBlock injectorBlock = this;
             FXGL.getGameTimer().runOnceAfter(new Runnable() {
                 @Override
                 public void run() {
@@ -83,10 +85,16 @@ public class InjectorBlock extends ElectronicDevice {
                     CastItem castItem = new CastItem(mold, type);
                     // add new item to block this is facing
                     Block neighbor = getNeighborBlock(0, -1, true);
-                    neighbor.addItem(new Item(castItem, new IntLoc(0, 0), neighbor));
+                    Item createdItem = new Item(castItem, new IntLoc(0, 0), neighbor);
+                    createdItem.setLayoutOffset(Rand.randomIntLoc(10, 2));
+                    neighbor.addItem(createdItem);
                     // TODO, create entity without passing in coords
                     //castItem.getAnimation().createEntity(0, 0).setZ(neighbor.getZ() + 1);
                     neighbor.showItems();
+                    getNeighbors().stream().filter(block -> block.getType().equals(Type.Computer))
+                            .map(block -> (ComputerBlock) block).forEach(computerBlock -> {
+                                computerBlock.itemCreated(injectorBlock, mold);
+                    });
                 }
             }, Duration.seconds(2));
         }

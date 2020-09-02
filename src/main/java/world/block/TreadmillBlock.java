@@ -81,7 +81,7 @@ public class TreadmillBlock extends ElectronicDevice {
     }
 
     private void moveToNeighboringBlock(Item item) {
-        System.out.println("++++" + item.getLocInContainer());
+        //System.out.println("++++" + item.getLocInContainer());
         item.markAsRemoved(this);
         Block neighbor = null;
         if (Math.abs(item.getLocInContainer().getX()) > Math.abs(item.getLocInContainer().getY()) ) {
@@ -106,7 +106,7 @@ public class TreadmillBlock extends ElectronicDevice {
         item.setLocInContainer(new Loc(0, 0));
         neighbor.addItem(item);
         item.move(0,0);
-        System.out.println(this + " neighbor " + neighbor);
+        //System.out.println(this + " neighbor " + neighbor);
     }
 
     private boolean outsideContainer(Item item) {

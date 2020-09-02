@@ -3,7 +3,6 @@ package microcosm;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.texture.Texture;
 import item.Item;
 import javafx.util.Duration;
 import player.Camera;
@@ -11,7 +10,7 @@ import player.Player;
 import robot.Robot;
 import util.DbClient;
 import util.IntLoc;
-import world.Sun;
+import util.Rand;
 import world.World;
 import world.WorldFactory;
 import world.block.Block;
@@ -56,10 +55,13 @@ public class GameApp extends GameApplication {
         World world = worlds.values().stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
 
 
-        TreadmillBlock treadmillBlock = (TreadmillBlock) world.getBlockAt(0, 6, 2);
-        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8), treadmillBlock)); //layout offset of 8 to center it
-        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Iron, world), new IntLoc(2, 8), treadmillBlock));
-        treadmillBlock.addItem(new Item(BlockFactory.create(0, 0, Block.Type.Coal, world), new IntLoc(2, 2), treadmillBlock));
+        FXGL.getGameTimer().runAtInterval(new Runnable() {
+            @Override
+            public void run() {
+                spawnResourcesOnTreadmill(world);
+            }
+        }, Duration.seconds(2));
+
 
         // robot
         Robot robot = new Robot(0, 0);
@@ -132,13 +134,22 @@ public class GameApp extends GameApplication {
 //
 //            }
 //        }, Duration.seconds(2));
-
-
     }
 
     @Override
     protected void initInput() {
         //
+    }
+
+    private void spawnResourcesOnTreadmill(World world) {
+        TreadmillBlock treadmillBlock = (TreadmillBlock) world.getBlockAt(0, 6, 2);
+        Item silicon = new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8), treadmillBlock);
+        treadmillBlock.addItem(silicon); //layout offset of 8 to center it
+        Item iron = new Item(BlockFactory.create(0, 0, Block.Type.Iron, world), new IntLoc(2, 8), treadmillBlock);
+        treadmillBlock.addItem(iron);
+        Item coal = new Item(BlockFactory.create(0, 0, Block.Type.Coal, world), new IntLoc(2, 2), treadmillBlock);
+        treadmillBlock.addItem(coal);
+        treadmillBlock.showItems();
     }
 
     public static void main(String[] args) {
