@@ -10,7 +10,7 @@ public class Sun extends World {
     public Sun() {
         super();
         // todo make larger
-        setRadius(5);
+        setRadius(4);
         setType(Type.Sun);
     }
 

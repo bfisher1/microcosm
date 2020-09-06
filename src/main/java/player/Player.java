@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @Setter
 public class Player {
 
-    Input input = FXGL.getInput();
-
     private Camera camera;
 
     private int cameraSpeed = 5;
@@ -36,41 +34,41 @@ public class Player {
 //            });
         }
     };
-
-    public UserAction downArrow = new UserAction("Down") {
-        @Override
-        protected void onAction() {
-            camera.setY(camera.getY() + cameraSpeed);
-        }
-    };
-
-    public UserAction leftArrow = new UserAction("Left") {
-        @Override
-        protected void onAction() {
-            camera.setX(camera.getX() - cameraSpeed);
-        }
-    };
-
-    public UserAction rightArrow = new UserAction("Right") {
-        @Override
-        protected void onAction() {
-            camera.setX(camera.getX() + cameraSpeed);
-        }
-    };
-
-    public UserAction leftClick = new UserAction("LeftClick") {
-        @Override
-        protected void onAction() {
-            input.getMouseXWorld();
-            input.getMouseYWorld();
-        }
-    };
-
-    public void initializeInput() {
-        input.addAction(upArrow, KeyCode.UP);
-        input.addAction(downArrow, KeyCode.DOWN);
-        input.addAction(leftArrow, KeyCode.LEFT);
-        input.addAction(rightArrow, KeyCode.RIGHT);
-        input.addAction(leftClick, MouseButton.PRIMARY);
-    }
+//
+//    public UserAction downArrow = new UserAction("Down") {
+//        @Override
+//        protected void onAction() {
+//            camera.setY(camera.getY() + cameraSpeed);
+//        }
+//    };
+//
+//    public UserAction leftArrow = new UserAction("Left") {
+//        @Override
+//        protected void onAction() {
+//            camera.setX(camera.getX() - cameraSpeed);
+//        }
+//    };
+//
+//    public UserAction rightArrow = new UserAction("Right") {
+//        @Override
+//        protected void onAction() {
+//            camera.setX(camera.getX() + cameraSpeed);
+//        }
+//    };
+//
+//    public UserAction leftClick = new UserAction("LeftClick") {
+//        @Override
+//        protected void onAction() {
+//            input.getMouseXWorld();
+//            input.getMouseYWorld();
+//        }
+//    };
+//
+//    public void initializeInput() {
+//        input.addAction(upArrow, KeyCode.UP);
+//        input.addAction(downArrow, KeyCode.DOWN);
+//        input.addAction(leftArrow, KeyCode.LEFT);
+//        input.addAction(rightArrow, KeyCode.RIGHT);
+//        input.addAction(leftClick, MouseButton.PRIMARY);
+//    }
 }

@@ -2,7 +2,9 @@ package world.resource;
 
 import item.Itemable;
 import lombok.*;
-import microcosm.Animation;
+import animation.Animation;
+import animation.AnimationBuilder;
+import animation.Sprite;
 import world.block.Block;
 
 @Getter
@@ -13,6 +15,7 @@ public class CastItem implements Itemable {
     Mold mold;
     Block.Type resourceType;
     private Animation animation;
+    private Sprite sprite;
 
     public CastItem(Mold mold, Block.Type resourceType) {
         this.mold = mold;
@@ -59,7 +62,7 @@ public class CastItem implements Itemable {
                 break;
         }
         String animDir = directory + animName;
-        Animation anim = new Animation(animDir);
+        Animation anim = AnimationBuilder.getBuilder().fileName(animDir).build();
         return anim;
     }
 

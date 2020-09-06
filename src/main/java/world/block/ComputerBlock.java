@@ -1,7 +1,8 @@
 package world.block;
 
 import lombok.NoArgsConstructor;
-import microcosm.Animation;
+import animation.Animation;
+import animation.AnimationBuilder;
 import world.World;
 import world.resource.Mold;
 
@@ -40,12 +41,12 @@ public class ComputerBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return new Animation("computer-on.png");
+        return AnimationBuilder.getBuilder().fileName("computer-on.png").build();
     }
 
     @Override
     public Animation getOffAnimation() {
-        return new Animation("computer-off.png");
+        return AnimationBuilder.getBuilder().fileName("computer-off.png").build();
     }
 
     public void itemCreated(InjectorBlock block, Mold mold) {

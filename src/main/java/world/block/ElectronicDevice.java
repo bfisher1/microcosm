@@ -1,10 +1,9 @@
 package world.block;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import microcosm.Animation;
+import animation.Animation;
 import world.World;
 
 import javax.persistence.*;

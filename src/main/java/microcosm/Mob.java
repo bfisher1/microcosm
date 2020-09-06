@@ -1,8 +1,9 @@
 package microcosm;
 
 
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
+import animation.Animation;
+import animation.AnimationBuilder;
+import animation.Sprite;
 import lombok.Getter;
 import lombok.Setter;
 import player.Camera;
@@ -29,16 +30,13 @@ public class Mob implements Collidable {
     private List<Collidable> collisions;
     private World currentWorld;
 
-    private Entity entity;
+    private Sprite sprite;
     //private List<Camera> cameras = new ArrayList<>();
     private Camera camera;
 
     public Mob(double x, double y, String animName) {
-        setEntity(FXGL.entityBuilder()
-                .at(x , y)
-                .view(animName)
-                .buildAndAttach());
-        entity.setZ(3);
+        Animation anim = AnimationBuilder.getBuilder().fileName(animName).build();
+        setSprite(new Sprite(anim, (int) x, (int) y, 3));
         setX(x);
         setY(y);
     }
@@ -47,7 +45,7 @@ public class Mob implements Collidable {
         this.prevX = this.x;
         this.x = x;
         if(loadedOnScreen()) {
-            entity.setX(x - camera.getX() - entity.getWidth() / 2);
+            sprite.setX(x - camera.getX() - sprite.getWidth() / 2);
         }
     }
 
@@ -55,7 +53,7 @@ public class Mob implements Collidable {
         this.prevY = this.y;
         this.y = y;
         if(loadedOnScreen()) {
-            entity.setY(y - camera.getY() - entity.getHeight() / 2);
+            sprite.setY(y - camera.getY() - sprite.getHeight() / 2);
         }
     }
 
@@ -69,21 +67,21 @@ public class Mob implements Collidable {
     }
 
     public boolean loadedOnScreen() {
-        return entity != null && camera != null;
+        return sprite != null && camera != null;
     }
 
     public void removeFromScreen() {
-        entity.removeFromWorld();
-        entity = null;
+        // entity.removeFromWorld();
+        //entity = null;
     }
 
     public void setScreenLoc(double x, double y) {
-        entity.setX(x);
-        entity.setY(y);
+        sprite.setX(x);
+        sprite.setY(y);
     }
 
     public Loc getScreenLoc() {
-        return new Loc(entity.getX(), entity.getY());
+        return new Loc(sprite.getX(), sprite.getY());
     }
 
     public void move(Loc diff) {

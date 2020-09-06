@@ -1,12 +1,11 @@
 package player;
 
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
 import lombok.Getter;
 import microcosm.Mob;
+import animation.Animation;
+import animation.Sprite;
 import util.IntLoc;
 import util.Loc;
-import util.DbClient;
 import world.World;
 import world.block.Block;
 
@@ -19,6 +18,7 @@ public class Camera {
 
     private Map<World, Set<IntLoc>> renderedBlocks;
     private Set<Mob> renderedMobs;
+    private PriorityQueue<Sprite> sprites = new PriorityQueue<>();
 
     private static Camera instance;
 
@@ -33,6 +33,12 @@ public class Camera {
         this.y = y;
         this.renderedBlocks = new HashMap<>();
         this.renderedMobs = new HashSet<>();
+    }
+
+    public void move(int x, int y) {
+        this.x += x;
+        this.y += y;
+        updateVisibleBlocks();
     }
 
     public void setX(int x) {
@@ -51,19 +57,21 @@ public class Camera {
     }
 
     public void updateVisibleBlocks() {
-        renderedBlocks.forEach((world, locs) -> {
-            locs.forEach(loc -> {
-                if (world.isBlockLoaded(loc.getX(), loc.getY())) {
-                    Block block = world.getBlockAt(loc.getX(), loc.getY());
-                    if (block != null) {
-                        Entity entity = block.getEntity();
-                        if (entity != null) {
+        try {
+            renderedBlocks.forEach((world, locs) -> {
+                locs.forEach(loc -> {
+                    if (world.isBlockLoaded(loc.getX(), loc.getY())) {
+                        Block block = world.getBlockAt(loc.getX(), loc.getY());
+                        if (block != null) {
+                            Animation animation = block.getAnimation();
                             block.setScreenLoc(new Loc(world.getX() + loc.getX() * block.BLOCK_WIDTH - x, world.getY() + loc.getY() * block.BLOCK_WIDTH - y));
                         }
                     }
-                }
+                });
             });
-        });
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public IntLoc startBlockLoc(World world) {
@@ -74,8 +82,10 @@ public class Camera {
 
     public IntLoc endBlockLoc(World world) {
         IntLoc start = startBlockLoc(world);
-        int endX = start.getX() + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
-        int endY = start.getY() + FXGL.getAppWidth() / Block.BLOCK_WIDTH + 2;
+        int WIDTH = 500;
+        int HEIGHT = 500;
+        int endX = start.getX() + WIDTH / Block.BLOCK_WIDTH + 2;
+        int endY = start.getY() + HEIGHT / Block.BLOCK_WIDTH + 2;
         return new IntLoc(endX, endY);
     }
 
@@ -112,10 +122,12 @@ public class Camera {
         if (!renderedBlocks.containsKey(block.getWorld()))
             renderedBlocks.put(block.getWorld(), new HashSet<>());
         renderedBlocks.get(block.getWorld()).add(block.getIntLoc());
+        sprites.add(block.getSprite());
     }
 
     public void removeRenderedBlock(Block block) {
         renderedBlocks.get(block.getWorld()).remove(block.getIntLoc());
+        sprites.remove(block.getSprite());
     }
 
     public void addWorldToRender(World world) {

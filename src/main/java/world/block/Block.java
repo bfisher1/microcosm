@@ -1,25 +1,22 @@
 package world.block;
 
-import com.almasb.fxgl.dsl.FXGL;
 import item.Container;
 import item.Item;
 import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
-import microcosm.Animation;
-import microcosm.AnimationClip;
 import microcosm.Collidable;
 import microcosm.Mob;
+import animation.Animation;
+import animation.AnimationBuilder;
+import animation.Sprite;
 import player.Camera;
 import util.IntLoc;
 import util.Loc;
 import world.Chunk;
 import world.World;
 
-import java.io.Serializable;
-
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +98,7 @@ public abstract class Block implements Collidable, Itemable, Container {
     @Transient
     private Animation animation;
     @Transient
-    private com.almasb.fxgl.entity.Entity entity;
+    private Sprite sprite;
 
     @ManyToOne
     @JoinColumn(name = "world_id")
@@ -157,13 +154,7 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void setAnimation(String animName) {
-        animation = new Animation(animName);
-//        int b = 6;
-//        double scale = Math.abs(-getZ() + 1 + b) / b;
-//        scale = .95;
-//        animation.setScaleX(scale);
-//        animation.setScaleY(scale);
-//        animation.setBackGround("black.png");
+        animation = AnimationBuilder.getBuilder().fileName(animName).build();
     }
 
     public void setAnimation(Animation animation) {
@@ -171,7 +162,7 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void updateAnimation() {
-        if (entity != null) {
+        if (sprite != null) {
             removeFromScreen();
             addToScreen(Camera.getInstance());
         }
@@ -184,15 +175,18 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     public void setAnimation(String animName, int frames, double delay) {
         //TODO refactor and don't use animDelay or animFrames, redundant
-        animation = new Animation(animName, frames, delay);
+        animation = AnimationBuilder.getBuilder()
+                .fileName(animName)
+                .framesAndDelay(frames, delay)
+                .build();
     }
 
 
     public void removeFromScreen() {
-        if (entity == null) {
+        if (sprite == null) {
             return;
         }
-        entity.removeFromWorld();
+        // entity.removeFromWorld();
         world.removeRenderedBlock(this);
         if(above != null)
             above.removeFromScreen();
@@ -203,17 +197,18 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     private void hideItems() {
         getItems().forEach(item -> {
-            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
-            if (entity != null) {
-                entity.removeFromWorld();
-                item.getItem().getAnimation().setEntity(null);
-            }
+            System.out.println("TODO, hide items!");
+//            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
+//            if (entity != null) {
+//                entity.removeFromWorld();
+//                item.getItem().getAnimation().setEntity(null);
+//            }
         });
     }
 
     public void addToScreen(Camera camera) {
-        entity = animation.createEntity(x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY());
-        entity.setZ(getZ());
+        sprite = new Sprite(animation, x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY(), 1);
+        sprite.setZ(getZ());
         world.addRenderedBlock(this);
         if(above != null)
             above.addToScreen(camera);
@@ -228,14 +223,14 @@ public abstract class Block implements Collidable, Itemable, Container {
     public void showItems() {
         Camera camera = Camera.getInstance();
         getItems().forEach(item -> {
-            item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
-            // 1 above the block it's on
-            item.getItem().getAnimation().getEntity().setZ(getZ() + 1);
+//            item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
+//            // 1 above the block it's on
+//            item.getItem().getAnimation().getEntity().setZ(getZ() + 1);
         });
     }
 
     public Loc getScreenLoc() {
-        return new Loc(entity.getX(), entity.getY());
+        return new Loc(sprite.getX(), sprite.getY());
     }
 
     public IntLoc getIntLoc(){
@@ -316,16 +311,16 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void setScreenLoc(Loc loc) {
-        entity.setX(loc.getX() + xSpriteOffset);
-        entity.setY(loc.getY() + ySpriteOffset);
+        sprite.setX((int) loc.getX() + xSpriteOffset);
+        sprite.setY((int) loc.getY() + ySpriteOffset);
         if(above != null)
             above.setScreenLoc(loc);
         //System.out.println("setting screen loc");
         getItems().forEach(item -> {
-            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
-            if (entity != null) {
-                entity.setX(loc.getX() + item.getLayoutOffset().getX() + item.getLocInContainer().getX());
-                entity.setY(loc.getY() + item.getLayoutOffset().getY() + item.getLocInContainer().getY());
+            Sprite sprite = item.getItem().getSprite();
+            if (sprite != null) {
+                sprite.setX((int) (loc.getX() + item.getLayoutOffset().getX() + item.getLocInContainer().getX()));
+                sprite.setY((int) (loc.getY() + item.getLayoutOffset().getY() + item.getLocInContainer().getY()));
             }
         });
     }
@@ -341,7 +336,9 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public boolean onScreen() {
-        return entity != null && entity.getX() > 0 && entity.getY() >  0 && entity.getX() < FXGL.getAppWidth() && entity.getY() < FXGL.getAppHeight();
+        int WIDTH = 500;
+        int HEIGHT = 500;
+        return sprite != null && sprite.getX() > 0 && sprite.getY() >  0 && sprite.getX() < WIDTH && sprite.getY() < HEIGHT;
     }
 
     public void move(double x, double y) {

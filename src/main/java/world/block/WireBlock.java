@@ -3,7 +3,8 @@ package world.block;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import microcosm.Animation;
+import animation.Animation;
+import animation.AnimationBuilder;
 import world.World;
 
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class WireBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return new Animation(getAnimationName());
+        return AnimationBuilder.getBuilder().fileName(getAnimationName()).build();
     }
 
     private String getAnimationName() {
@@ -86,7 +87,7 @@ public class WireBlock extends ElectronicDevice {
 
     @Override
     public Animation getOffAnimation() {
-        return new Animation(getAnimationName());
+        return AnimationBuilder.getBuilder().fileName(getAnimationName()).build();
     }
 
     public void setOn(boolean on) {

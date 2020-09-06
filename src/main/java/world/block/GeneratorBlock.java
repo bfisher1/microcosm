@@ -3,7 +3,8 @@ package world.block;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import microcosm.Animation;
+import animation.Animation;
+import animation.AnimationBuilder;
 import world.World;
 
 import javax.persistence.Entity;
@@ -24,12 +25,12 @@ public class GeneratorBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return new Animation("generator-on.png");
+        return AnimationBuilder.getBuilder().fileName("generator-on.png").build();
     }
 
     @Override
     public Animation getOffAnimation() {
-        return new Animation("generator-off.png");
+        return AnimationBuilder.getBuilder().fileName("generator-off.png").build();
     }
 
     public void setOn(boolean on) {

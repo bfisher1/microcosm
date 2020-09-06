@@ -30,7 +30,7 @@ public class TreeBlock extends Block {
 
     public void setScreenLoc(Loc loc) {
         super.setScreenLoc(loc);
-        getEntity().setZ(getZ() + (int) getEntity().getY());
+        getSprite().setZ(getZ() + (int) getSprite().getY());
     }
 
 }

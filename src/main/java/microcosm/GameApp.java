@@ -1,16 +1,15 @@
 package microcosm;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.dsl.FXGL;
+import animation.Animation;
+import animation.AnimationBuilder;
+import animation.Sprite;
 import item.Item;
-import javafx.util.Duration;
 import player.Camera;
 import player.Player;
 import robot.Robot;
 import util.DbClient;
 import util.IntLoc;
-import util.Rand;
+import util.LazyTimer;
 import world.World;
 import world.WorldFactory;
 import world.block.Block;
@@ -18,20 +17,111 @@ import world.block.BlockFactory;
 import world.block.GeneratorBlock;
 import world.block.TreadmillBlock;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferStrategy;
+import java.util.Timer;
 import java.util.*;
 
-public class GameApp extends GameApplication {
+/*
+ * This applet allows the user to move a texture painted rectangle around the applet
+ * window.  The rectangle flickers and draws slowly because this applet does not use
+ * double buffering.
+ */
+public class GameApp {
 
-    private Camera camera;
-    private Map<Long, World> worlds;
-    //private Sun sun;
+
+    static Camera camera;
+    static Map<Long, World> worlds;
+
+    public static void main(String[] args) {
+        JFrame app = new JFrame();
+        app.setIgnoreRepaint( true );
+        app.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        app.addKeyListener(new KeyManager());
 
 
-    @Override
-    protected void initSettings(GameSettings settings) { }
+        Canvas canvas = new Canvas();
+        canvas.setIgnoreRepaint( true );
+        canvas.setSize( 640, 480 );
 
-    @Override
-    protected void initGame() {
+        app.add( canvas );
+        app.pack();
+        app.setVisible( true );
+
+        canvas.createBufferStrategy( 2 );
+        BufferStrategy buffer = canvas.getBufferStrategy();
+
+
+        Timer timer = new Timer();
+        initGame(timer);
+
+        Graphics graphics = null;
+
+        LazyTimer keyTimer = new LazyTimer(2);
+        LazyTimer graphicsTimer = new LazyTimer(4);
+
+        Animation background = AnimationBuilder.getBuilder().fileName("purple-background.png").build();
+
+        while( true ) {
+            try {
+
+                if (keyTimer.resetIfReady()) {
+                    handleKeys();
+                }
+
+                if(graphicsTimer.resetIfReady()) {
+                    graphics = buffer.getDrawGraphics();
+                    background.draw(graphics, 0, 0);
+
+                    draw(graphics);
+
+                    if (!buffer.contentsLost())
+                        buffer.show();
+
+                    Thread.yield();
+                }
+            } finally {
+                if( graphics != null )
+                    graphics.dispose();
+            }
+        }
+
+
+    }
+
+    private static void handleKeys() {
+        if(KeyManager.isBeingPressed(KeyEvent.VK_RIGHT)) {
+            Camera.getInstance().move(1, 0);
+        }
+        if(KeyManager.isBeingPressed(KeyEvent.VK_LEFT)) {
+            Camera.getInstance().move(-1, 0);
+        }
+        if(KeyManager.isBeingPressed(KeyEvent.VK_UP)) {
+            Camera.getInstance().move(0, -1);
+        }
+        if(KeyManager.isBeingPressed(KeyEvent.VK_DOWN)) {
+            Camera.getInstance().move(0, 1);
+        }
+    }
+
+    private static void draw(Graphics graphics) {
+
+        Camera camera = Camera.getInstance();
+
+        try {
+            PriorityQueue<Sprite> sprites = new PriorityQueue<>(camera.getSprites());
+            while (!sprites.isEmpty()) {
+                sprites.remove().draw(graphics);
+            }
+        } catch(Exception e) {
+            System.out.println("error drawing");
+        }
+    }
+
+
+    private static void initGame(Timer timer) {
 
         // thread to save blocks to DB
         (new Thread(new BlockSaver(false))).start();
@@ -55,27 +145,34 @@ public class GameApp extends GameApplication {
         World world = worlds.values().stream().filter(wrld -> wrld.getType() == World.Type.World).findFirst().get();
 
 
-        FXGL.getGameTimer().runAtInterval(new Runnable() {
-            @Override
-            public void run() {
-                spawnResourcesOnTreadmill(world);
-            }
-        }, Duration.seconds(2));
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                       @Override
+                       public void run() {
+                           spawnResourcesOnTreadmill(world);
+                       }
+                   }, 0, 2000);
 
 
         // robot
-        Robot robot = new Robot(0, 0);
+        robot.Robot robot = new Robot(0, 0);
         robot.setCurrentWorld(world);
         robot.setCamera(camera);
         galaxy.addMob(robot);
 
         Player player = new Player(camera);
-        player.initializeInput();
+        //player.initializeInput();
 
 
         ChunkLoader chunkLoader = new ChunkLoader(camera, worlds);
 
-        FXGL.getGameTimer().runAtInterval(chunkLoader, Duration.seconds(.1));
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        chunkLoader.run();
+                    }
+                }, 0, 100);
 
         // ASYNC VERSION
 //        FXGL.getGameTimer().runAtInterval(new Runnable() {
@@ -86,62 +183,51 @@ public class GameApp extends GameApplication {
 //        }, Duration.seconds(.1));
 
 
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        robot.move();
+                        galaxy.runMobCollisions();
 
-        
-        FXGL.getGameTimer().runAtInterval(new Runnable() {
-            @Override
-            public void run() {
-                robot.move();
-                galaxy.runMobCollisions();
+                        world.getBlocksByType().get(Block.Type.Treadmill).forEach(block -> {
+                            TreadmillBlock treadmillBlock = (TreadmillBlock) block;
+                            if(treadmillBlock.isOn())
+                                treadmillBlock.whileOn();
+                        });
 
-                world.getBlocksByType().get(Block.Type.Treadmill).forEach(block -> {
-                    TreadmillBlock treadmillBlock = (TreadmillBlock) block;
-                    if(treadmillBlock.isOn())
-                        treadmillBlock.whileOn();
-                });
+                        Camera.getInstance().updateVisibleBlocks();
+                    }
+                }, 0, 1);
 
-                Camera.getInstance().updateVisibleBlocks();
 
-            }
-        }, Duration.seconds(0));
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        world.getLoadedBlocksOfType(Block.Type.Generator).forEach(block -> {
+                            GeneratorBlock generator = (GeneratorBlock) block;
+                            if(!generator.isOn())
+                                generator.setOn(true);
+                        });
+                    }
+                }, 0, 1000);
 
-        FXGL.getGameTimer().runAtInterval(new Runnable() {
-            @Override
-            public void run() {
-                world.getLoadedBlocksOfType(Block.Type.Generator).forEach(block -> {
-                    GeneratorBlock generator = (GeneratorBlock) block;
-                    if(!generator.isOn())
-                        generator.setOn(true);
-                });
-            }
-        }, Duration.seconds(1.0));
 
-        FXGL.getGameTimer().runAtInterval(new Runnable() {
-            @Override
-            public void run() {
-                camera.removeBlocksThatShouldNotBeOnScreen();
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        camera.removeBlocksThatShouldNotBeOnScreen();
 
-                camera.renderBlocksThatShouldBeOnScreen();
-            }
-        }, new Duration(250));
+                        camera.renderBlocksThatShouldBeOnScreen();
+                    }
+                }, 0, 250);
 
         robot.setDirection(Math.PI / 2.0);
-//
-//        FXGL.getGameTimer().runAtInterval(new Runnable() {
-//            @Override
-//            public void run() {
-//                robot.setDirection(Math.PI / 2.0);
-//
-//            }
-//        }, Duration.seconds(2));
     }
 
-    @Override
-    protected void initInput() {
-        //
-    }
-
-    private void spawnResourcesOnTreadmill(World world) {
+    private static void spawnResourcesOnTreadmill(World world) {
         TreadmillBlock treadmillBlock = (TreadmillBlock) world.getBlockAt(0, 6, 2);
         Item silicon = new Item(BlockFactory.create(0, 0, Block.Type.Silicon, world), new IntLoc(8, 8), treadmillBlock);
         treadmillBlock.addItem(silicon); //layout offset of 8 to center it
@@ -152,7 +238,4 @@ public class GameApp extends GameApplication {
         treadmillBlock.showItems();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

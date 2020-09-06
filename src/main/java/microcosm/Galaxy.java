@@ -27,11 +27,11 @@ public class Galaxy {
         mobs = new HashMap<>();
         worlds = new ArrayList<>();
         // background
-        FXGL.entityBuilder()
-            .at(0, 0)
-            .view("purple-background.png")
-            .buildAndAttach()
-            .setZ(0);
+//        FXGL.entityBuilder()
+//            .at(0, 0)
+//            .view("purple-background.png")
+//            .buildAndAttach()
+//            .setZ(0);
     }
 
     public void runMobCollisions() {

@@ -25,7 +25,7 @@ public class DbResetter {
 
     private static void fillDb() {
         World world = new World(0, 0);
-        Sun sun = new Sun(25 * Block.BLOCK_WIDTH, 10);
+        Sun sun = new Sun(65 * Block.BLOCK_WIDTH, 10);
         DbClient.save(world);
         DbClient.save(sun);
 

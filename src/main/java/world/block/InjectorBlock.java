@@ -1,14 +1,11 @@
 package world.block;
 
-import com.almasb.fxgl.dsl.FXGL;
-import item.Container;
 import item.Item;
-import item.Itemable;
-import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import microcosm.Animation;
+import animation.Animation;
+import animation.AnimationBuilder;
 import util.IntLoc;
 import util.Rand;
 import world.World;
@@ -20,6 +17,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Getter
@@ -44,14 +43,14 @@ public class InjectorBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        Animation anim = new Animation("injector-on.png");
+        Animation anim = AnimationBuilder.getBuilder().fileName("injector-on.png").build();
         //anim.setAngle(90);
         return anim;
     }
 
     @Override
     public Animation getOffAnimation() {
-        Animation anim = new Animation("injector-off.png");
+        Animation anim = AnimationBuilder.getBuilder().fileName("injector-off.png").build();
         //anim.setAngle(90);
         return anim;
     }
@@ -76,7 +75,8 @@ public class InjectorBlock extends ElectronicDevice {
         if (fuel > 0 && !itemsToInject.isEmpty()) {
             fuel--;
             InjectorBlock injectorBlock = this;
-            FXGL.getGameTimer().runOnceAfter(new Runnable() {
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     // produce mold part
@@ -93,10 +93,10 @@ public class InjectorBlock extends ElectronicDevice {
                     neighbor.showItems();
                     getNeighbors().stream().filter(block -> block.getType().equals(Type.Computer))
                             .map(block -> (ComputerBlock) block).forEach(computerBlock -> {
-                                computerBlock.itemCreated(injectorBlock, mold);
+                        computerBlock.itemCreated(injectorBlock, mold);
                     });
                 }
-            }, Duration.seconds(2));
+            }, 0, 2000);
         }
     }
 

@@ -4,9 +4,8 @@ import item.Item;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import microcosm.Animation;
-import player.Camera;
-import util.IntLoc;
+import animation.Animation;
+import animation.AnimationBuilder;
 import util.Loc;
 import world.World;
 
@@ -34,12 +33,12 @@ public class TreadmillBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return new Animation("treadmill-up.png", 10, .2);
+        return AnimationBuilder.getBuilder().fileName("treadmill-up.png").framesAndDelay(10, .02).build();
     }
 
     @Override
     public Animation getOffAnimation() {
-        return new Animation("treadmill-up-still.png");
+        return AnimationBuilder.getBuilder().fileName("treadmill-up-still.png").build();
     }
 
     public List<TreadmillBlock> getAlignedTreadmillBlocks() {

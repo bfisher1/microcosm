@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import player.Camera;
+import util.DbClient;
 import util.IntLoc;
 import world.block.Block;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -47,7 +49,7 @@ public class World {
 
         chunks = new HashMap<>();
         blocksByType = new HashMap<>();
-        radius = 10;
+        radius = 20;
         type = Type.World;
     }
 
@@ -94,7 +96,7 @@ public class World {
         this.y += y;
 
         getAllBlocks().forEach(block -> {
-            if(block.getEntity() != null)
+            if(block.getSprite() != null)
                 block.move(x, y);
         });
     }
@@ -180,6 +182,13 @@ public class World {
 
     public void removeRenderedBlock(Block block) {
         Camera.getInstance().removeRenderedBlock(block);
+    }
+
+
+    //@Cacheable(value = "nearbyWorlds", key=this.id)
+    public List<World> getNearbyWorlds() {
+        // TODO add distance threshold and filter out worlds past that
+        return DbClient.findAll(World.class).stream().filter(world -> world.getId() != this.id).collect(Collectors.toList());
     }
 
     @Override
