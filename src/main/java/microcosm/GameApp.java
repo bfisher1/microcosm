@@ -44,7 +44,7 @@ public class GameApp {
 
         Canvas canvas = new Canvas();
         canvas.setIgnoreRepaint( true );
-        canvas.setSize( 640, 480 );
+        canvas.setSize( 840, 700 );
 
         app.add( canvas );
         app.pack();
@@ -60,25 +60,35 @@ public class GameApp {
         Graphics graphics = null;
 
         LazyTimer keyTimer = new LazyTimer(2);
-        LazyTimer graphicsTimer = new LazyTimer(4);
+        LazyTimer graphicsTimer = new LazyTimer(0);
 
         Animation background = AnimationBuilder.getBuilder().fileName("purple-background.png").build();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                handleKeys();
+            }
+        }, 0, 1);
+
 
         while( true ) {
             try {
 
-                if (keyTimer.resetIfReady()) {
-                    handleKeys();
-                }
+//                if (keyTimer.resetIfReady()) {
+//                    handleKeys();
+//                }
 
                 if(graphicsTimer.resetIfReady()) {
                     graphics = buffer.getDrawGraphics();
-                    background.draw(graphics, 0, 0);
 
-                    draw(graphics);
+                    draw(graphics, background);
 
                     if (!buffer.contentsLost())
                         buffer.show();
+
+//                    if(Camera.getInstance().getSprites().size() < 200)
+//                        System.out.println("Sprite nums " + Camera.getInstance().getSprites().size());
 
                     Thread.yield();
                 }
@@ -106,17 +116,20 @@ public class GameApp {
         }
     }
 
-    private static void draw(Graphics graphics) {
+    private static void draw(Graphics graphics, Animation background) {
 
         Camera camera = Camera.getInstance();
-
+        background.draw(graphics, 0, 0);
+        Camera.spriteLock.lock();
+        PriorityQueue<Sprite> sprites = new PriorityQueue<>(camera.getPrevSprites());
+        Camera.spriteLock.unlock();
         try {
-            PriorityQueue<Sprite> sprites = new PriorityQueue<>(camera.getSprites());
             while (!sprites.isEmpty()) {
-                sprites.remove().draw(graphics);
+                Sprite sprite = sprites.remove();
+                sprite.draw(graphics);
             }
         } catch(Exception e) {
-            System.out.println("error drawing");
+            System.out.println("error drawing" + e);
         }
     }
 
@@ -132,6 +145,8 @@ public class GameApp {
         dbWorlds.forEach(dbWorld -> {
             worlds.put(dbWorld.getId(), WorldFactory.create(dbWorld));
         });
+
+        World.loadedWorlds = new ArrayList<>(worlds.values());
 
 
         Galaxy galaxy = new Galaxy();
@@ -212,6 +227,21 @@ public class GameApp {
                         });
                     }
                 }, 0, 1000);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        worlds.forEach((id, world) -> {
+                            world.updateBlockTemperatures();
+                        });
+                    }
+                }, 0, 1000);
+            }
+        }).start();
 
 
         timer.scheduleAtFixedRate(

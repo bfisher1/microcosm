@@ -2,10 +2,10 @@ package player;
 
 import lombok.Getter;
 import microcosm.Mob;
-import animation.Animation;
 import animation.Sprite;
 import util.IntLoc;
 import util.Loc;
+import util.Lock;
 import world.World;
 import world.block.Block;
 
@@ -19,6 +19,8 @@ public class Camera {
     private Map<World, Set<IntLoc>> renderedBlocks;
     private Set<Mob> renderedMobs;
     private PriorityQueue<Sprite> sprites = new PriorityQueue<>();
+    private PriorityQueue<Sprite> prevSprites = new PriorityQueue<>();
+    public static Lock spriteLock = new Lock();
 
     private static Camera instance;
 
@@ -57,13 +59,22 @@ public class Camera {
     }
 
     public void updateVisibleBlocks() {
+        spriteLock.lock();
+        prevSprites = new PriorityQueue<>();
+        try {
+            sprites.forEach(sprite -> {
+                prevSprites.add(new Sprite(sprite));
+            });
+        } catch (ConcurrentModificationException e) {
+            System.out.println(e);
+        }
+        spriteLock.unlock();
         try {
             renderedBlocks.forEach((world, locs) -> {
                 locs.forEach(loc -> {
                     if (world.isBlockLoaded(loc.getX(), loc.getY())) {
                         Block block = world.getBlockAt(loc.getX(), loc.getY());
                         if (block != null) {
-                            Animation animation = block.getAnimation();
                             block.setScreenLoc(new Loc(world.getX() + loc.getX() * block.BLOCK_WIDTH - x, world.getY() + loc.getY() * block.BLOCK_WIDTH - y));
                         }
                     }
@@ -84,8 +95,9 @@ public class Camera {
         IntLoc start = startBlockLoc(world);
         int WIDTH = 500;
         int HEIGHT = 500;
-        int endX = start.getX() + WIDTH / Block.BLOCK_WIDTH + 2;
-        int endY = start.getY() + HEIGHT / Block.BLOCK_WIDTH + 2;
+        // just display 20 by 20 blocks
+        int endX = start.getX() + 30; // + WIDTH / Block.BLOCK_WIDTH + 2;
+        int endY = start.getY() + 24; // + HEIGHT / Block.BLOCK_WIDTH + 2;
         return new IntLoc(endX, endY);
     }
 

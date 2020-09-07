@@ -8,4 +8,5 @@ public interface Itemable {
     Animation getAnimation();
     Object getType();
     Sprite getSprite();
+    void setSprite(Sprite sprite);
 }

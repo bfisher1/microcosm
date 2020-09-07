@@ -1,5 +1,8 @@
 package world.block;
 
+import animation.Animation;
+import animation.AnimationBuilder;
+import animation.Sprite;
 import item.Container;
 import item.Item;
 import item.Itemable;
@@ -7,12 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 import microcosm.Collidable;
 import microcosm.Mob;
-import animation.Animation;
-import animation.AnimationBuilder;
-import animation.Sprite;
 import player.Camera;
 import util.IntLoc;
 import util.Loc;
+import util.MathUtil;
 import world.Chunk;
 import world.World;
 
@@ -78,6 +79,8 @@ public abstract class Block implements Collidable, Itemable, Container {
     private int y;
     private int z;
 
+    private int temperature;
+
     private int xSpriteOffset;
     private int ySpriteOffset;
     @Transient
@@ -119,6 +122,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         this.world = world;
         // add method to destroy block and remove it from list when block is removed, replaced
         // add events that occur every x seconds and update blocks in thread
+        updateTemperature();
     }
 
     public Block() {
@@ -127,6 +131,19 @@ public abstract class Block implements Collidable, Itemable, Container {
         xSpriteOffset = 0;
         ySpriteOffset = 0;
         displayItems = true;
+    }
+
+    public void updateTemperature() {
+        if (world != null) {
+            temperature = 0;
+            world.getNearbyWorlds().forEach(otherWorld -> {
+                double additionalTemperature = otherWorld.temperatureOutput();
+                double distBetweenWorlds = MathUtil.dist(world.getX() + getX() * BLOCK_WIDTH, world.getY() + getY() * BLOCK_WIDTH, otherWorld.getX(), otherWorld.getY());
+                additionalTemperature /= distBetweenWorlds;
+                additionalTemperature *= 8;
+                temperature += additionalTemperature;
+            });
+        }
     }
 
     public void setType(Type type) {
@@ -186,6 +203,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         if (sprite == null) {
             return;
         }
+        Camera.getInstance().getSprites().remove(sprite);
         // entity.removeFromWorld();
         world.removeRenderedBlock(this);
         if(above != null)
@@ -197,12 +215,12 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     private void hideItems() {
         getItems().forEach(item -> {
-            System.out.println("TODO, hide items!");
-//            com.almasb.fxgl.entity.Entity entity = item.getItem().getAnimation().getEntity();
-//            if (entity != null) {
-//                entity.removeFromWorld();
-//                item.getItem().getAnimation().setEntity(null);
-//            }
+            Sprite sprite = item.getItem().getSprite();
+            item.getItem().setSprite(null);
+            // remove sprite from camera if it's present there
+            if (sprite != null && Camera.getInstance().getSprites().contains(sprite)) {
+                Camera.getInstance().getSprites().remove(sprite);
+            }
         });
     }
 
@@ -223,14 +241,26 @@ public abstract class Block implements Collidable, Itemable, Container {
     public void showItems() {
         Camera camera = Camera.getInstance();
         getItems().forEach(item -> {
-//            item.getItem().getAnimation().createEntity(getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY(), .5, .5);
-//            // 1 above the block it's on
-//            item.getItem().getAnimation().getEntity().setZ(getZ() + 1);
+            Animation itemAnimaton = AnimationBuilder.getBuilder()
+                    .animation(item.getItem().getAnimation())
+                    .scaleX(.5)
+                    .scaleY(.5)
+                    .build();
+
+            // 1 above the block it's on, also an extra little to distinguish different items
+            Sprite sprite = new Sprite(itemAnimaton, getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY() , getZ() + 1);
+            item.getItem().setSprite(sprite);
+            // add item's sprite to camera's list of sprites
+            Camera.getInstance().getSprites().add(sprite);
         });
     }
 
     public Loc getScreenLoc() {
-        return new Loc(sprite.getX(), sprite.getY());
+        try {
+            return new Loc(sprite.getX(), sprite.getY());
+        } catch(NullPointerException e) {
+            throw e;
+        }
     }
 
     public IntLoc getIntLoc(){

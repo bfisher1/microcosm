@@ -29,7 +29,7 @@ public class Item {
         locInContainer.setX(locInContainer.getX() + x);
         locInContainer.setY(locInContainer.getY() + y);
         Sprite sprite = item.getSprite();
-        if (sprite != null) {
+        if (sprite != null && container.getSprite() != null) {
             sprite.setX(container.getScreenLoc().getX() + locInContainer.getX() + layoutOffset.getX());
             sprite.setY(container.getScreenLoc().getY() + locInContainer.getY() + layoutOffset.getY());
             sprite.setZ(getContainer().getZ() + 1);

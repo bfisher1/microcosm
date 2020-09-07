@@ -2,35 +2,50 @@ package animation;
 
 import lombok.Getter;
 import lombok.Setter;
-import player.Camera;
+import util.MathUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.PriorityQueue;
 
 @Getter
 @Setter
 public class Animation {
     private String filename;
     private List<BufferedImage> animations;
-    private int scaleX;
-    private int scaleY;
+    private double scaleX;
+    private double scaleY;
     private double delay;
     private long lastFrameChange;
     private int animIndex;
     private int frames;
+
+    private String sharedKey = null;
+    private static long lastSharedFrameChange;
+    public static Map<String, List<Animation>> shared = new HashMap<>();
 
     public Animation() {
         animations = new ArrayList<>();
         lastFrameChange = System.currentTimeMillis();
         animIndex = 0;
         frames = 1;
+        scaleX = 1.0;
+        scaleY = 1.0;
+    }
+
+    public void setSharedKey(String sharedKey) {
+        this.sharedKey = sharedKey;
+        if (sharedKey == null) {
+            return;
+        }
+        if(!Animation.shared.containsKey(sharedKey)) {
+            Animation.shared.put(sharedKey, new ArrayList<>());
+        }
+        Animation.shared.get(sharedKey).add(this);
     }
 
     public void setFilename(String fileName) {
@@ -69,17 +84,41 @@ public class Animation {
         return System.currentTimeMillis() - lastFrameChange >= delay * 1000;
     }
 
-    public void draw(Graphics g, int x, int y) {
+    public boolean timeToChangeSharedFrame() {
+        // convert time difference to seconds
+        return System.currentTimeMillis() - lastSharedFrameChange >= delay * 1000;
+    }
 
+    public void draw(Graphics g, int x, int y) {
         // draw, may want to pass graphics here
         // or have graphics as static
         if (frames > 1) {
-            if ( timeToChangeFrame() ) {
-                lastFrameChange = System.currentTimeMillis();
-                animIndex = (animIndex + 1) % animations.size();
+            if (sharedKey == null) {
+                if (timeToChangeFrame()) {
+                    lastFrameChange = System.currentTimeMillis();
+                    animIndex = (animIndex + 1) % animations.size();
+                }
+            } else {
+                if (timeToChangeSharedFrame()) {
+                    lastSharedFrameChange = System.currentTimeMillis();
+                    animIndex = (animIndex + 1) % animations.size();
+                    try {
+                        shared.get(sharedKey).forEach(anim -> {
+                            anim.animIndex = animIndex;
+                        });
+                    } catch (ConcurrentModificationException e) {
+                        System.out.println(e);
+                    }
+                }
             }
         }
-        g.drawImage(getCurrentFrame(), x, y, null);
+
+        if (MathUtil.within(scaleX, 1.0, 0.01) || MathUtil.within(scaleY, 1.0, 0.01)) {
+            g.drawImage(getCurrentFrame(), x, y, null);
+        } else {
+            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
+        }
+
     }
 
     public BufferedImage getCurrentFrame() {

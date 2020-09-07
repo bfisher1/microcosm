@@ -19,4 +19,9 @@ public class Rand {
         double y = randDoubleWithMaxAbsValue(maxY);
         return new IntLoc(x, y);
     }
+
+    public static double randDouble() {
+        return (new Random()).nextDouble();
+    }
+
 }

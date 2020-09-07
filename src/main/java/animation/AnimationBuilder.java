@@ -1,5 +1,7 @@
 package animation;
 
+import java.util.ArrayList;
+
 public class AnimationBuilder {
     private Animation animation;
 
@@ -22,19 +24,29 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder animation(Animation animation) {
+        this.animation = animation;
+        return this;
+    }
+
     public AnimationBuilder framesAndDelay(int frames, double delay) {
         getAnimation().setFrames(frames);
         getAnimation().setDelay(delay);
         return this;
     }
 
-    public AnimationBuilder scaleX(int scaleX) {
+    public AnimationBuilder scaleX(double scaleX) {
         getAnimation().setScaleX(scaleX);
         return this;
     }
 
-    public AnimationBuilder scaleY(int scaleY) {
+    public AnimationBuilder scaleY(double scaleY) {
         getAnimation().setScaleY(scaleY);
+        return this;
+    }
+
+    public AnimationBuilder sharedKey(String sharedKey) {
+        getAnimation().setSharedKey(sharedKey);
         return this;
     }
 

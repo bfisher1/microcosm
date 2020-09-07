@@ -1,10 +1,8 @@
 package world;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import player.Camera;
-import util.DbClient;
 import util.IntLoc;
 import world.block.Block;
 
@@ -25,6 +23,8 @@ public class World {
         Moon,
         Asteroid
     }
+
+    public static List<World> loadedWorlds = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -188,7 +188,34 @@ public class World {
     //@Cacheable(value = "nearbyWorlds", key=this.id)
     public List<World> getNearbyWorlds() {
         // TODO add distance threshold and filter out worlds past that
-        return DbClient.findAll(World.class).stream().filter(world -> world.getId() != this.id).collect(Collectors.toList());
+        //return DbClient.findAll(World.class).stream().filter(world -> world.getId() != this.id).collect(Collectors.toList());
+        return loadedWorlds.stream().filter(world -> world != this).collect(Collectors.toList());
+    }
+
+
+
+    public double temperatureOutput() {
+        double temp = numberOfBlocksOfType(Block.Type.Sun) * 6
+                + numberOfBlocksOfType(Block.Type.Uranium) * 2
+                + numberOfBlocksOfType(Block.Type.Plutonium) * 4;
+        System.out.println("temp " + temp);
+        return temp;
+    }
+
+    private int numberOfBlocksOfType(Block.Type type) {
+        if (blocksByType.containsKey(type)) {
+            return blocksByType.get(type).size();
+        }
+        return 0;
+    }
+
+    public void updateBlockTemperatures() {
+
+        chunks.forEach((loc, chunk) -> {
+            chunk.getBlocks().forEach((blockLoc, block) -> {
+                block.updateTemperature();
+            });
+        });
     }
 
     @Override

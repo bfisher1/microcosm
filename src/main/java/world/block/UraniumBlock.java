@@ -12,6 +12,7 @@ import javax.persistence.Table;
 public class UraniumBlock extends Block {
     public UraniumBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("uranium.png", 7, 1.4);
+        setAnimation("uranium.png", 7, .1);
+        getAnimation().setSharedKey("uranium");
     }
 }

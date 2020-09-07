@@ -14,4 +14,16 @@ public class GrassBlock extends Block {
         super(x, y, world);
         setAnimation("grass.png");
     }
+
+    public void updateTemperature() {
+        super.updateTemperature();
+
+        // todo frozen grass
+        if (getTemperature() < 49) {
+            setAnimation("grass.png");
+        }
+        else {
+            setAnimation("scorched-grass.png");
+        }
+    }
 }
