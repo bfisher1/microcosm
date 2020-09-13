@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import animation.Animation;
 import animation.AnimationBuilder;
+import playground.World;
 import util.IntLoc;
 import util.Rand;
-import world.World;
 import world.resource.CastItem;
 import world.resource.Mold;
 import world.resource.ResourceCost;
@@ -43,14 +43,14 @@ public class InjectorBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        Animation anim = AnimationBuilder.getBuilder().fileName("injector-on.png").build();
+        Animation anim = AnimationBuilder.getBuilder().fileName("3d/injector.png").build();
         //anim.setAngle(90);
         return anim;
     }
 
     @Override
     public Animation getOffAnimation() {
-        Animation anim = AnimationBuilder.getBuilder().fileName("injector-off.png").build();
+        Animation anim = AnimationBuilder.getBuilder().fileName("3d/injector.png").build();
         //anim.setAngle(90);
         return anim;
     }
@@ -76,31 +76,32 @@ public class InjectorBlock extends ElectronicDevice {
             fuel--;
             InjectorBlock injectorBlock = this;
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        // produce mold part
-                        Item item = itemsToInject.remove();
-                        Type type = (Type) item.getItem().getType();
-                        CastItem castItem = new CastItem(mold, type);
-                        // add new item to block this is facing
-                        Block neighbor = getNeighborBlock(0, -1, true);
-                        Item createdItem = new Item(castItem, new IntLoc(0, 0), neighbor);
-                        createdItem.setLayoutOffset(Rand.randomIntLoc(10, 2));
-                        neighbor.addItem(createdItem);
-                        // TODO, create entity without passing in coords
-                        //castItem.getAnimation().createEntity(0, 0).setZ(neighbor.getZ() + 1);
-                        neighbor.showItems();
-                        getNeighbors().stream().filter(block -> block.getType().equals(Type.Computer))
-                                .map(block -> (ComputerBlock) block).forEach(computerBlock -> {
-                            computerBlock.itemCreated(injectorBlock, mold);
-                        });
-                    } catch (Exception e) {
-                        //
-                    }
-                }
-            }, 0, 2000);
+            //TODO uncomment to fix
+//            timer.scheduleAtFixedRate(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        // produce mold part
+//                        Item item = itemsToInject.remove();
+//                        Type type = (Type) item.getItem().getType();
+//                        CastItem castItem = new CastItem(mold, type);
+//                        // add new item to block this is facing
+//                        Block neighbor = getNeighborBlock(0, -1, true);
+//                        Item createdItem = new Item(castItem, new IntLoc(0, 0), neighbor);
+//                        createdItem.setLayoutOffset(Rand.randomIntLoc(10, 2));
+//                        neighbor.addItem(createdItem);
+//                        // TODO, create entity without passing in coords
+//                        //castItem.getAnimation().createEntity(0, 0).setZ(neighbor.getZ() + 1);
+//                        neighbor.showItems();
+//                        getNeighbors().stream().filter(block -> block.getType().equals(Type.Computer))
+//                                .map(block -> (ComputerBlock) block).forEach(computerBlock -> {
+//                            computerBlock.itemCreated(injectorBlock, mold);
+//                        });
+//                    } catch (Exception e) {
+//                        //
+//                    }
+//                }
+//            }, 0, 2000);
         }
     }
 

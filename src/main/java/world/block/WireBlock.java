@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import animation.Animation;
 import animation.AnimationBuilder;
-import world.World;
+import playground.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -41,26 +41,26 @@ public class WireBlock extends ElectronicDevice {
         boolean right = false;
         boolean up = false;
         boolean down = false;
-        if(hasNeighborBlock(-1, 0)) {
-            if(getNeighborBlock(-1, 0).getType().equals(Type.Wire)) {
-                left = true;
-            }
-        }
-        if(hasNeighborBlock(1, 0)) {
-            if(getNeighborBlock(1, 0).getType().equals(Type.Wire)) {
-                right = true;
-            }
-        }
-        if(hasNeighborBlock(0, -1)) {
-            if(getNeighborBlock(0, -1).getType().equals(Type.Wire)) {
-                up = true;
-            }
-        }
-        if(hasNeighborBlock(0, 1)) {
-            if(getNeighborBlock(0, 1).getType().equals(Type.Wire)) {
-                down = true;
-            }
-        }
+//        if(hasNeighborBlock(-1, 0)) {
+//            if(getNeighborBlock(-1, 0).getType().equals(Type.Wire)) {
+//                left = true;
+//            }
+//        }
+//        if(hasNeighborBlock(1, 0)) {
+//            if(getNeighborBlock(1, 0).getType().equals(Type.Wire)) {
+//                right = true;
+//            }
+//        }
+//        if(hasNeighborBlock(0, -1)) {
+//            if(getNeighborBlock(0, -1).getType().equals(Type.Wire)) {
+//                up = true;
+//            }
+//        }
+//        if(hasNeighborBlock(0, 1)) {
+//            if(getNeighborBlock(0, 1).getType().equals(Type.Wire)) {
+//                down = true;
+//            }
+//        }
         if (left) {
             if (up) {
                 return "wire up left " + on + ".png";
@@ -92,13 +92,13 @@ public class WireBlock extends ElectronicDevice {
 
     public void setOn(boolean on) {
         super.setOn(on);
-        getNeighbors().forEach(block -> {
-            if(block.isElectronicDevice()) {
-                ElectronicDevice electronicDevice = (ElectronicDevice) block;
-                if(!electronicDevice.isOn())
-                    electronicDevice.setOn(true);
-            }
-        });
+//        getNeighbors().forEach(block -> {
+//            if(block.isElectronicDevice()) {
+//                ElectronicDevice electronicDevice = (ElectronicDevice) block;
+//                if(!electronicDevice.isOn())
+//                    electronicDevice.setOn(true);
+//            }
+//        });
     }
 
 }

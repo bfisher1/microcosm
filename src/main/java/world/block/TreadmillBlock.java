@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import animation.Animation;
 import animation.AnimationBuilder;
+import playground.World;
 import util.Loc;
-import world.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -33,26 +33,26 @@ public class TreadmillBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return AnimationBuilder.getBuilder().fileName("treadmill-up.png").framesAndDelay(10, .02).build();
+        return AnimationBuilder.getBuilder().fileName("3d/treadmill-up.png").framesAndDelay(10, .02).build();
     }
 
     @Override
     public Animation getOffAnimation() {
-        return AnimationBuilder.getBuilder().fileName("treadmill-up-still.png").build();
+        return AnimationBuilder.getBuilder().fileName("3d/treadmill-up-still.png").build();
     }
 
     public List<TreadmillBlock> getAlignedTreadmillBlocks() {
         // TODO, add support for horizontal and vertical treadmill blocks
-        return getVerticalNeighbors().stream().filter(block -> Type.Treadmill.equals(block.getType())).map(block -> (TreadmillBlock) block).collect(Collectors.toList());
+        return null; //getVerticalNeighbors().stream().filter(block -> Type.Treadmill.equals(block.getType())).map(block -> (TreadmillBlock) block).collect(Collectors.toList());
     }
 
     public void setOn(boolean on) {
         super.setOn(on);
-        getAlignedTreadmillBlocks().forEach(treadmillBlock -> {
-            if(!treadmillBlock.isOn()) {
-                treadmillBlock.setOn(true);
-            }
-        });
+//        getAlignedTreadmillBlocks().forEach(treadmillBlock -> {
+//            if(!treadmillBlock.isOn()) {
+//                treadmillBlock.setOn(true);
+//            }
+//        });
     }
 
     public void clearRemovedItems() {
@@ -80,32 +80,32 @@ public class TreadmillBlock extends ElectronicDevice {
     }
 
     private void moveToNeighboringBlock(Item item) {
-        //System.out.println("++++" + item.getLocInContainer());
-        item.markAsRemoved(this);
-        Block neighbor = null;
-        if (Math.abs(item.getLocInContainer().getX()) > Math.abs(item.getLocInContainer().getY()) ) {
-            // x is greater, so move horizontally
-            if (item.getLocInContainer().getX() > 0) {
-                // positive x
-                neighbor = getNeighborBlock(1, 0);
-            } else {
-                // negative x
-                neighbor = getNeighborBlock(-1, 0);
-            }
-        } else {
-            // y is greater, so move vertically
-            if (item.getLocInContainer().getY() > 0) {
-                // positive y
-                neighbor = getNeighborBlock(0, 1);
-            } else {
-                // negative y
-                neighbor = getNeighborBlock(0, -1);
-            }
-        }
-        item.setLocInContainer(new Loc(0, 0));
-        neighbor.addItem(item);
-        item.move(0,0);
-        //System.out.println(this + " neighbor " + neighbor);
+//        //System.out.println("++++" + item.getLocInContainer());
+//        item.markAsRemoved(this);
+//        Block neighbor = null;
+//        if (Math.abs(item.getLocInContainer().getX()) > Math.abs(item.getLocInContainer().getY()) ) {
+//            // x is greater, so move horizontally
+//            if (item.getLocInContainer().getX() > 0) {
+//                // positive x
+//                neighbor = getNeighborBlock(1, 0);
+//            } else {
+//                // negative x
+//                neighbor = getNeighborBlock(-1, 0);
+//            }
+//        } else {
+//            // y is greater, so move vertically
+//            if (item.getLocInContainer().getY() > 0) {
+//                // positive y
+//                neighbor = getNeighborBlock(0, 1);
+//            } else {
+//                // negative y
+//                neighbor = getNeighborBlock(0, -1);
+//            }
+//        }
+//        item.setLocInContainer(new Loc(0, 0));
+//        neighbor.addItem(item);
+//        item.move(0,0);
+//        //System.out.println(this + " neighbor " + neighbor);
     }
 
     private boolean outsideContainer(Item item) {

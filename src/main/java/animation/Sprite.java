@@ -53,11 +53,28 @@ public class Sprite implements Comparable<Sprite> {
 
     @Override
     public int compareTo(@NotNull Sprite sprite) {
-        return (int) (this.getZ() - sprite.getZ() );
+        int zDiff = (int) (this.getZ() - sprite.getZ() );
+        if (zDiff == 0) {
+            int yDiff = (this.getY() - sprite.getY() );
+            if (yDiff == 0) {
+                return (this.getX() - sprite.getX() );
+            }
+            return yDiff;
+        }
+        return zDiff;
     }
 
     public void draw(Graphics g) {
-        getAnimation().draw(g, x, y);
+        try {
+            getAnimation().draw(g, x, y);
+        } catch(Exception e){
+            int f = 0;
+            f++;
+        }
+    }
+
+    public void draw(Graphics g, int xOffset, int yOffset) {
+        getAnimation().draw(g, x + xOffset, y + yOffset);
     }
 
 }

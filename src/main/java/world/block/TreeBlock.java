@@ -1,8 +1,8 @@
 package world.block;
 
 import lombok.NoArgsConstructor;
+import playground.World;
 import util.Loc;
-import world.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

@@ -1,7 +1,7 @@
 package world.block;
 
 import lombok.NoArgsConstructor;
-import world.World;
+import playground.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,18 +12,22 @@ import javax.persistence.Table;
 public class GrassBlock extends Block {
     public GrassBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("grass.png");
+        setAnimation("3d/grass.png");
+        //updateTemperature();
     }
 
     public void updateTemperature() {
         super.updateTemperature();
+        System.out.println("temperature " + getTemperature());
 
-        // todo frozen grass
-        if (getTemperature() < 49) {
-            setAnimation("grass.png");
+        if (getTemperature() < 45) {
+            setAnimation("3d/frozen-grass.png");
+        }
+        else if (getTemperature() < 49) {
+            setAnimation("3d/grass.png");
         }
         else {
-            setAnimation("scorched-grass.png");
+            setAnimation("3d/scorched-grass.png");
         }
     }
 }

@@ -1,10 +1,19 @@
 package world.block;
 
-import world.World;
+import playground.BlockLocation;
+import playground.World;
 
 import static world.block.Block.*;
 
 public class BlockFactory {
+
+    public static Block create(BlockLocation location, Type type, World world) {
+        Block block = create(location.getX(), location.getY(), type, world);
+        block.setZ(location.getZ());
+        return block;
+    }
+
+
     public static Block create(int x, int y, Type type, World world) {
         Block block = null;
         switch(type) {

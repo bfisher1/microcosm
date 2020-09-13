@@ -9,13 +9,11 @@ import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Collidable;
-import microcosm.Mob;
-import player.Camera;
+import playground.Camera;
+import playground.World;
 import util.IntLoc;
 import util.Loc;
 import util.MathUtil;
-import world.Chunk;
-import world.World;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -48,9 +46,9 @@ public abstract class Block implements Collidable, Itemable, Container {
         return false;
     }
 
-    public void handleCollision(Mob mob) {
-        mob.handleCollision(this);
-    }
+//    public void handleCollision(Mob mob) {
+//        mob.handleCollision(this);
+//    }
 
     public enum Type {
         Grass,
@@ -108,12 +106,12 @@ public abstract class Block implements Collidable, Itemable, Container {
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private World world;
 
-    @ManyToOne
-    @JoinColumn(name = "chunk_id")
-    private Chunk chunk;
-
     @Transient
     private boolean loaded;
+
+    public void setZ(int z) {
+        this.sprite.setZ(z);
+    }
 
     public Block(int x, int y, World world) {
         this();
@@ -123,6 +121,11 @@ public abstract class Block implements Collidable, Itemable, Container {
         // add method to destroy block and remove it from list when block is removed, replaced
         // add events that occur every x seconds and update blocks in thread
         updateTemperature();
+    }
+
+    public void loadSprite() {
+        sprite = new Sprite(animation, (int) (x * BLOCK_WIDTH - Camera.getInstance().getX()), (int) (y * BLOCK_WIDTH - Camera.getInstance().getY()), getZ());
+        sprite.setZ(getZ());
     }
 
     public Block() {
@@ -136,25 +139,18 @@ public abstract class Block implements Collidable, Itemable, Container {
     public void updateTemperature() {
         if (world != null) {
             temperature = 0;
-            world.getNearbyWorlds().forEach(otherWorld -> {
+            List<World> nearbyWorlds = world.getNearbyWorlds();
+            nearbyWorlds.forEach(otherWorld -> {
                 double additionalTemperature = otherWorld.temperatureOutput();
-                double distBetweenWorlds = MathUtil.dist(world.getX() + getX() * BLOCK_WIDTH, world.getY() + getY() * BLOCK_WIDTH, otherWorld.getX(), otherWorld.getY());
+                double distBetweenWorlds = MathUtil.dist(world.getX() + getX(), world.getY() + getY(), otherWorld.getX(), otherWorld.getY());
                 additionalTemperature /= distBetweenWorlds;
-                additionalTemperature *= 8;
+                additionalTemperature *= 2.7;
                 temperature += additionalTemperature;
             });
         }
     }
 
     public void setType(Type type) {
-        // if the block is being initialized still
-        if (this.type == null) {
-            // add block to dictionary of block types in chunk
-            if (!world.getBlocksByType().containsKey(type)) {
-                world.getBlocksByType().put(type, new ArrayList<>());
-            }
-            world.getBlocksByType().get(type).add(this);
-        }
         this.type = type;
         this.typeName = type.toString();
     }
@@ -172,23 +168,14 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     public void setAnimation(String animName) {
         animation = AnimationBuilder.getBuilder().fileName(animName).build();
+        this.loadSprite();
     }
 
     public void setAnimation(Animation animation) {
         this.animation = animation;
+        this.loadSprite();
     }
 
-    public void updateAnimation() {
-        if (sprite != null) {
-            removeFromScreen();
-            addToScreen(Camera.getInstance());
-        }
-    }
-
-    public void destroy() {
-        // flag to remove from list of blocksByType eventually
-        loaded = false;
-    }
 
     public void setAnimation(String animName, int frames, double delay) {
         //TODO refactor and don't use animDelay or animFrames, redundant
@@ -196,22 +183,10 @@ public abstract class Block implements Collidable, Itemable, Container {
                 .fileName(animName)
                 .framesAndDelay(frames, delay)
                 .build();
+        this.loadSprite();
     }
 
 
-    public void removeFromScreen() {
-        if (sprite == null) {
-            return;
-        }
-        Camera.getInstance().getSprites().remove(sprite);
-        // entity.removeFromWorld();
-        world.removeRenderedBlock(this);
-        if(above != null)
-            above.removeFromScreen();
-        if (displayItems) {
-            hideItems();
-        }
-    }
 
     private void hideItems() {
         getItems().forEach(item -> {
@@ -219,24 +194,11 @@ public abstract class Block implements Collidable, Itemable, Container {
             item.getItem().setSprite(null);
             // remove sprite from camera if it's present there
             if (sprite != null && Camera.getInstance().getSprites().contains(sprite)) {
-                Camera.getInstance().getSprites().remove(sprite);
+                Camera.getInstance().removeSpriteFromScreen(sprite);
             }
         });
     }
 
-    public void addToScreen(Camera camera) {
-        sprite = new Sprite(animation, x * BLOCK_WIDTH - camera.getX(), y * BLOCK_WIDTH - camera.getY(), 1);
-        sprite.setZ(getZ());
-        world.addRenderedBlock(this);
-        if(above != null)
-            above.addToScreen(camera);
-        if (this instanceof InjectorBlock) {
-            //System.out.println("---------++++++++++++++++++++++-" + displayItems);
-        }
-        if (displayItems) {
-            showItems();
-        }
-    }
 
     public void showItems() {
         Camera camera = Camera.getInstance();
@@ -248,7 +210,7 @@ public abstract class Block implements Collidable, Itemable, Container {
                     .build();
 
             // 1 above the block it's on, also an extra little to distinguish different items
-            Sprite sprite = new Sprite(itemAnimaton, getX() * BLOCK_WIDTH - camera.getX(), getY() * BLOCK_WIDTH - camera.getY() , getZ() + 1);
+            Sprite sprite = new Sprite(itemAnimaton, getSprite().getX(), getSprite().getY() , getZ() + 1);
             item.getItem().setSprite(sprite);
             // add item's sprite to camera's list of sprites
             Camera.getInstance().getSprites().add(sprite);
@@ -256,76 +218,11 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public Loc getScreenLoc() {
-        try {
-            return new Loc(sprite.getX(), sprite.getY());
-        } catch(NullPointerException e) {
-            throw e;
-        }
+        return new Loc(sprite.getX(), sprite.getY());
     }
 
     public IntLoc getIntLoc(){
         return new IntLoc(x, y);
-    }
-
-    public boolean hasNeighborBlock(int offsetX, int offsetY) {
-        if (world.isBlockLoaded(x + offsetX, y + offsetY)) {
-            Block block = world.getBlockAt(x + offsetX, y + offsetY);
-            while(block != null && block.getZ() != z)
-                block = block.getAbove();
-            return block != null;
-        }
-        return false;
-    }
-
-    public Block getNeighborBlock(int offsetX, int offsetY) {
-        return getNeighborBlock(offsetX, offsetY, false);
-    }
-
-    public Block getNeighborBlock(int offsetX, int offsetY, boolean highest) {
-        Block block = world.getBlockAt(x + offsetX, y + offsetY);
-        //get block at same z
-        while(block != null && block.getZ() != z)
-            block = block.getAbove();
-        if (block == null) {
-            block = world.getBlockAt(x + offsetX, y + offsetY);
-            if (highest) {
-                while(block != null && block.getAbove() != null)
-                    block = block.getAbove();
-            }
-        }
-        return block;
-    }
-
-
-    public List<Block> getHorizontalNeighbors() {
-        List<Block> neighbors = new ArrayList<>();
-        if(hasNeighborBlock(-1, 0))
-            neighbors.add(getNeighborBlock(-1, 0, true));
-        if(hasNeighborBlock(1, 0))
-            neighbors.add(getNeighborBlock(1, 0, true));
-        return neighbors;
-    }
-
-    public List<Block> getVerticalNeighbors() {
-        List<Block> neighbors = new ArrayList<>();
-        if(hasNeighborBlock(0, -1))
-            neighbors.add(getNeighborBlock(0, -1, true));
-        if(hasNeighborBlock(0, 1))
-            neighbors.add(getNeighborBlock(0, 1, true));
-        return neighbors;
-    }
-
-    public List<Block> getNeighbors() {
-        List<Block> neighbors = new ArrayList<>();
-        if(hasNeighborBlock(0, -1))
-            neighbors.add(getNeighborBlock(0, -1));
-        if(hasNeighborBlock(-1, 0))
-            neighbors.add(getNeighborBlock(-1, 0));
-        if(hasNeighborBlock(1, 0))
-            neighbors.add(getNeighborBlock(1, 0));
-        if(hasNeighborBlock(0, 1))
-            neighbors.add(getNeighborBlock(0, 1));
-        return neighbors;
     }
 
     public boolean isElectronicDevice() {
@@ -357,24 +254,6 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     public String toString() {
         return "{" + type.toString() + ": (" + getX() + "," + getY() + ")}";
-    }
-
-    public void move(Loc diff) {
-        Loc loc = getScreenLoc();
-        loc.increase(diff);
-        setScreenLoc(loc);
-    }
-
-    public boolean onScreen() {
-        int WIDTH = 500;
-        int HEIGHT = 500;
-        return sprite != null && sprite.getX() > 0 && sprite.getY() >  0 && sprite.getX() < WIDTH && sprite.getY() < HEIGHT;
-    }
-
-    public void move(double x, double y) {
-        move(new Loc(x, y));
-        if(above != null)
-            above.move(x, y);
     }
 
     public void addItem(Item item) {

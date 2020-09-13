@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import animation.Animation;
-import world.World;
+import playground.World;
 
 import javax.persistence.*;
 
@@ -40,7 +40,6 @@ public abstract class ElectronicDevice extends Block {
             setAnimation(getOnAnimation());
         else
             setAnimation(getOffAnimation());
-        updateAnimation();
     }
 
 }

@@ -58,15 +58,23 @@ public class Animation {
         BufferedImage bufferedImage;
         try {
             int width, height;
-            bufferedImage = ImageIO.read(new File(filename));
-            width = bufferedImage.getWidth(null);
-            height = bufferedImage.getHeight(null);
-            if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB) {
-                BufferedImage bi2 =
-                        new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-                Graphics big = bi2.getGraphics();
-                big.drawImage(bufferedImage, 0, 0, null);
-                bufferedImage = bi2;
+
+            if(ImageBank.images.containsKey(filename)) {
+                bufferedImage = ImageBank.images.get(filename);
+                width = bufferedImage.getWidth();
+                height = bufferedImage.getHeight();
+            } else {
+                bufferedImage = ImageIO.read(new File(filename));
+                width = bufferedImage.getWidth(null);
+                height = bufferedImage.getHeight(null);
+                if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB) {
+                    BufferedImage bi2 =
+                            new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics big = bi2.getGraphics();
+                    big.drawImage(bufferedImage, 0, 0, null);
+                    bufferedImage = bi2;
+                }
+                ImageBank.images.put(filename, bufferedImage);
             }
 
             int frameHeight = height / frames;

@@ -1,5 +1,7 @@
 package world;
 
+import playground.Sun;
+import playground.World;
 import util.IntLoc;
 import world.block.Block;
 import world.block.BlockFactory;

@@ -3,7 +3,7 @@ package world.block;
 import lombok.NoArgsConstructor;
 import animation.Animation;
 import animation.AnimationBuilder;
-import world.World;
+import playground.World;
 import world.resource.Mold;
 
 import javax.persistence.Entity;

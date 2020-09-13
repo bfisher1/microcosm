@@ -1,7 +1,8 @@
 package world.block;
 
+import animation.AnimationBuilder;
 import lombok.NoArgsConstructor;
-import world.World;
+import playground.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,6 +13,6 @@ import javax.persistence.Table;
 public class WaterBlock extends Block {
     public WaterBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("water-1.png");
+        setAnimation(AnimationBuilder.getBuilder().fileName("3d/water-still.png").build());
     }
 }
