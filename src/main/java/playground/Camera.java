@@ -37,7 +37,12 @@ public class Camera {
     }
 
     public void removeSpriteFromScreen(Sprite sprite) {
-        sprites.remove(sprite);
+        if (sprites.contains(sprite))
+            try {
+                sprites.remove(sprite);
+            } catch(Exception e) {
+                System.out.println(e);
+            }
     }
 
 }

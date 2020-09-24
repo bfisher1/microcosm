@@ -1,17 +1,35 @@
 package playground;
 
+import animation.Sprite;
 import lombok.Getter;
 import lombok.Setter;
+import mob.*;
 import util.MathUtil;
+import util.Rand;
+import world.PerlinNoise;
 import world.block.Block;
 import world.block.BlockFactory;
 import world.block.TreadmillBlock;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
 public class World {
+
+    private static int worldCount = 0;
+
+    private int id = 0;
+
+    public static List<World> worlds = new ArrayList<>();
+
+    public List<Mob> mobs = new ArrayList<>();
+
+    public void replaceBlockWithType(Block old, Block.Type newType) {
+        old.removeFromWorld();
+        blocks.put(old.getLocation(), BlockFactory.create(old.getLocation(), newType, this));
+    }
 
     public enum Type {
         World,
@@ -20,7 +38,7 @@ public class World {
         Asteroid
     }
 
-    private Map<BlockLocation, Block> blocks = new HashMap<>();
+    private Map<BlockLocation, Block> blocks = new ConcurrentHashMap<>();
 
     private double x, y;
 
@@ -30,48 +48,121 @@ public class World {
     private static double WORLD_COORD_SCALE = 32.0;
 
     public World() {
+        worlds.add(this);
+        worldCount++;
+        this.id = worldCount;
     }
 
     public World(double x, double y, int radius) {
+        this();
         this.radius = radius;
         this.x = x;
         this.y = y;
         for(int i = -radius; i <= radius; i++) {
             for(int j = -radius; j <= radius; j++) {
+
                 if (MathUtil.dist(0, 0, i, j) <= radius) {
-                    createBlockAt(i, j, 0, Block.Type.Grass);
+                    createBlockAt(i, j, 0, Block.Type.Stone);
+                    double height = PerlinNoise.getHeight(i, j, .04, 8, 1);
+                    if (height > .9) {
+                        createBlockAt(i, j, 1, Block.Type.Water);
+                    } else {
+                        createBlockAt(i, j, 1, Block.Type.Grass);
+                    }
+                    if (Rand.randDouble() < .05) {
+                        createBlockAt(i, j, 2, Block.Type.Tree);
+                    }
                 }
             }
 
         }
-        for(int z = 1; z < 5; z++) {
-            createBlockAt(0, 0, z, Block.Type.Stone);
+
+
+//        int mountainHeight = 5;
+//
+//        for(int z = 1; z < mountainHeight; z++) {
+//            int heightLeft = mountainHeight - z;
+//            for(int i = -heightLeft; i < heightLeft; i++ ) {
+//                for(int j = -heightLeft; j < heightLeft; j++ ) {
+//                    createBlockAt(i, j, z * 10, Block.Type.Stone);
+//                }
+//            }
+//        }
+
+        // getBlockAt(0, 0, 4).get()
+
+        createBlockAt(5, 5, 2, Block.Type.Injector);
+        ((TreadmillBlock) createBlockAt(5, 6, 2, Block.Type.Treadmill)).setOn(true);
+        ((TreadmillBlock) createBlockAt(5, 4, 2, Block.Type.Treadmill)).setOn(true);
+        createBlockAt(5, 7, 2, Block.Type.Water);
+
+
+        createBlockAt(6, 6, 2, Block.Type.Grass);
+
+
+        int s = 5;
+
+        for(int i = 0; i < 1; i++) {
+            mobs.add(new Imp(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
+            mobs.add(new Wolf(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
+            mobs.add(new Wizard(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
+            mobs.add(new Baboon(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
+            mobs.add(new Moose(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
         }
-
-        createBlockAt(5, 5, 1, Block.Type.Injector);
-        ((TreadmillBlock) createBlockAt(5, 6, 1, Block.Type.Treadmill)).setOn(true);
-        ((TreadmillBlock) createBlockAt(5, 4, 1, Block.Type.Treadmill)).setOn(true);
-        createBlockAt(5, 7, 1, Block.Type.Water);
-
-
-        createBlockAt(6, 6, 1, Block.Type.Grass);
+        mobs.add(new Grape(8, 8, 2, this));
 
     }
 
     protected Block createBlockAt(int x, int y, int z, Block.Type type) {
         BlockLocation location = new BlockLocation(x, y, z);
-        blocks.put(location, BlockFactory.create(x, y, type, null));
+        Block block = BlockFactory.create(location, type, this);
+        blocks.put(location, block);
         blocks.get(location).setZ(z);
         adjustSprite(blocks.get(location));
         return blocks.get(location);
     }
 
+    public Optional<Block> getBlockAt(int x, int y, int z) {
+        BlockLocation location = new BlockLocation(x, y, z);
+        if (blocks.containsKey(location)) {
+            return Optional.of(blocks.get(location));
+        }
+        return Optional.empty();
+    }
+
     public void adjustSprite(Block block) {
+        adjustSprite(block, block.getSprite());
+        block.getSprite().backgroundSprites.forEach(sprite -> {
+            adjustSprite(block, sprite);
+        });
+    }
+
+    public void adjustSprite(Mob mob) {
+        adjustSprite(mob, mob.getSprite());
+        mob.getSprite().backgroundSprites.forEach(sprite -> {
+            adjustSprite(mob, sprite);
+        });
+    }
+
+    public void adjustSprite(Mob mob, Sprite sprite) {
         int s = 22;
         int s2 = 22;
         int s3 = 10;
-        block.getSprite().setX(block.getX() * s + block.getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
-        block.getSprite().setY(block.getX() * s - block.getY() * s2 - block.getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+        // TODO, work for off world anims
+        sprite.setX(mob.getLocation().getX() * s + mob.getLocation().getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
+        sprite.setY(mob.getLocation().getX() * s - mob.getLocation().getY() * s2 - mob.getLocation().getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+        // we tack on the id to make worlds consistently above/below others
+        sprite.setZ(mob.getLocation().getZ() + ((double) id) / 10000.0 );
+    }
+
+    public void adjustSprite(Block block, Sprite sprite) {
+        int s = 22;
+        int s2 = 22;
+        int s3 = 10;
+        sprite.setX(block.getX() * s + block.getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
+        sprite.setY(block.getX() * s - block.getY() * s2 - block.getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+        // we tack on the id to make worlds consistently above/below others
+        sprite.setZ(block.getZ() + ((double) id) / 10000.0 );
     }
 
     public void shift(double x, double y) {
@@ -80,18 +171,21 @@ public class World {
     }
 
     public List<World> getNearbyWorlds() {
-        // toDO port
-        return new ArrayList<>();
+        // toDO filter nearbyness
+        // filter out this world
+        return worlds;
     }
 
 
     public double temperatureOutput() {
         //toDO port
-        return 0;
+        return blocks.values().stream().filter(block -> block.getType().equals(Block.Type.Sun)).count() * 5 +
+               blocks.values().stream().filter(block -> block.getType().equals(Block.Type.Uranium)).count() * 2 +
+               blocks.values().stream().filter(block -> block.getType().equals(Block.Type.Plutonium)).count() * 1;
     }
 
 
-    public Collection<Block> getBlocks() {
+    public Collection<Block> getBlockList() {
         return blocks.values();
     }
 }

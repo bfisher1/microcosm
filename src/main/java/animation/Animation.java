@@ -19,6 +19,8 @@ public class Animation {
     private List<BufferedImage> animations;
     private double scaleX;
     private double scaleY;
+    private int xOffset;
+    private int yOffset;
     private double delay;
     private long lastFrameChange;
     private int animIndex;

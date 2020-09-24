@@ -45,6 +45,16 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder xOffset(int xOffset) {
+        getAnimation().setXOffset(xOffset);
+        return this;
+    }
+
+    public AnimationBuilder yOffset(int yOffset) {
+        getAnimation().setYOffset(yOffset);
+        return this;
+    }
+
     public AnimationBuilder sharedKey(String sharedKey) {
         getAnimation().setSharedKey(sharedKey);
         return this;

@@ -75,7 +75,7 @@ public class PerlinNoise {
         return fin / div;
     }
 
-    static double getHeight(double x, double y, double freq, int depth, int seed) {
+    public static double getHeight(double x, double y, double freq, int depth, int seed) {
         double xa = x * freq;
         double ya = y * freq;
         double amp = 1.0;

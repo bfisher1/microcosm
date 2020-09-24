@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,7 +16,10 @@ public class Sprite implements Comparable<Sprite> {
     private int x;
     private int y;
     private double z;
+    private int xOffset;
+    private int yOffset;
     public static int count = 0;
+    public List<Sprite> backgroundSprites = new ArrayList<>();
 
     public Sprite() {
         count++;
@@ -25,6 +30,8 @@ public class Sprite implements Comparable<Sprite> {
         this.x = sprite.x;
         this.y = sprite.y;
         this.z = sprite.z;
+        this.xOffset = sprite.xOffset;
+        this.yOffset = sprite.yOffset;
     }
 
     public Sprite(Animation animation, int x, int y, double z) {
@@ -32,7 +39,7 @@ public class Sprite implements Comparable<Sprite> {
         this.animation = animation;
         this.x = x;
         this.y = y;
-        this.z = z + ( (double) Sprite.count) * .00001;
+        this.z = z + ( (double) Sprite.count) * .001;
     }
 
     public void setX(double x) {
@@ -54,7 +61,7 @@ public class Sprite implements Comparable<Sprite> {
     @Override
     public int compareTo(@NotNull Sprite sprite) {
         int zDiff = (int) (this.getZ() - sprite.getZ() );
-        if (zDiff == 0) {
+        if (Math.abs(zDiff) < 0.001) {
             int yDiff = (this.getY() - sprite.getY() );
             if (yDiff == 0) {
                 return (this.getX() - sprite.getX() );
@@ -66,15 +73,20 @@ public class Sprite implements Comparable<Sprite> {
 
     public void draw(Graphics g) {
         try {
-            getAnimation().draw(g, x, y);
+            backgroundSprites.forEach(sprite -> sprite.draw(g));
+            getAnimation().draw(g, x + getAnimation().getXOffset(), y + + getAnimation().getYOffset());
         } catch(Exception e){
-            int f = 0;
-            f++;
+            System.out.println(e);
         }
     }
 
     public void draw(Graphics g, int xOffset, int yOffset) {
+        backgroundSprites.forEach(sprite -> sprite.draw(g, xOffset, yOffset));
         getAnimation().draw(g, x + xOffset, y + yOffset);
     }
 
+    public void addBackgroundSprite(Animation background) {
+        Sprite sprite = new Sprite(background, this.x, this.y, this.z);
+        backgroundSprites.add(sprite);
+    }
 }

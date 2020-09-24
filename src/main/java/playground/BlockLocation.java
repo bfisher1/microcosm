@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class BlockLocation {
+public class BlockLocation implements Location<Integer> {
     int x;
     int y;
     int z;
@@ -26,4 +28,37 @@ public class BlockLocation {
     public int hashCode() {
         return (x + "," + y + "," + z).hashCode();
     }
+
+    @Override
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
+    @Override
+    public void setZ(Integer z) {
+        this.z = z;
+    }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public Integer getZ() {
+        return z;
+    }
+
+    @Override
+    public Optional<World> getWorld() {
+        return Optional.empty();
+    }
+
 }

@@ -9,6 +9,7 @@ import item.Itemable;
 import lombok.Getter;
 import lombok.Setter;
 import microcosm.Collidable;
+import playground.BlockLocation;
 import playground.Camera;
 import playground.World;
 import util.IntLoc;
@@ -18,6 +19,8 @@ import util.MathUtil;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -44,6 +47,20 @@ public abstract class Block implements Collidable, Itemable, Container {
     @Override
     public boolean isCollidingWith(Collidable otherMob) {
         return false;
+    }
+
+    public boolean onFire = false;
+
+    public void setOnFire(boolean onFire) {
+        // if onFire now but wasn't previously, create fire sprite
+        if (onFire && !this.onFire) {
+            this.getSprite().addBackgroundSprite(AnimationBuilder.getBuilder().fileName("3d/fire.png").framesAndDelay(10, 0.1).build());
+        }
+        this.onFire = onFire;
+    }
+
+    public BlockLocation getLocation() {
+        return new BlockLocation(this.x, this.y, this.z);
     }
 
 //    public void handleCollision(Mob mob) {
@@ -110,7 +127,9 @@ public abstract class Block implements Collidable, Itemable, Container {
     private boolean loaded;
 
     public void setZ(int z) {
-        this.sprite.setZ(z);
+        this.z = z;
+        if (this.sprite != null)
+            this.sprite.setZ(z);
     }
 
     public Block(int x, int y, World world) {
@@ -124,8 +143,50 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void loadSprite() {
-        sprite = new Sprite(animation, (int) (x * BLOCK_WIDTH - Camera.getInstance().getX()), (int) (y * BLOCK_WIDTH - Camera.getInstance().getY()), getZ());
-        sprite.setZ(getZ());
+        if (sprite == null) {
+            sprite = new Sprite(animation, (int) (x * BLOCK_WIDTH - Camera.getInstance().getX()), (int) (y * BLOCK_WIDTH - Camera.getInstance().getY()), getZ());
+            sprite.setZ(getZ());
+        } else {
+            sprite.setAnimation(this.animation);
+        }
+    }
+
+    public void removeFromWorld() {
+        Camera.getInstance().removeSpriteFromScreen(this.getSprite());
+        world.getBlocks().remove(getLocation());
+    }
+
+    /*
+     * Block offset by x, y, z from this one.
+     */
+    public Optional<Block> blockRelative(int x, int y, int z) {
+        BlockLocation location = getLocation();
+        location.setX(location.getX() + x);
+        location.setY(location.getY() + y);
+        location.setZ(location.getZ() + z);
+
+        Block block = world.getBlocks().get(location);
+        if (block != null) {
+            return Optional.of(block);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Block> blockAbove() {
+        return blockRelative(0, 0, 1);
+    }
+
+    public Optional<Block> blockBelow() {
+        return blockRelative(0, 0, 1);
+    }
+
+    public List<Block> cardinalNeighbors() {
+        List<Optional<Block>> neighborOptionals = new ArrayList<>();
+        neighborOptionals.add(blockRelative(1, 0, 0));
+        neighborOptionals.add(blockRelative(-1, 0, 0));
+        neighborOptionals.add(blockRelative(0, 1, 0));
+        neighborOptionals.add(blockRelative(0, -1, 0));
+        return neighborOptionals.stream().filter(n -> n.isPresent()).map(n -> n.get()).collect(Collectors.toList());
     }
 
     public Block() {
@@ -136,16 +197,28 @@ public abstract class Block implements Collidable, Itemable, Container {
         displayItems = true;
     }
 
+
     public void updateTemperature() {
         if (world != null) {
             temperature = 0;
             List<World> nearbyWorlds = world.getNearbyWorlds();
             nearbyWorlds.forEach(otherWorld -> {
                 double additionalTemperature = otherWorld.temperatureOutput();
-                double distBetweenWorlds = MathUtil.dist(world.getX() + getX(), world.getY() + getY(), otherWorld.getX(), otherWorld.getY());
-                additionalTemperature /= distBetweenWorlds;
-                additionalTemperature *= 2.7;
-                temperature += additionalTemperature;
+                // this really should use the nearest block in the sun to calculate
+
+                // TODO, just get this from block map in world
+                Optional<Block> otherWorldCenter = otherWorld.getBlockList().stream().filter(block -> block.getX() == 0 && block.y == 0).findFirst();
+                // for now, just using sprites to calculate distance
+                if (otherWorldCenter.isPresent()) {
+                    Sprite otherWorldCenterSprite = otherWorldCenter.get().sprite;
+                    if (sprite != null) {
+                        double distBetweenWorlds = MathUtil.dist(otherWorldCenterSprite.getX(), otherWorldCenterSprite.getY(), sprite.getX(), sprite.getY());
+                        // for now using radius
+                        additionalTemperature /= (distBetweenWorlds - otherWorld.getRadius());
+                        additionalTemperature *= 30;
+                        temperature += additionalTemperature;
+                    }
+                }
             });
         }
     }
@@ -253,7 +326,7 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public String toString() {
-        return "{" + type.toString() + ": (" + getX() + "," + getY() + ")}";
+        return "{" + type.toString() + ": (" + getX() + "," + getY() + ", " + getZ() + ")}";
     }
 
     public void addItem(Item item) {
