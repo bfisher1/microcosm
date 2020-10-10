@@ -29,6 +29,7 @@ public class GameApp {
     public static int HEIGHT = 850;
     public static int MIN_CAMERA_X = -50;
     public static int MIN_CAMERA_Y = -50;
+    private static Canvas canvas;
 
 
     public static void main(String[] args) {
@@ -38,7 +39,7 @@ public class GameApp {
         app.addKeyListener(new KeyManager());
 
 
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         canvas.setIgnoreRepaint( true );
         canvas.setSize( 840, 700 );
 
@@ -113,6 +114,13 @@ public class GameApp {
                     graphics.dispose();
             }
         }
+    }
+
+    public static Point getMouseLocation() {
+        if (canvas == null || canvas.getMousePosition() == null) {
+            return new Point(0, 0);
+        }
+        return canvas.getMousePosition();
     }
 
     private static void handleKeys() {

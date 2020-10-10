@@ -53,7 +53,7 @@ public abstract class Mob {
     public Optional<Block> getBlockBelow(double xOffset, double yOffset) {
         // subtract 1 from z to get block below
         if (location.getWorld().isPresent()) {
-            return location.getWorld().get().getBlockAt((int) (location.getX() + xOffset), (int) (location.getY() + yOffset), location.getZ().intValue() - 1);
+            return location.getWorld().get().getBlockAt((int) (location.getX() + xOffset -.5), (int) (location.getY() + yOffset - .5), location.getZ().intValue() - 1);
         }
         return Optional.empty();
     }

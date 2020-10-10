@@ -1,5 +1,6 @@
 package playground;
 
+import animation.AnimationBuilder;
 import animation.Sprite;
 import lombok.Getter;
 import lombok.Setter;
@@ -144,15 +145,44 @@ public class World {
         });
     }
 
+    private Set<Block> blockMap = new HashSet<>();
+
     public void adjustSprite(Mob mob, Sprite sprite) {
         int s = 22;
         int s2 = 22;
         int s3 = 10;
         // TODO, work for off world anims
-        sprite.setX(mob.getLocation().getX() * s + mob.getLocation().getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
-        sprite.setY(mob.getLocation().getX() * s - mob.getLocation().getY() * s2 - mob.getLocation().getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
-        // we tack on the id to make worlds consistently above/below others
-        sprite.setZ(mob.getLocation().getZ() + ((double) id) / 10000.0 );
+
+        if (mob instanceof Grape) {
+            Optional<Block> block = mob.getBlockBelow();
+            if (block.isPresent()) {
+
+
+
+                double y = block.get().getY();//
+                double x = block.get().getX();//
+                double z = mob.getLocation().getZ();
+                sprite.setX(x * s + (y) * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
+                sprite.setY(x * s - (y) * s2 - z * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+                // we tack on the id to make worlds consistently above/below others
+                sprite.setZ(z + ((double) id) / 10000.0 );
+
+                blockMap.add(block.get());
+                for (int i = -1; i < 1; i++) {
+                    for(int j = -1; j < 1; j++) {
+                        Optional<Block> otherBlock = mob.getBlockBelow().get().blockRelative(i, j, 0);
+                        if (otherBlock.isPresent()) {
+                            otherBlock.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("3d/sand.png").build());
+                        }
+                    }
+                }
+                block.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("3d/water-still.png").build());
+                System.out.println("Block at: " + block.toString());
+
+            } else {
+                //System.out.println("couldnt find block ++++++++++++++++++++++++++++++++++++++++++++++++++++++=====+++=");
+            }
+        }
     }
 
     public void adjustSprite(Block block, Sprite sprite) {
