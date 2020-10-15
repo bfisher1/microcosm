@@ -13,11 +13,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.*;
 
 /*
@@ -25,7 +22,7 @@ import java.util.*;
  * window.  The rectangle flickers and draws slowly because this applet does not use
  * double buffering.
  */
-public class GameApp {
+public class GameApp2 {
 
     public static int WIDTH = 850;
     public static int HEIGHT = 850;
@@ -106,25 +103,37 @@ public class GameApp {
             }
         }, 0, 5);
 
+//
+//        worlds.stream().forEach(world -> {
+//            world.getBlockList().forEach(block -> {
+//                Camera.getInstance().addSpriteToScreen(block.getSprite());
+//            });
+//        });
 
-        worlds.stream().forEach(world -> {
-            world.getBlockList().forEach(block -> {
-                Camera.getInstance().addSpriteToScreen(block.getSprite());
-            });
-        });
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                new Thread(() -> worlds.parallelStream().forEach(world -> {
+//                    world.getBlocks().forEach((loc, block) -> {
+//                        block.updateTemperature();
+//                        sun.setX(sun.getX() - .001);
+//                    });
+//                })).start();
+//            }
+//        }, 0, 1500);
 
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                new Thread(() -> worlds.parallelStream().forEach(world -> {
-                    world.getBlocks().forEach((loc, block) -> {
-                        block.updateTemperature();
-                        sun.setX(sun.getX() - .001);
-                    });
-                })).start();
-            }
-        }, 0, 1500);
 
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                new Thread(() -> worlds.parallelStream().forEach(world -> {
+//                    world.getBlocks().forEach((loc, block) -> {
+//                        block.updateTemperature();
+//                        sun.setX(sun.getX() - .001);
+//                    });
+//                })).start();
+//            }
+//        }, 0, 1500);
 
         while( true ) {
             try {

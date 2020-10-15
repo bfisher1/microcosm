@@ -1,6 +1,5 @@
 package animation;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +19,7 @@ public class Sprite implements Comparable<Sprite> {
     private int yOffset;
     public static int count = 0;
     public List<Sprite> backgroundSprites = new ArrayList<>();
+    public List<Sprite> foregroundSprites = new ArrayList<>();
 
     public Sprite() {
         count++;
@@ -74,7 +74,8 @@ public class Sprite implements Comparable<Sprite> {
     public void draw(Graphics g) {
         try {
             backgroundSprites.forEach(sprite -> sprite.draw(g));
-            getAnimation().draw(g, x + getAnimation().getXOffset(), y + + getAnimation().getYOffset());
+            getAnimation().draw(g, x + getAnimation().getXOffset(), y + getAnimation().getYOffset());
+            foregroundSprites.forEach(sprite -> sprite.draw(g));
         } catch(Exception e){
             System.out.println(e);
         }
@@ -83,10 +84,16 @@ public class Sprite implements Comparable<Sprite> {
     public void draw(Graphics g, int xOffset, int yOffset) {
         backgroundSprites.forEach(sprite -> sprite.draw(g, xOffset, yOffset));
         getAnimation().draw(g, x + xOffset, y + yOffset);
+        foregroundSprites.forEach(sprite -> sprite.draw(g, xOffset, yOffset));
     }
 
     public void addBackgroundSprite(Animation background) {
         Sprite sprite = new Sprite(background, this.x, this.y, this.z);
         backgroundSprites.add(sprite);
+    }
+
+    public void addForegroundSprite(Animation background) {
+        Sprite sprite = new Sprite(background, this.x, this.y, this.z);
+        foregroundSprites.add(sprite);
     }
 }

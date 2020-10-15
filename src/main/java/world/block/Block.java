@@ -146,6 +146,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         if (sprite == null) {
             sprite = new Sprite(animation, (int) (x * BLOCK_WIDTH - Camera.getInstance().getX()), (int) (y * BLOCK_WIDTH - Camera.getInstance().getY()), getZ());
             sprite.setZ(getZ());
+            //sprite.addForegroundSprite(AnimationBuilder.getBuilder().fileName("3d/shadow.png").build());
         } else {
             sprite.setAnimation(this.animation);
         }

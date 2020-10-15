@@ -136,11 +136,17 @@ public class World {
         block.getSprite().backgroundSprites.forEach(sprite -> {
             adjustSprite(block, sprite);
         });
+        block.getSprite().foregroundSprites.forEach(sprite -> {
+            adjustSprite(block, sprite);
+        });
     }
 
     public void adjustSprite(Mob mob) {
         adjustSprite(mob, mob.getSprite());
         mob.getSprite().backgroundSprites.forEach(sprite -> {
+            adjustSprite(mob, sprite);
+        });
+        mob.getSprite().foregroundSprites.forEach(sprite -> {
             adjustSprite(mob, sprite);
         });
     }

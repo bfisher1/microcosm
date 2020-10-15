@@ -82,7 +82,22 @@ public class Animation {
             int frameHeight = height / frames;
 
             for(int i = 0; i < frames; i++) {
-                animations.add(bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight));
+                BufferedImage subImage = bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight);
+
+                for (int y = 0; y < subImage.getHeight(); y += 10) {
+                    for (int x = 0; x < subImage.getWidth(); x += 10) {
+                        int pixel = subImage.getRGB(x, y);
+                        if( (pixel>>24) != 0x00 ) {
+                            subImage.setRGB(x, y, 0 );
+                        }
+                    }
+                }
+
+//                Graphics graphics = subImage.getGraphics();
+//                graphics.setColor(new Color(0, 0, 0, 2));
+//                graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+
+                animations.add(subImage);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Image could not be read");
