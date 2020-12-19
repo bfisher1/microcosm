@@ -84,14 +84,14 @@ public class Animation {
             for(int i = 0; i < frames; i++) {
                 BufferedImage subImage = bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight);
 
-                for (int y = 0; y < subImage.getHeight(); y += 10) {
-                    for (int x = 0; x < subImage.getWidth(); x += 10) {
-                        int pixel = subImage.getRGB(x, y);
-                        if( (pixel>>24) != 0x00 ) {
-                            subImage.setRGB(x, y, 0 );
-                        }
-                    }
-                }
+//                for (int y = 0; y < subImage.getHeight(); y += 10) {
+//                    for (int x = 0; x < subImage.getWidth(); x += 10) {
+//                        int pixel = subImage.getRGB(x, y);
+//                        if( (pixel>>24) != 0x00 ) {
+//                            subImage.setRGB(x, y, 0 );
+//                        }
+//                    }
+//                }
 
 //                Graphics graphics = subImage.getGraphics();
 //                graphics.setColor(new Color(0, 0, 0, 2));
@@ -114,9 +114,11 @@ public class Animation {
         return System.currentTimeMillis() - lastSharedFrameChange >= delay * 1000;
     }
 
-    public void draw(Graphics g, int x, int y) {
-        // draw, may want to pass graphics here
-        // or have graphics as static
+    public void draw(Graphics2D g, int x, int y) {
+        draw(g, x, y, 0);
+    }
+
+    public void draw(Graphics2D g, int x, int y, double angle) {
         if (frames > 1) {
             if (sharedKey == null) {
                 if (timeToChangeFrame()) {
@@ -138,10 +140,19 @@ public class Animation {
             }
         }
 
+        int width = getCurrentFrame().getWidth();
+        int height = getCurrentFrame().getHeight();
+
+        BufferedImage rotated = new BufferedImage(width, height, getCurrentFrame().getType());
+        Graphics2D graphic = rotated.createGraphics();
+        graphic.rotate(Math.toRadians(angle), width/2, height/2);
+        graphic.drawImage(getCurrentFrame(), null, 0, 0);
+        graphic.dispose();
+
         if (MathUtil.within(scaleX, 1.0, 0.01) || MathUtil.within(scaleY, 1.0, 0.01)) {
-            g.drawImage(getCurrentFrame(), x, y, null);
+            g.drawImage(rotated, x, y, null);
         } else {
-            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
+            g.drawImage(rotated, x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
         }
 
     }
