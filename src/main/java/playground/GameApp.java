@@ -131,7 +131,7 @@ public class GameApp {
                 if(graphicsTimer.resetIfReady()) {
 
                     updateWorldSprites(worlds);
-                    draw((Graphics2D) buffer.getDrawGraphics(), background);
+                    draw(buffer.getDrawGraphics(), background);
 
                     if (!buffer.contentsLost())
                         buffer.show();
@@ -170,7 +170,6 @@ public class GameApp {
 
     private static void updateWorldSprites(Collection<World> worlds) {
         worlds.forEach(world -> {
-            //world.setAngle(world.getAngle() + 1);
             world.getBlocks().forEach((location, block) -> {
                world.adjustSprite(block);
                if((block.getSprite().getX() < MIN_CAMERA_X || block.getSprite().getX() > WIDTH || block.getSprite().getY() < MIN_CAMERA_Y || block.getSprite().getY() > HEIGHT) || shouldNotBeVisible(block)) {
@@ -199,7 +198,7 @@ public class GameApp {
         return  (block.blockAbove().isPresent() && !block.blockAbove().get().getType().equals(Block.Type.Tree)) && block.cardinalNeighbors().size() == 4;
     }
 
-    private static void draw(Graphics2D graphics, Animation background) {
+    private static void draw(Graphics graphics, Animation background) {
 
         background.draw(graphics, 0, 0);
 

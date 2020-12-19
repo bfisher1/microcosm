@@ -14,12 +14,7 @@ public class Sprite implements Comparable<Sprite> {
     private Animation animation;
     private int x;
     private int y;
-
-    private double sortX;
-    private double sortY;
-
     private double z;
-    private double angle = 57;
     private int xOffset;
     private int yOffset;
     public static int count = 0;
@@ -65,26 +60,31 @@ public class Sprite implements Comparable<Sprite> {
 
     @Override
     public int compareTo(@NotNull Sprite sprite) {
-        double magicScale = 1000000;
-        int zDiff = (int) (this.getZ() - sprite.getZ());
+        int zDiff = (int) (this.getZ() - sprite.getZ() );
         if (Math.abs(zDiff) < 0.001) {
-            int yDiff = (int) ((this.sortY - sprite.sortY ) * magicScale);
+            int yDiff = (this.getY() - sprite.getY() );
             if (yDiff == 0) {
-                return (int) ((this.sortX - sprite.sortX ) * magicScale);
+                return (this.getX() - sprite.getX() );
             }
             return yDiff;
         }
         return zDiff;
     }
 
-    public void draw(Graphics2D g) {
+    public void draw(Graphics g) {
         try {
             backgroundSprites.forEach(sprite -> sprite.draw(g));
-            getAnimation().draw(g, x + getAnimation().getXOffset(), y + getAnimation().getYOffset(), this.angle);
+            getAnimation().draw(g, x + getAnimation().getXOffset(), y + getAnimation().getYOffset());
             foregroundSprites.forEach(sprite -> sprite.draw(g));
         } catch(Exception e){
             System.out.println(e);
         }
+    }
+
+    public void draw(Graphics g, int xOffset, int yOffset) {
+        backgroundSprites.forEach(sprite -> sprite.draw(g, xOffset, yOffset));
+        getAnimation().draw(g, x + xOffset, y + yOffset);
+        foregroundSprites.forEach(sprite -> sprite.draw(g, xOffset, yOffset));
     }
 
     public void addBackgroundSprite(Animation background) {

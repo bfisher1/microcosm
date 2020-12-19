@@ -27,8 +27,6 @@ public class World {
 
     public List<Mob> mobs = new ArrayList<>();
 
-    private double angle;
-
     public void replaceBlockWithType(Block old, Block.Type newType) {
         old.removeFromWorld();
         blocks.put(old.getLocation(), BlockFactory.create(old.getLocation(), newType, this));
@@ -197,33 +195,10 @@ public class World {
         int s = 22;
         int s2 = 22;
         int s3 = 10;
-        double blockScreenX = block.getX() * s + block.getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX();
-        double blockScreenY = block.getX() * s - block.getY() * s2 - block.getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY();
-
-        double worldCenterScreenX = (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX();
-        double worldCenterScreenY = (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY();
-
-        // rotating with world angle
-
-        double radius = MathUtil.dist(blockScreenX, blockScreenY, worldCenterScreenX, worldCenterScreenY);
-        double currentAngle = Math.atan2(blockScreenY - worldCenterScreenY, blockScreenX - worldCenterScreenX);
-
-        double rotatedX = radius * Math.cos(currentAngle + 0 * angle * Math.PI / 180);
-        double rotatedY = radius * Math.sin(currentAngle + 0 * angle * Math.PI / 180);
-
-
-        sprite.setSortX(blockScreenX);
-        sprite.setSortY(blockScreenY);
-
-
-        sprite.setX(rotatedX + Camera.getInstance().getX());
-        sprite.setY(rotatedY + Camera.getInstance().getY());
+        sprite.setX(block.getX() * s + block.getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
+        sprite.setY(block.getX() * s - block.getY() * s2 - block.getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
         // we tack on the id to make worlds consistently above/below others
         sprite.setZ(block.getZ() + ((double) id) / 10000.0 );
-//        if (!block.getType().equals(Block.Type.Tree))
-            //sprite.setAngle(block.getWorld().getAngle());
-//        else
-//            sprite.setAngle(0);
     }
 
     public void shift(double x, double y) {

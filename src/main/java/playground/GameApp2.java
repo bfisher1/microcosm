@@ -13,12 +13,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Timer;
 import java.util.*;
-
-import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 /*
  * This applet allows the user to move a texture painted rectangle around the applet
@@ -143,10 +140,7 @@ public class GameApp2 {
                 if(graphicsTimer.resetIfReady()) {
 
                     updateWorldSprites(worlds);
-
-                    Graphics2D worldGraphics = (new BufferedImage(600, 600, TYPE_INT_ARGB)).createGraphics();
-                    draw((Graphics2D) buffer.getDrawGraphics(), background, worldGraphics);
-                    worldGraphics.dispose();
+                    draw(buffer.getDrawGraphics(), background);
 
                     if (!buffer.contentsLost())
                         buffer.show();
@@ -185,7 +179,6 @@ public class GameApp2 {
 
     private static void updateWorldSprites(Collection<World> worlds) {
         worlds.forEach(world -> {
-            world.setAngle(world.getAngle() + .5);
             world.getBlocks().forEach((location, block) -> {
                world.adjustSprite(block);
                if((block.getSprite().getX() < MIN_CAMERA_X || block.getSprite().getX() > WIDTH || block.getSprite().getY() < MIN_CAMERA_Y || block.getSprite().getY() > HEIGHT) || shouldNotBeVisible(block)) {
@@ -214,7 +207,7 @@ public class GameApp2 {
         return  (block.blockAbove().isPresent() && !block.blockAbove().get().getType().equals(Block.Type.Tree)) && block.cardinalNeighbors().size() == 4;
     }
 
-    private static void draw(Graphics2D graphics, Animation background, Graphics2D worldGraphics) {
+    private static void draw(Graphics graphics, Animation background) {
 
         background.draw(graphics, 0, 0);
 
