@@ -12,6 +12,6 @@ import javax.persistence.Table;
 public class StoneBlock extends Block {
     public StoneBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("3d/stone.png");
+        setAnimation("stone.png");
     }
 }

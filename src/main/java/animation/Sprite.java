@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 public class Sprite implements Comparable<Sprite> {
     private Animation animation;
+    private int id;
     private int x;
     private int y;
     private double z;
@@ -22,7 +23,7 @@ public class Sprite implements Comparable<Sprite> {
     public List<Sprite> foregroundSprites = new ArrayList<>();
 
     public Sprite() {
-        count++;
+        id = count++;
     }
 
     public Sprite(Sprite sprite) {
@@ -59,7 +60,11 @@ public class Sprite implements Comparable<Sprite> {
     }
 
     @Override
-    public int compareTo(@NotNull Sprite sprite) {
+    public int compareTo(@NotNull Sprite sprite) {//w\
+        //todo: instead of sorting by the sprites, can sort based off of block location in world
+        // then, can factor in angle of world
+
+        // boom, back without this stupid flickering bug
         int zDiff = (int) (this.getZ() - sprite.getZ() );
         if (Math.abs(zDiff) < 0.001) {
             int yDiff = (this.getY() - sprite.getY() );

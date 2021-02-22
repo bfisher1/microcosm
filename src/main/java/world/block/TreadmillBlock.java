@@ -33,12 +33,12 @@ public class TreadmillBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        return AnimationBuilder.getBuilder().fileName("3d/treadmill-up.png").framesAndDelay(10, .02).build();
+        return AnimationBuilder.getBuilder().fileName("treadmill-up.png").framesAndDelay(10, .02).build();
     }
 
     @Override
     public Animation getOffAnimation() {
-        return AnimationBuilder.getBuilder().fileName("3d/treadmill-up-still.png").build();
+        return AnimationBuilder.getBuilder().fileName("treadmill-up-still.png").build();
     }
 
     public List<TreadmillBlock> getAlignedTreadmillBlocks() {

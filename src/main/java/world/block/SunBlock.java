@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class SunBlock extends Block {
     public SunBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("3d/sunblock.png");
+        setAnimation("sunblock.png");
 //        double rand = (new Random()).nextDouble();
 //        if (rand < .3)
 //            setAnimation("sunblock.png");

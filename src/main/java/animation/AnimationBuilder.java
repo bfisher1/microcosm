@@ -55,6 +55,11 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder zoomable(boolean zoomable) {
+        getAnimation().setZoomable(zoomable);
+        return this;
+    }
+
     public AnimationBuilder sharedKey(String sharedKey) {
         getAnimation().setSharedKey(sharedKey);
         return this;

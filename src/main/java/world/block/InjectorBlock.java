@@ -43,14 +43,14 @@ public class InjectorBlock extends ElectronicDevice {
 
     @Override
     public Animation getOnAnimation() {
-        Animation anim = AnimationBuilder.getBuilder().fileName("3d/injector.png").build();
+        Animation anim = AnimationBuilder.getBuilder().fileName("injector.png").build();
         //anim.setAngle(90);
         return anim;
     }
 
     @Override
     public Animation getOffAnimation() {
-        Animation anim = AnimationBuilder.getBuilder().fileName("3d/injector.png").build();
+        Animation anim = AnimationBuilder.getBuilder().fileName("injector.png").build();
         //anim.setAngle(90);
         return anim;
     }

@@ -92,6 +92,7 @@ public class World {
 
         // getBlockAt(0, 0, 4).get()
 
+        /*
         createBlockAt(5, 5, 2, Block.Type.Injector);
         ((TreadmillBlock) createBlockAt(5, 6, 2, Block.Type.Treadmill)).setOn(true);
         ((TreadmillBlock) createBlockAt(5, 4, 2, Block.Type.Treadmill)).setOn(true);
@@ -110,7 +111,9 @@ public class World {
             mobs.add(new Baboon(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
             mobs.add(new Moose(Rand.randDouble() * s, Rand.randDouble() * s, 2, this));
         }
-        mobs.add(new Grape(8, 8, 2, this));
+        mobs.add(new Grape(8, 8, 2, this));\
+
+         */
 
     }
 
@@ -159,6 +162,13 @@ public class World {
         int s3 = 10;
         // TODO, work for off world anims
 
+//        // TODO, work for off world anims
+//        sprite.setX(mob.getLocation().getX() * s + mob.getLocation().getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
+//        sprite.setY(mob.getLocation().getX() * s - mob.getLocation().getY() * s2 - mob.getLocation().getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+//        // we tack on the id to make worlds consistently above/below others
+//        sprite.setZ(mob.getLocation().getZ() + ((double) id) / 10000.0 );
+//
+
         if (mob instanceof Grape) {
             Optional<Block> block = mob.getBlockBelow();
             if (block.isPresent()) {
@@ -178,11 +188,11 @@ public class World {
                     for(int j = -1; j < 1; j++) {
                         Optional<Block> otherBlock = mob.getBlockBelow().get().blockRelative(i, j, 0);
                         if (otherBlock.isPresent()) {
-                            otherBlock.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("3d/sand.png").build());
+                            otherBlock.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("sand.png").build());
                         }
                     }
                 }
-                block.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("3d/water-still.png").build());
+                block.get().getSprite().setAnimation(AnimationBuilder.getBuilder().fileName("water.png").build());
                 System.out.println("Block at: " + block.toString());
 
             } else {
@@ -194,9 +204,8 @@ public class World {
     public void adjustSprite(Block block, Sprite sprite) {
         int s = 22;
         int s2 = 22;
-        int s3 = 10;
-        sprite.setX(block.getX() * s + block.getY() * s2 + (this.x - this.y) * WORLD_COORD_SCALE + Camera.getInstance().getX());
-        sprite.setY(block.getX() * s - block.getY() * s2 - block.getZ() * s3 + (this.x + this.y) * WORLD_COORD_SCALE + Camera.getInstance().getY());
+        sprite.setX((block.getX() * s + this.x * WORLD_COORD_SCALE + Camera.getInstance().getX()) * Camera.getInstance().getZoom());
+        sprite.setY((-block.getY() * s2 + this.y * WORLD_COORD_SCALE + Camera.getInstance().getY()) * Camera.getInstance().getZoom());
         // we tack on the id to make worlds consistently above/below others
         sprite.setZ(block.getZ() + ((double) id) / 10000.0 );
     }

@@ -12,6 +12,6 @@ import javax.persistence.Table;
 public class SandBlock extends Block {
     public SandBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("3d/sand.png");
+        setAnimation("sand.png");
     }
 }

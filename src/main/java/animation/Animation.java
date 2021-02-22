@@ -2,6 +2,8 @@ package animation;
 
 import lombok.Getter;
 import lombok.Setter;
+import playground.Camera;
+import playground.GameApp;
 import util.MathUtil;
 
 import javax.imageio.ImageIO;
@@ -25,6 +27,7 @@ public class Animation {
     private long lastFrameChange;
     private int animIndex;
     private int frames;
+    private boolean zoomable = true;
 
     private String sharedKey = null;
     private static long lastSharedFrameChange;
@@ -84,14 +87,14 @@ public class Animation {
             for(int i = 0; i < frames; i++) {
                 BufferedImage subImage = bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight);
 
-                for (int y = 0; y < subImage.getHeight(); y += 10) {
-                    for (int x = 0; x < subImage.getWidth(); x += 10) {
-                        int pixel = subImage.getRGB(x, y);
-                        if( (pixel>>24) != 0x00 ) {
-                            subImage.setRGB(x, y, 0 );
-                        }
-                    }
-                }
+//                for (int y = 0; y < subImage.getHeight(); y += 10) {
+//                    for (int x = 0; x < subImage.getWidth(); x += 10) {
+//                        int pixel = subImage.getRGB(x, y);
+//                        if( (pixel>>24) != 0x00 ) {
+//                            subImage.setRGB(x, y, 0 );
+//                        }
+//                    }
+//                }
 
 //                Graphics graphics = subImage.getGraphics();
 //                graphics.setColor(new Color(0, 0, 0, 2));
@@ -138,12 +141,19 @@ public class Animation {
             }
         }
 
-        if (MathUtil.within(scaleX, 1.0, 0.01) || MathUtil.within(scaleY, 1.0, 0.01)) {
-            g.drawImage(getCurrentFrame(), x, y, null);
+//        if (MathUtil.within(scaleX, 1.0, 0.01) || MathUtil.within(scaleY, 1.0, 0.01)) {
+//            //g.drawImage(getCurrentFrame(), x, y, null);
+//            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
+//
+//        } else {
+//            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
+//        }
+        if (zoomable) {
+            double zoom = Camera.getInstance().getZoom();
+            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX * zoom), (int) (getCurrentFrame().getHeight() * scaleY * zoom), null);
         } else {
             g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
         }
-
     }
 
     public BufferedImage getCurrentFrame() {

@@ -66,13 +66,13 @@ public class GrassBlock extends Block {
             }
 
             if (State.Frozen.equals(state) || state == null) {
-                setAnimation("3d/frozen-grass.png");
+                setAnimation("frozen-grass.png");
             }
             else if (State.Normal.equals(state)) {
-                setAnimation("3d/grass.png");
+                setAnimation("grass.png");
             }
             else if (State.Scorched.equals(state)) {
-                setAnimation("3d/scorched-grass.png");
+                setAnimation("scorched-grass.png");
             }
         }
     }

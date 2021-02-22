@@ -30,6 +30,9 @@ public class GameApp2 {
     public static int MIN_CAMERA_Y = -50;
     private static Canvas canvas;
 
+    private static Map<Integer, Long> keyEventCounts = new HashMap();
+    private static Map<Integer, Long> handledKeyEventCounts = new HashMap();
+
 
     public static void main(String[] args) {
         JFrame app = new JFrame();
@@ -92,13 +95,16 @@ public class GameApp2 {
 
         LazyTimer graphicsTimer = new LazyTimer(0);
 
-        Animation background = AnimationBuilder.getBuilder().fileName("purple-background.png").build();
+        Animation background = AnimationBuilder.getBuilder()
+                .fileName("purple-background.png")
+                .zoomable(false)
+                .build();
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 worlds.stream().parallel().forEach(world -> {
-                    handleKeys();
+                    recordPressedKeys();
                 });
             }
         }, 0, 5);
@@ -140,6 +146,7 @@ public class GameApp2 {
                 if(graphicsTimer.resetIfReady()) {
 
                     updateWorldSprites(worlds);
+                    handlePressedKeys();
                     draw(buffer.getDrawGraphics(), background);
 
                     if (!buffer.contentsLost())
@@ -154,6 +161,43 @@ public class GameApp2 {
         }
     }
 
+    private static void handlePressedKeys() {
+        double speed = 2.5;
+
+        keyEventCounts.forEach((key, count) -> {
+            Long handledCount = 0L;
+            if (handledKeyEventCounts.containsKey(key)) {
+                handledCount = handledKeyEventCounts.get(key);
+            }
+            Long unhandledCount = count - handledCount;
+            if (unhandledCount > 0) {
+                switch (key) {
+                    case KeyEvent.VK_RIGHT:
+                        Camera.getInstance().move(-speed * unhandledCount, 0);
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        Camera.getInstance().move(speed * unhandledCount, 0);
+                        break;
+                    case KeyEvent.VK_UP:
+                        Camera.getInstance().move(0, speed * unhandledCount);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        Camera.getInstance().move(0, -speed * unhandledCount);
+                        break;
+                    case KeyEvent.VK_CONTROL:
+                        Camera.getInstance().zoomIn(unhandledCount);
+                        break;
+                    case KeyEvent.VK_SHIFT:
+                        Camera.getInstance().zoomOut(unhandledCount);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            handledKeyEventCounts.put(key, count);
+        });
+    }
+
     public static Point getMouseLocation() {
         if (canvas == null || canvas.getMousePosition() == null) {
             return new Point(0, 0);
@@ -161,19 +205,17 @@ public class GameApp2 {
         return canvas.getMousePosition();
     }
 
-    private static void handleKeys() {
-        double speed = .5;
-        if(KeyManager.isBeingPressed(KeyEvent.VK_RIGHT)) {
-            Camera.getInstance().move(-speed, 0);
-        }
-        if(KeyManager.isBeingPressed(KeyEvent.VK_LEFT)) {
-            Camera.getInstance().move(speed, 0);
-        }
-        if(KeyManager.isBeingPressed(KeyEvent.VK_UP)) {
-            Camera.getInstance().move(0, speed);
-        }
-        if(KeyManager.isBeingPressed(KeyEvent.VK_DOWN)) {
-            Camera.getInstance().move(0, -speed);
+    private static void recordPressedKeys() {
+        int[] keyEvents = {KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_CONTROL, KeyEvent.VK_SHIFT};
+        for(int i = 0; i < keyEvents.length; i++) {
+            int key = keyEvents[i];
+            if (KeyManager.isBeingPressed(key)) {
+                if (!keyEventCounts.containsKey(key)) {
+                    keyEventCounts.put(key, 1L);
+                } else {
+                    keyEventCounts.put(key, keyEventCounts.get(key) + 1);
+                }
+            }
         }
     }
 
@@ -187,18 +229,18 @@ public class GameApp2 {
                    Camera.getInstance().addSpriteToScreen(block.getSprite());
                }
             });
-//            world.getMobs().forEach(mob -> {
-//                if(mob.readyToRun()) {
-//                    mob.runLogic();
-//                }
-//                world.adjustSprite(mob);
-//                // TODO, dry out this logic
-//                if(mob.getSprite().getX() < MIN_CAMERA_X || mob.getSprite().getX() > WIDTH || mob.getSprite().getY() < MIN_CAMERA_Y || mob.getSprite().getY() > HEIGHT) {
-//                    Camera.getInstance().removeSpriteFromScreen(mob.getSprite());
-//                } else if (!Camera.getInstance().getSprites().contains(mob.getSprite())) {
-//                    Camera.getInstance().addSpriteToScreen(mob.getSprite());
-//                }
-//            });
+            world.getMobs().forEach(mob -> {
+                if(mob.readyToRun()) {
+                    mob.runLogic();
+                }
+                world.adjustSprite(mob);
+                // TODO, dry out this logic
+                if(mob.getSprite().getX() < MIN_CAMERA_X || mob.getSprite().getX() > WIDTH || mob.getSprite().getY() < MIN_CAMERA_Y || mob.getSprite().getY() > HEIGHT) {
+                    Camera.getInstance().removeSpriteFromScreen(mob.getSprite());
+                } else if (!Camera.getInstance().getSprites().contains(mob.getSprite())) {
+                    Camera.getInstance().addSpriteToScreen(mob.getSprite());
+                }
+            });
 
         });
     }
@@ -208,6 +250,7 @@ public class GameApp2 {
     }
 
     private static void draw(Graphics graphics, Animation background) {
+
 
         background.draw(graphics, 0, 0);
 

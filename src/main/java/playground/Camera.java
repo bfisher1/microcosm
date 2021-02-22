@@ -11,6 +11,8 @@ import java.util.PriorityQueue;
 public class Camera {
     private double x;
     private double y;
+    private double zoom = 1.0;
+    private double zoomSpeed = 0.001;
     private PriorityQueue<Sprite> sprites = new PriorityQueue<>();
 
     private static Camera instance;
@@ -45,4 +47,21 @@ public class Camera {
             }
     }
 
+    // TODO, have max zoom ins and outs
+
+    public void zoomIn() {
+        zoom += zoomSpeed;
+    }
+
+    public void zoomOut() {
+        zoom -= zoomSpeed;
+    }
+
+    public void zoomIn(Long times) {
+        zoom += zoomSpeed * times;
+    }
+
+    public void zoomOut(Long times) {
+        zoom -= zoomSpeed * times;
+    }
 }

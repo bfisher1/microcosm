@@ -17,7 +17,7 @@ public class WaterBlock extends Block {
     // if evaporates, can stay in world atmosphere
     public WaterBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation(AnimationBuilder.getBuilder().fileName("3d/water-still.png").build());
+        setAnimation(AnimationBuilder.getBuilder().fileName("water.png").build());
     }
 
 
