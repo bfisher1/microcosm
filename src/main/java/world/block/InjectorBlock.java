@@ -39,6 +39,7 @@ public class InjectorBlock extends ElectronicDevice {
         super(x, y, world);
         setDisplayItems(false);
         setAnimation(getOffAnimation());
+        setFullyCoveringView(false);
     }
 
     @Override

@@ -32,6 +32,7 @@ public class TreeBlock extends Block {
 
     public TreeBlock(int x, int y, World world) {
         super(x, y, world);
+        this.setFullyCoveringView(false);
         double rand = (new Random()).nextDouble();
         if (rand < .3)
             setState(State.RedTree);

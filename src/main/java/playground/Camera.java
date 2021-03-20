@@ -11,9 +11,13 @@ import java.util.PriorityQueue;
 public class Camera {
     private double x;
     private double y;
+    private double orientation;
     private double zoom = 1.0;
     private double zoomSpeed = 0.001;
     private PriorityQueue<Sprite> sprites = new PriorityQueue<>();
+
+    private World lockedWorld;
+
 
     private static Camera instance;
 

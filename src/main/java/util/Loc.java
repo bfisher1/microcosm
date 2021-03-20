@@ -23,6 +23,11 @@ public class Loc {
         this.y += diff.y;
     }
 
+    public void increase(double diffX, double diffY) {
+        this.x += diffX;
+        this.y += diffY;
+    }
+
     public String toString() {
         return "(" + getX() + ", " + getY() + ")";
     }

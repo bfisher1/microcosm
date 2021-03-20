@@ -12,9 +12,8 @@ import microcosm.Collidable;
 import playground.BlockLocation;
 import playground.Camera;
 import playground.World;
-import util.IntLoc;
-import util.Loc;
-import util.MathUtil;
+import util.*;
+import world.resource.BlockItem;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -63,6 +62,23 @@ public abstract class Block implements Collidable, Itemable, Container {
         return new BlockLocation(this.x, this.y, this.z);
     }
 
+    public void placeItemsOnTopOf(List<world.resource.Item> items) {
+        itemsOnTopOf.addAll(items.stream().map(item ->
+                new BlockItem(item, this, Rand.randomIntLocCenteredAtZero(5, 5).toLoc()))
+                .collect(Collectors.toList())
+        );
+    }
+
+    public BlockItem placeItemOnTopOf(world.resource.Item item) {
+        BlockItem blockItem = new BlockItem(item, this, Rand.randomIntLocCenteredAtZero(5, 5).toLoc());
+        itemsOnTopOf.add(blockItem);
+        return blockItem;
+    }
+
+    public void removeItemFromOnTopOf(world.resource.BlockItem item) {
+        itemsOnTopOf.remove(item);
+    }
+
 //    public void handleCollision(Mob mob) {
 //        mob.handleCollision(this);
 //    }
@@ -87,14 +103,36 @@ public abstract class Block implements Collidable, Itemable, Container {
         Plutonium,
         Treadmill,
         Computer,
+        Smelter,
+        Tray,
+        Printer,
+        Clay,
         Unknown
     };
+
+    public enum Direction {
+        Up,
+        Down,
+        Left,
+        Right,
+    }
+
+    private Direction direction = Direction.Up;
 
     private int x;
     private int y;
     private int z;
 
+    private IntLoc screenLocation;
+    private Rectangle corners;
+
+    private List<BlockItem> itemsOnTopOf = new ArrayList<>();
+
     private int temperature;
+
+    private boolean selected;
+
+    private boolean fullyCoveringView = true;
 
     private int xSpriteOffset;
     private int ySpriteOffset;
@@ -115,6 +153,9 @@ public abstract class Block implements Collidable, Itemable, Container {
     private  Block above = null;
     @Transient
     private Animation animation;
+
+    public final static Animation SELECTED_ANIMATION = AnimationBuilder.getBuilder().fileName("select-green.png").build();
+
     @Transient
     private Sprite sprite;
 
@@ -125,6 +166,55 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     @Transient
     private boolean loaded;
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+
+        if (animation == null || direction == null) {
+            return;
+        }
+
+        switch (direction) {
+            case Up:
+                this.animation.setAngle(0);
+                break;
+            case Down:
+                this.animation.setAngle(180);
+                break;
+            case Left:
+                this.animation.setAngle(90);
+                break;
+            case Right:
+                this.animation.setAngle(270);
+                break;
+        }
+
+        this.animation.load();
+    }
+
+    public Direction getOppositeDirection() {
+        switch (direction) {
+            case Up:
+                return Direction.Down;
+            case Down:
+                return Direction.Up;
+            case Left:
+                return Direction.Right;
+            case Right:
+                return Direction.Left;
+        }
+        return null;
+    }
+
+    // todo
+    public Direction getClockWiseDirection() {
+        throw new RuntimeException("TODO, implement this method");
+    }
+
+    // todo
+    public Direction getCounterClockWiseDirection() {
+        throw new RuntimeException("TODO, implement this method");
+    }
 
     public void setZ(int z) {
         this.z = z;
@@ -140,6 +230,14 @@ public abstract class Block implements Collidable, Itemable, Container {
         // add method to destroy block and remove it from list when block is removed, replaced
         // add events that occur every x seconds and update blocks in thread
         updateTemperature();
+    }
+
+    public boolean isHorizontal() {
+        return Direction.Left.equals(direction) || Direction.Right.equals(direction);
+    }
+
+    public boolean isVertical() {
+        return Direction.Up.equals(direction) || Direction.Down.equals(direction);
     }
 
     public void loadSprite() {
@@ -181,12 +279,50 @@ public abstract class Block implements Collidable, Itemable, Container {
         return blockRelative(0, 0, 1);
     }
 
+    public Optional<Block> getNeighbor(Direction direction) {
+        switch (direction) {
+            case Up:
+                return blockRelative(0, -1, 0);
+            case Down:
+                return blockRelative(0, 1, 0);
+            case Right:
+                return blockRelative(1, 0, 0);
+            case Left:
+                return blockRelative(-1, 0, 0);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Block> getHighestNeighborAtOrUnderHeight(Direction direction) {
+        for(int z = getZ(); z >= 0; z--) {
+            Optional<Block> neighbor = getNeighbor(direction);
+            if (neighbor.isPresent()) {
+                return neighbor;
+            }
+        }
+        return Optional.empty();
+    }
+
     public List<Block> cardinalNeighbors() {
         List<Optional<Block>> neighborOptionals = new ArrayList<>();
         neighborOptionals.add(blockRelative(1, 0, 0));
         neighborOptionals.add(blockRelative(-1, 0, 0));
         neighborOptionals.add(blockRelative(0, 1, 0));
         neighborOptionals.add(blockRelative(0, -1, 0));
+        return neighborOptionals.stream().filter(n -> n.isPresent()).map(n -> n.get()).collect(Collectors.toList());
+    }
+
+    public List<Block> verticalNeighbors() {
+        List<Optional<Block>> neighborOptionals = new ArrayList<>();
+        neighborOptionals.add(blockRelative(0, 1, 0));
+        neighborOptionals.add(blockRelative(0, -1, 0));
+        return neighborOptionals.stream().filter(n -> n.isPresent()).map(n -> n.get()).collect(Collectors.toList());
+    }
+
+    public List<Block> horizontalNeighbors() {
+        List<Optional<Block>> neighborOptionals = new ArrayList<>();
+        neighborOptionals.add(blockRelative(1, 0, 0));
+        neighborOptionals.add(blockRelative(-1, 0, 0));
         return neighborOptionals.stream().filter(n -> n.isPresent()).map(n -> n.get()).collect(Collectors.toList());
     }
 
@@ -241,15 +377,17 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void setAnimation(String animName) {
-        animation = AnimationBuilder.getBuilder().fileName(animName).build();
-        this.loadSprite();
+        // preserve the angle of the previous animation
+        int angle = animation != null ? animation.getAngle() : 0;
+        setAnimation(AnimationBuilder.getBuilder().fileName(animName).angle(angle).build());
     }
 
     public void setAnimation(Animation animation) {
         this.animation = animation;
+        // reset direction to update the animation accordingly
+        this.setDirection(direction);
         this.loadSprite();
     }
-
 
     public void setAnimation(String animName, int frames, double delay) {
         //TODO refactor and don't use animDelay or animFrames, redundant
@@ -259,8 +397,6 @@ public abstract class Block implements Collidable, Itemable, Container {
                 .build();
         this.loadSprite();
     }
-
-
 
     private void hideItems() {
         getItems().forEach(item -> {

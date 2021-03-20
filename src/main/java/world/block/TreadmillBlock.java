@@ -7,7 +7,7 @@ import lombok.Setter;
 import animation.Animation;
 import animation.AnimationBuilder;
 import playground.World;
-import util.Loc;
+import world.block.execution.ConstantlyExecutable;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "treadmill_block")
 @NoArgsConstructor
-public class TreadmillBlock extends ElectronicDevice {
+public class TreadmillBlock extends ElectronicDevice implements ConstantlyExecutable {
 
     @Transient
     private int width = Block.BLOCK_WIDTH;
@@ -42,17 +42,21 @@ public class TreadmillBlock extends ElectronicDevice {
     }
 
     public List<TreadmillBlock> getAlignedTreadmillBlocks() {
-        // TODO, add support for horizontal and vertical treadmill blocks
-        return null; //getVerticalNeighbors().stream().filter(block -> Type.Treadmill.equals(block.getType())).map(block -> (TreadmillBlock) block).collect(Collectors.toList());
+        List<Block> neighbors = isVertical() ? verticalNeighbors() : horizontalNeighbors();
+        return neighbors.stream()
+                .filter(block -> Type.Treadmill.equals(block.getType()))
+                .map(block -> (TreadmillBlock) block)
+                .collect(Collectors.toList());
     }
 
     public void setOn(boolean on) {
         super.setOn(on);
-//        getAlignedTreadmillBlocks().forEach(treadmillBlock -> {
-//            if(!treadmillBlock.isOn()) {
-//                treadmillBlock.setOn(true);
-//            }
-//        });
+        startExecuting();
+        getAlignedTreadmillBlocks().forEach(treadmillBlock -> {
+            if(!treadmillBlock.isOn()) {
+                treadmillBlock.setOn(true);
+            }
+        });
     }
 
     public void clearRemovedItems() {
@@ -110,6 +114,23 @@ public class TreadmillBlock extends ElectronicDevice {
 
     private boolean outsideContainer(Item item) {
         return Math.abs(item.getLocInContainer().getX()) > width || Math.abs(item.getLocInContainer().getY()) > width;
+    }
+
+    @Override
+    public void startExecuting() {
+        getWorld().startExecuting(getLocation(), this);
+    }
+
+    @Override
+    public void execute() {
+        this.getItemsOnTopOf().forEach(blockItem -> {
+            blockItem.move(0.1, getDirection());
+        });
+    }
+
+    @Override
+    public boolean shouldStopExecuting() {
+        return !isOn();
     }
 
 

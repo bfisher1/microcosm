@@ -4,7 +4,7 @@ import animation.Animation;
 import animation.AnimationBuilder;
 import animation.Sprite;
 import microcosm.KeyManager;
-import util.LazyTimer;
+import util.PollingTimer;
 import world.block.Block;
 
 import javax.swing.*;
@@ -93,7 +93,7 @@ public class GameApp {
 
         Graphics graphics = null;
 
-        LazyTimer graphicsTimer = new LazyTimer(0);
+        PollingTimer graphicsTimer = new PollingTimer(0);
 
         Animation background = AnimationBuilder.getBuilder().fileName("purple-background.png").build();
 

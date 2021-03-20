@@ -1,11 +1,11 @@
 package util;
 
-public class LazyTimer {
+public class PollingTimer {
 
     private long start;
     private long delay;
 
-    public LazyTimer(long delay) {
+    public PollingTimer(long delay) {
         this.delay = delay;
         start = System.currentTimeMillis();
     }

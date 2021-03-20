@@ -5,7 +5,7 @@ import animation.Sprite;
 import lombok.Getter;
 import lombok.Setter;
 import playground.Location;
-import util.LazyTimer;
+import util.PollingTimer;
 import util.Rand;
 import world.block.Block;
 
@@ -44,7 +44,7 @@ public abstract class Mob {
     Sprite sprite;
     double direction = 0.0;
     double velocity = 0.05;
-    LazyTimer timer = new LazyTimer(20);
+    PollingTimer timer = new PollingTimer(20);
 
     public Optional<Block> getBlockBelow() {
         return getBlockBelow(0, 0);

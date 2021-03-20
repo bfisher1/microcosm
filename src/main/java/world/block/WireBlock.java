@@ -17,17 +17,11 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class WireBlock extends ElectronicDevice {
 
-    private enum Direction {
-        Vertical,
-        Horizontal
-    }
-
-    private Direction direction;
-
     public WireBlock(int x, int y, World world) {
         super(x, y, world);
         setAnimation(getAnimationName());
-        direction = Direction.Horizontal;
+        setDirection(Direction.Left);
+        setFullyCoveringView(false);
     }
 
     @Override

@@ -31,8 +31,17 @@ public class IntLoc {
         return false;
     }
 
+    public void increase(IntLoc diff) {
+        this.x += diff.x;
+        this.y += diff.y;
+    }
+
     @Override
     public int hashCode() {
         return (x + "" + y).hashCode();
+    }
+
+    public Loc toLoc() {
+        return new Loc(x, y);
     }
 }

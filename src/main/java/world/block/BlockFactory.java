@@ -71,6 +71,18 @@ public class BlockFactory {
             case Computer:
                 block = new ComputerBlock(x, y, world);
                 break;
+            case Tray:
+                block = new TrayBlock(x, y, world);
+                break;
+            case Smelter:
+                block = new SmelterBlock(x, y, world);
+                break;
+            case Printer:
+                block = new PrinterBlock(x, y, world);
+                break;
+            case Clay:
+                block = new ClayBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

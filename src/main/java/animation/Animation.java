@@ -28,6 +28,7 @@ public class Animation {
     private int animIndex;
     private int frames;
     private boolean zoomable = true;
+    private int angle = 0;
 
     private String sharedKey = null;
     private static long lastSharedFrameChange;
@@ -57,15 +58,15 @@ public class Animation {
         this.filename = "src/main/resources/assets/textures/" + fileName;
     }
 
-
     public void load() {
-
         BufferedImage bufferedImage;
+        animations = new ArrayList<>();
         try {
             int width, height;
 
-            if(ImageBank.images.containsKey(filename)) {
-                bufferedImage = ImageBank.images.get(filename);
+            String fileNameAtAngle = filename + '-' + angle;
+            if(ImageBank.images.containsKey(fileNameAtAngle)) {
+                bufferedImage = ImageBank.images.get(fileNameAtAngle);
                 width = bufferedImage.getWidth();
                 height = bufferedImage.getHeight();
             } else {
@@ -79,7 +80,18 @@ public class Animation {
                     big.drawImage(bufferedImage, 0, 0, null);
                     bufferedImage = bi2;
                 }
-                ImageBank.images.put(filename, bufferedImage);
+
+                if (angle != 0) {
+                    // todo, multiple could probably be less than 2
+                    BufferedImage rotated = new BufferedImage(width * 2, height * 2, bufferedImage.getType());
+                    Graphics2D graphic = rotated.createGraphics();
+                    graphic.rotate(Math.toRadians(90), width/2, height/2);
+                    graphic.drawImage(bufferedImage, null, 0, 0);
+                    graphic.dispose();
+                    bufferedImage = rotated;
+                }
+
+                ImageBank.images.put(fileNameAtAngle, bufferedImage);
             }
 
             int frameHeight = height / frames;
@@ -118,6 +130,13 @@ public class Animation {
     }
 
     public void draw(Graphics g, int x, int y) {
+        draw(g, x, y, 0);
+    }
+
+    public void draw(Graphics g, int x, int y, Integer angle) {
+        x += xOffset;
+        y += yOffset;
+
         // draw, may want to pass graphics here
         // or have graphics as static
         if (frames > 1) {
@@ -141,13 +160,6 @@ public class Animation {
             }
         }
 
-//        if (MathUtil.within(scaleX, 1.0, 0.01) || MathUtil.within(scaleY, 1.0, 0.01)) {
-//            //g.drawImage(getCurrentFrame(), x, y, null);
-//            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
-//
-//        } else {
-//            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
-//        }
         if (zoomable) {
             double zoom = Camera.getInstance().getZoom();
             g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX * zoom), (int) (getCurrentFrame().getHeight() * scaleY * zoom), null);

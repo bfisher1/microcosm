@@ -1,7 +1,5 @@
 package animation;
 
-import java.util.ArrayList;
-
 public class AnimationBuilder {
     private Animation animation;
 
@@ -21,6 +19,11 @@ public class AnimationBuilder {
 
     public AnimationBuilder fileName(String fileName) {
         getAnimation().setFilename(fileName);
+        return this;
+    }
+
+    public AnimationBuilder angle(int angle) {
+        getAnimation().setAngle(angle);
         return this;
     }
 
