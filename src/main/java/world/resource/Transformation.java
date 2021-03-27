@@ -8,6 +8,8 @@ public class Transformation {
     // clay -> smelter(fueled with some water) -> ceramic
     // iron rubber -> smelter() -> smelted-iron
 
+    // silicon + rubber -> plastic
+
     // tree -> tapped for sap, smelted with water, then dried -> rubber
 
         // printer uses smelted-iron

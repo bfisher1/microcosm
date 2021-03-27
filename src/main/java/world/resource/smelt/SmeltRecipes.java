@@ -15,7 +15,7 @@ public class SmeltRecipes {
                 yield.setFuelConsumed(.5); // 1/2 fuel consumer per iron
                 yield.setTimeRequiredMillis(500); // 1/2 second per iron
                 yield.getQuantitiesConsumed().put(SmeltableItem.SmeltCode.Iron, 1.0);
-                yield.setSmeltedItems(Collections.singletonList(new Iron(1.0)));
+                yield.setSmeltedItems(Collections.singletonList(new SmeltedIron(1.0)));
             } else {
                 yield.setValidRecipe(false);
             }

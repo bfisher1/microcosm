@@ -32,4 +32,7 @@ public class Loc {
         return "(" + getX() + ", " + getY() + ")";
     }
 
+    public Loc plus(double xDiff, double yDiff) {
+        return new Loc(x + xDiff, y + yDiff);
+    }
 }

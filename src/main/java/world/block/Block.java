@@ -14,11 +14,10 @@ import playground.Camera;
 import playground.World;
 import util.*;
 import world.resource.BlockItem;
+import world.resource.WorldItem;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -63,10 +62,9 @@ public abstract class Block implements Collidable, Itemable, Container {
     }
 
     public void placeItemsOnTopOf(List<world.resource.Item> items) {
-        itemsOnTopOf.addAll(items.stream().map(item ->
-                new BlockItem(item, this, Rand.randomIntLocCenteredAtZero(5, 5).toLoc()))
-                .collect(Collectors.toList())
-        );
+        items.stream().forEach(item -> {
+            new WorldItem(item, world, getX(), getY(), getZ());
+        });
     }
 
     public BlockItem placeItemOnTopOf(world.resource.Item item) {
@@ -77,6 +75,16 @@ public abstract class Block implements Collidable, Itemable, Container {
 
     public void removeItemFromOnTopOf(world.resource.BlockItem item) {
         itemsOnTopOf.remove(item);
+    }
+
+    public void addItemOnTopOf(WorldItem worldItem) {
+        itemsOn.put(worldItem.getId(), worldItem);
+    }
+
+    public void removeItemOnTopOf(WorldItem worldItem) {
+        if (itemsOn.containsKey(worldItem.getId())) {
+            itemsOn.remove(worldItem.getId());
+        }
     }
 
 //    public void handleCollision(Mob mob) {
@@ -127,6 +135,13 @@ public abstract class Block implements Collidable, Itemable, Container {
     private Rectangle corners;
 
     private List<BlockItem> itemsOnTopOf = new ArrayList<>();
+
+    Map<Long, WorldItem> itemsOn = new HashMap<>();
+
+    /**
+     * Extra amount z is incremented by when drawing.
+     */
+    private int drawZOffset = 0;
 
     private int temperature;
 

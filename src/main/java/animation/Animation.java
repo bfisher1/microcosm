@@ -26,7 +26,14 @@ public class Animation {
     private double delay;
     private long lastFrameChange;
     private int animIndex;
+
+    /**
+     * Number of frames in the animation. If using a spreadsheet, specify horizontal and vertical frames. Otherwise, just use frames.
+     */
     private int frames;
+    private Integer horizontalFrames;
+    private Integer verticalFrames;
+
     private boolean zoomable = true;
     private int angle = 0;
 
@@ -94,26 +101,26 @@ public class Animation {
                 ImageBank.images.put(fileNameAtAngle, bufferedImage);
             }
 
-            int frameHeight = height / frames;
+            if (horizontalFrames != null && verticalFrames != null) {
 
-            for(int i = 0; i < frames; i++) {
-                BufferedImage subImage = bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight);
+                int frameHeight = height / verticalFrames;
+                int frameWidth = width / horizontalFrames;
 
-//                for (int y = 0; y < subImage.getHeight(); y += 10) {
-//                    for (int x = 0; x < subImage.getWidth(); x += 10) {
-//                        int pixel = subImage.getRGB(x, y);
-//                        if( (pixel>>24) != 0x00 ) {
-//                            subImage.setRGB(x, y, 0 );
-//                        }
-//                    }
-//                }
+                for (int y = 0; y < verticalFrames; y++) {
+                    for (int x = 0; x < horizontalFrames; x++) {
+                        BufferedImage subImage = bufferedImage.getSubimage(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
+                        animations.add(subImage);
+                    }
+                }
+            } else {
+                int frameHeight = height / frames;
 
-//                Graphics graphics = subImage.getGraphics();
-//                graphics.setColor(new Color(0, 0, 0, 2));
-//                graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-
-                animations.add(subImage);
+                for(int i = 0; i < frames; i++) {
+                    BufferedImage subImage = bufferedImage.getSubimage(0, i * frameHeight, width, frameHeight);
+                    animations.add(subImage);
+                }
             }
+
         } catch (IOException e) {
             throw new IllegalArgumentException("Image could not be read");
         }

@@ -1,9 +1,11 @@
 package world.block;
 
+import animation.Animation;
+import animation.AnimationBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import playground.World;
-import world.resource.Item;
+import world.resource.WorldItem;
 import world.resource.smelt.SmeltRecipes;
 import world.resource.smelt.SmeltableItem;
 import world.resource.smelt.SmeltedItem;
@@ -13,7 +15,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class SmelterBlock extends Block {
+public class SmelterBlock extends ElectronicDevice {
 
     /**
      * How much fuel is in the machine.
@@ -36,17 +38,35 @@ public class SmelterBlock extends Block {
      */
     private int maxProductCapacity = 0;
 
-    private boolean on = false;
     private Timer timer = new Timer();
+
+    /**
+     * Automatically smelt inputs when fuel/inputs added.
+     */
+    private boolean autoSmelt = true;
 
     public SmelterBlock(int x, int y, World world) {
         super(x, y, world);
-        setAnimation("smelter-off.png");
+        setOn(false);
         setDirection(Direction.Up);
+        setDrawZOffset(1);
+    }
+
+    @Override
+    public Animation getOnAnimation() {
+        return AnimationBuilder.getBuilder().fileName("smelter-on.png").build();
+    }
+
+    @Override
+    public Animation getOffAnimation() {
+        return AnimationBuilder.getBuilder().fileName("smelter-off.png").build();
     }
 
     public void addFuel(int amount) {
         fuel += amount;
+        if (autoSmelt) {
+            startBurningUntilAllSmelted();
+        }
     }
 
     public void addItem(SmeltableItem item) {
@@ -56,6 +76,10 @@ public class SmelterBlock extends Block {
             existingItem.get().setQuantity(item.getQuantity() + existingItem.get().getQuantity());
         } else {
             resources.add(item);
+        }
+
+        if (autoSmelt) {
+            startBurningUntilAllSmelted();
         }
     }
 
@@ -67,48 +91,56 @@ public class SmelterBlock extends Block {
 
     private void burnUntilAllSmelted() {
         Yield yield = SmeltRecipes.getYield(resources);
+        // todo, handle not enough resources. What happens if there are 0 quantity of a resource, or too little? Should be removed
         if (yield.isValidRecipe() && yield.getFuelConsumed() <= fuel) {
-            // there is enough fuel, so start burning
+            // there is enough fuel and resources, so start burning
             this.setOn(true);
             setAnimation("smelter-on.png");
             // enqueue event to burn
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    fuel -= yield.getFuelConsumed();
-                    resources.stream().forEach(resource -> {
-                        resource.setQuantity(resource.getQuantity() - yield.getQuantitiesConsumed().get(resource.getSmeltCode()));
-                    });
-
-                    // output products into product tray
-                    yield.getSmeltedItems().stream().forEach(output -> {
-                        Optional<SmeltedItem> existingProduct = products.stream().filter(product -> product.getSmeltedCode().equals(output.getSmeltedCode())).findAny();
-                        if (existingProduct.isPresent()) {
-                            existingProduct.get().setQuantity(output.getQuantity() + existingProduct.get().getQuantity());
-                        } else {
-                            products.add(output);
-                        }
-                    });
-
-                    // output products into neighboring block if there are too many in the tray
-                    if (products.size() >= maxProductCapacity) {
-                        getHighestNeighborAtOrUnderHeight(getDirection()).ifPresent(neighbor -> {
-                            neighbor.placeItemsOnTopOf(new ArrayList<>(products));
+                    // need to check isOn in case printer was stopped before
+                    // todo, partially complete items and lose fuel when shutting off
+                    if (isOn()) {
+                        fuel -= yield.getFuelConsumed();
+                        resources.stream().forEach(resource -> {
+                            resource.setQuantity(resource.getQuantity() - yield.getQuantitiesConsumed().get(resource.getSmeltCode()));
                         });
-                        products = new ArrayList<>();
-                    }
 
-                    // start burning next unit/batch of items
-                    burnUntilAllSmelted();
+                        // output products into product tray
+                        yield.getSmeltedItems().stream().forEach(output -> {
+                            Optional<SmeltedItem> existingProduct = products.stream().filter(product -> product.getSmeltedCode().equals(output.getSmeltedCode())).findAny();
+                            if (existingProduct.isPresent()) {
+                                existingProduct.get().setQuantity(output.getQuantity() + existingProduct.get().getQuantity());
+                            } else {
+                                products.add(output);
+                            }
+                        });
+
+                        // output products into neighboring block if there are too many in the tray
+                        if (products.size() >= maxProductCapacity) {
+                            getHighestNeighborAtOrUnderHeight(getDirection()).ifPresent(neighbor -> {
+                                neighbor.placeItemsOnTopOf(new ArrayList<>(products));
+                            });
+                            products = new ArrayList<>();
+                        }
+
+                        // start burning next unit/batch of items
+                        burnUntilAllSmelted();
+                    }
                 }
             }, yield.getTimeRequiredMillis());
         } else {
-            turnOff();
+            this.setOn(false);
         }
     }
 
-    public void turnOff() {
-        this.setOn(false);
-        setAnimation("smelter-off.png");
+    public void addItemOnTopOf(WorldItem worldItem) {
+        if (worldItem.getItem() instanceof SmeltableItem) {
+            addItem((SmeltableItem) worldItem.getItem());
+        } else {
+            super.addItemOnTopOf(worldItem);
+        }
     }
 }

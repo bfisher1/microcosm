@@ -10,12 +10,14 @@ import util.Rectangle;
 import util.Vector;
 import util.*;
 import world.PerlinNoise;
-import world.block.Block;
-import world.block.BlockFactory;
-import world.block.SmelterBlock;
-import world.block.TreadmillBlock;
+import world.block.*;
 import world.block.execution.ConstantlyExecutable;
-import world.resource.BlockItem;
+import world.resource.Item;
+import world.resource.WorldItem;
+import world.resource.print.PrintDesignCode;
+import world.resource.print.PrintItemRequest;
+import world.resource.print.PrintableResourceCode;
+import world.resource.print.Size;
 import world.resource.raw.IronRubble;
 
 import java.awt.*;
@@ -91,6 +93,11 @@ public class World {
 //        IntLoc worldCenterScreenLoc = new IntLoc((int) ((cameraRotationAdjustedX - Camera.getInstance().getX()) * blockWidth * Camera.getInstance().getZoom()),
 //                (int) ((cameraRotationAdjustedY - Camera.getInstance().getY()) * blockWidth * Camera.getInstance().getZoom()));
 
+        // WORLD should just have list of items, and then can tell what block those are on top of when executing block
+        // whenever item moves, recalculate which block it's on and notify that block
+
+        // block items can still exist, but when moving they should be disconeccted. maybe better not to tho
+
         IntLoc worldImageCenter = new IntLoc(worldImage.getWidth()/2, worldImage.getHeight()/2);
 
         Graphics2D worldGraphics = worldImage.createGraphics();
@@ -132,7 +139,7 @@ public class World {
         Point mouseLocation = GameApp2.getMouseLocation();
         hoveredBlock = null;
 
-        List<BlockItem> blockItems = new ArrayList<>();
+        List<WorldItem> worldItems = new ArrayList<>();
 
         coords.forEach(coord -> {
             final int x = coord.getX();
@@ -164,7 +171,7 @@ public class World {
                         (int) (blockX * blockWidth * camera.getZoom() + 0 * worldCenterScreenLoc.getX()),
                         (int) (blockY * blockWidth * camera.getZoom() + 0 * worldCenterScreenLoc.getY()));
 
-                blockItems.addAll(block.getItemsOnTopOf().stream().filter(blockItem -> !blockItem.isDeleted()).collect(Collectors.toList()));
+                worldItems.addAll(block.getItemsOn().values()); //.stream().filter(blockItem -> !blockItem.isDeleted()).collect(Collectors.toList()));
 
                 if (block.isSelected()) {
                     block.SELECTED_ANIMATION.draw(worldGraphics,
@@ -195,26 +202,14 @@ public class World {
             });
         });
 
-
         /**
-         * Draw block items after blocks.
+         * Draw items after blocks.
          */
-        blockItems.stream().forEach(item -> {
-            Block block = item.getBlock();
-
-            block.getItemsOnTopOf().stream().filter(blockItem -> !blockItem.isDeleted()).forEach(blockItem -> {
-                blockItem.getItem().getAnimation().draw(worldGraphics,
-                        (int) ((block.getX() * blockWidth + blockItem.getOffsetPx().getX()) * camera.getZoom() + 0 * worldCenterScreenLoc.getX()),
-                        (int) ((block.getY() * blockWidth + blockItem.getOffsetPx().getY()) * camera.getZoom() + 0 * worldCenterScreenLoc.getY()));
-            });
-            // TODO, this logic should be moved to a callback via a gameapp util function that
-            // runs all callbacks inside the gameloop, synchronously
-            block.getItemsOnTopOf().stream().filter(blockItem -> blockItem.isDeleted())
-                    .collect(Collectors.toList())
-                    .stream()
-                    .forEach(blockItem -> block.removeItemFromOnTopOf(blockItem));
+        worldItems.stream().forEach(worldItem -> {
+            worldItem.getItem().getAnimation().draw(worldGraphics,
+                    (int) ((worldItem.getLoc().getX() * blockWidth) * camera.getZoom() + 0 * worldCenterScreenLoc.getX()),
+                    (int) ((worldItem.getLoc().getY() * blockWidth) * camera.getZoom() + 0 * worldCenterScreenLoc.getY()));
         });
-
 
         worldGraphics.dispose();
         // draw world image to graphics at the end
@@ -357,18 +352,26 @@ public class World {
         createBlockAt(0, 0, 2, Block.Type.Computer);
         createBlockAt(0, -1, 2, Block.Type.Wire);
         TreadmillBlock treadmillBlock = (TreadmillBlock) createBlockAt(0, -2, 2, Block.Type.Treadmill);
-        treadmillBlock.placeItemsOnTopOf(Collections.singletonList(new IronRubble(2)));
+        //treadmillBlock.placeItemsOnTopOf(Collections.singletonList(new IronRubble(2)));
+
+        addItemAt(new IronRubble(2), treadmillBlock);
+
 //        treadmillBlock.placeItemsOnTopOf(Collections.singletonList(new IronRubble(3)));
 
         createBlockAt(0, -3, 2, Block.Type.Treadmill);
         createBlockAt(0, -4, 2, Block.Type.Treadmill);
         createBlockAt(0, -5, 2, Block.Type.Treadmill);
-        createBlockAt(0, -6, 2, Block.Type.Treadmill);
+        SmelterBlock smelterBlock = ((SmelterBlock) createBlockAt(0, -6, 2, Block.Type.Smelter));
         createBlockAt(0, -7, 2, Block.Type.Treadmill);
         createBlockAt(1, -7, 2, Block.Type.Treadmill);
+        ((TreadmillBlock) createBlockAt(0, -8, 2, Block.Type.Treadmill)).setOn(true);
+        PrinterBlock printerBlock = ((PrinterBlock) createBlockAt(0, -8, 2, Block.Type.Printer));
+        createBlockAt(0, -9, 2, Block.Type.Treadmill);
+        printerBlock.changeResource(PrintableResourceCode.Iron);
+        printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Gear, PrintableResourceCode.Iron, 1, Size.Small));
+        printerBlock.addFuel(100);
         treadmillBlock.setOn(true);
-//        SmelterBlock smelterBlock = ((SmelterBlock) createBlockAt(0, -4, 2, Block.Type.Smelter));
-//        smelterBlock.addFuel(10);
+        smelterBlock.addFuel(10);
 //        smelterBlock.addItem(new IronRubble(4.0));
 //
 //        Timer timer = new Timer();
@@ -423,6 +426,18 @@ public class World {
 
     }
 
+    private void addItemAt(Item item, Block block) {
+        addItemAt(item, block.getLocation());
+    }
+
+    private void addItemAt(Item item, BlockLocation location) {
+        new WorldItem(item, this, location.x, location.y, location.z);
+    }
+
+    private void addItemAt(Item item, double x, double y, int z) {
+        new WorldItem(item, this, x, y, z);
+    }
+
     public Block createBlockAt(int x, int y, int z, Block.Type type) {
         BlockLocation location = new BlockLocation(x, y, z);
         Block block = BlockFactory.create(location, type, this);
@@ -448,8 +463,29 @@ public class World {
         return Optional.empty();
     }
 
+    /**
+     * Determine which block a point is at.
+     *
+     * Each block covers x.0 to x.999
+     *                   y.0 to y.999
+     */
+    public Optional<Block> getBlockAt(double x, double y, double z) {
+        BlockLocation location = new BlockLocation((int) x, (int) y, (int) z);
+        if (blocks.containsKey(location)) {
+            return Optional.of(blocks.get(location));
+        }
+        return Optional.empty();
+    }
+
     public Optional<Block> getBlockAt(int x, int y, int z) {
         BlockLocation location = new BlockLocation(x, y, z);
+        if (blocks.containsKey(location)) {
+            return Optional.of(blocks.get(location));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Block> getBlockAt(BlockLocation location) {
         if (blocks.containsKey(location)) {
             return Optional.of(blocks.get(location));
         }

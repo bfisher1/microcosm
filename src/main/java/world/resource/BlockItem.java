@@ -1,13 +1,10 @@
 package world.resource;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import util.Loc;
 import world.block.Block;
 
-import java.util.Collections;
 import java.util.Optional;
 
 /**

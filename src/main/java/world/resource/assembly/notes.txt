@@ -1,0 +1,25 @@
+
+
+Robot physical system will be made of
+    movement system
+        - wheels
+        - axis
+        - tires
+        - motors
+    chasis
+        - welded / screwed metal panes together
+        - contains batteries
+        - motherboard
+    arms
+        - sticks
+        - joints
+        - motors
+        - rubber gripper
+    head
+        - head box
+        - camera
+        - neck
+            - motors
+
+assembly process:
+    

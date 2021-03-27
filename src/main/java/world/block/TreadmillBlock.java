@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -123,9 +124,13 @@ public class TreadmillBlock extends ElectronicDevice implements ConstantlyExecut
 
     @Override
     public void execute() {
-        this.getItemsOnTopOf().forEach(blockItem -> {
-            blockItem.move(0.1, getDirection());
-        });
+        try {
+            this.getItemsOn().values().forEach(worldItem -> {
+                worldItem.move(0.02, getDirection());
+            });
+        } catch(ConcurrentModificationException e) {
+            System.out.println("Concurrent modifcation");
+        }
     }
 
     @Override

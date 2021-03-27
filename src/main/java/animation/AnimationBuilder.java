@@ -38,6 +38,14 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder framesAndDelay(int horizontalFrames, int verticalFrames, double delay) {
+        getAnimation().setHorizontalFrames(horizontalFrames);
+        getAnimation().setVerticalFrames(verticalFrames);
+        getAnimation().setFrames(horizontalFrames * verticalFrames);
+        getAnimation().setDelay(delay);
+        return this;
+    }
+
     public AnimationBuilder scaleX(double scaleX) {
         getAnimation().setScaleX(scaleX);
         return this;
