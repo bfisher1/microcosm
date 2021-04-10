@@ -4,6 +4,8 @@ import animation.AnimationBuilder;
 import animation.Sprite;
 import lombok.Getter;
 import lombok.Setter;
+import machine.ArmActionSequenceBuilder;
+import machine.ArmActionType;
 import mob.Grape;
 import mob.Mob;
 import util.Rectangle;
@@ -75,7 +77,7 @@ public class World {
          *      a fair bit of this could be parallelized
          */
 
-        int blockWidth = Block.BLOCK_WIDTH - 2;
+        int blockWidth = Block.BLOCK_SCREEN_WIDTH;
 
         double cameraToWorldDist = Math.sqrt(Math.pow(x - Camera.getInstance().getX(), 2) + Math.pow(Camera.getInstance().getY() - y, 2));
         double cameraToWorldAngle = -Math.atan2(y - Camera.getInstance().getY(), x - Camera.getInstance().getX()); // * 180.0 / Math.PI;
@@ -139,7 +141,7 @@ public class World {
         Point mouseLocation = GameApp2.getMouseLocation();
         hoveredBlock = null;
 
-        List<WorldItem> worldItems = new ArrayList<>();
+        List<Block> blocksWithItemsOnTopOfThem = new ArrayList<>();
 
         coords.forEach(coord -> {
             final int x = coord.getX();
@@ -167,11 +169,11 @@ public class World {
                 int blockX = block.getX();
                 int blockY = block.getY();
                 // todo, draw in block class
-                block.getAnimation().draw(worldGraphics,
-                        (int) (blockX * blockWidth * camera.getZoom() + 0 * worldCenterScreenLoc.getX()),
-                        (int) (blockY * blockWidth * camera.getZoom() + 0 * worldCenterScreenLoc.getY()));
+                block.draw(worldGraphics, worldCenterScreenLoc);
 
-                worldItems.addAll(block.getItemsOn().values()); //.stream().filter(blockItem -> !blockItem.isDeleted()).collect(Collectors.toList()));
+                if (block.hasSomethingOnTopOf()) {
+                    blocksWithItemsOnTopOfThem.add(block); //.stream().filter(blockItem -> !blockItem.isDeleted()).collect(Collectors.toList()));
+                }
 
                 if (block.isSelected()) {
                     block.SELECTED_ANIMATION.draw(worldGraphics,
@@ -205,10 +207,8 @@ public class World {
         /**
          * Draw items after blocks.
          */
-        worldItems.stream().forEach(worldItem -> {
-            worldItem.getItem().getAnimation().draw(worldGraphics,
-                    (int) ((worldItem.getLoc().getX() * blockWidth) * camera.getZoom() + 0 * worldCenterScreenLoc.getX()),
-                    (int) ((worldItem.getLoc().getY() * blockWidth) * camera.getZoom() + 0 * worldCenterScreenLoc.getY()));
+        blocksWithItemsOnTopOfThem.stream().forEach(block -> {
+            block.drawItemsOnTopOf(worldGraphics, worldCenterScreenLoc);
         });
 
         worldGraphics.dispose();
@@ -364,14 +364,29 @@ public class World {
         SmelterBlock smelterBlock = ((SmelterBlock) createBlockAt(0, -6, 2, Block.Type.Smelter));
         createBlockAt(0, -7, 2, Block.Type.Treadmill);
         createBlockAt(1, -7, 2, Block.Type.Treadmill);
-        ((TreadmillBlock) createBlockAt(0, -8, 2, Block.Type.Treadmill)).setOn(true);
+//        ((TreadmillBlock) createBlockAt(0, -8, 2, Block.Type.Treadmill)).setOn(true);
         PrinterBlock printerBlock = ((PrinterBlock) createBlockAt(0, -8, 2, Block.Type.Printer));
         createBlockAt(0, -9, 2, Block.Type.Treadmill);
+        ArmBlock armBlock = (ArmBlock) createBlockAt(0, -10, 2, Block.Type.Arm);
         printerBlock.changeResource(PrintableResourceCode.Iron);
+        printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Drill, PrintableResourceCode.Iron, 1, Size.Medium));
         printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Gear, PrintableResourceCode.Iron, 1, Size.Small));
         printerBlock.addFuel(100);
-        treadmillBlock.setOn(true);
+//        treadmillBlock.setOn(true);
         smelterBlock.addFuel(10);
+
+
+
+        armBlock.beginSequence(
+                ArmActionSequenceBuilder.getBuilder()
+                        .type(ArmActionType.Extend)
+                        .arg("goal", true)
+                        .type(ArmActionType.Rotate)
+                        .arg("rate", .7)
+                        .arg("goal", 90.0)
+                        .build()
+        );
+
 //        smelterBlock.addItem(new IronRubble(4.0));
 //
 //        Timer timer = new Timer();

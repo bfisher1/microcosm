@@ -1,5 +1,6 @@
 package animation;
 
+import kotlin.jvm.internal.Lambda;
 import lombok.Getter;
 import lombok.Setter;
 import playground.Camera;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
@@ -26,6 +28,9 @@ public class Animation {
     private double delay;
     private long lastFrameChange;
     private int animIndex;
+    private boolean loop = true;
+    private boolean reverse = false;
+    private Runnable onAnimationFinished = null;
 
     /**
      * Number of frames in the animation. If using a spreadsheet, specify horizontal and vertical frames. Otherwise, just use frames.
@@ -92,7 +97,7 @@ public class Animation {
                     // todo, multiple could probably be less than 2
                     BufferedImage rotated = new BufferedImage(width * 2, height * 2, bufferedImage.getType());
                     Graphics2D graphic = rotated.createGraphics();
-                    graphic.rotate(Math.toRadians(90), width/2, height/2);
+                    graphic.rotate(Math.toRadians(angle), width/2, height/2);
                     graphic.drawImage(bufferedImage, null, 0, 0);
                     graphic.dispose();
                     bufferedImage = rotated;
@@ -126,7 +131,22 @@ public class Animation {
         }
     }
 
+    public void reset() {
+        this.animIndex = 0;
+    }
+
+    public void reverse() {
+        this.reverse = !this.reverse;
+    }
+
     public boolean timeToChangeFrame() {
+        if ( ((animIndex >= animations.size() - 1 && !reverse) || (animIndex <= 0 && reverse)) && !loop) {
+            if (onAnimationFinished != null) {
+                onAnimationFinished.run();
+                onAnimationFinished = null;
+            }
+            return false;
+        }
         // convert time difference to seconds
         return System.currentTimeMillis() - lastFrameChange >= delay * 1000;
     }
@@ -137,10 +157,10 @@ public class Animation {
     }
 
     public void draw(Graphics g, int x, int y) {
-        draw(g, x, y, 0);
+        draw(g, x, y, 0, null, null);
     }
 
-    public void draw(Graphics g, int x, int y, Integer angle) {
+    public void draw(Graphics g, int x, int y, Integer angle, Integer rotationOriginX, Integer rotationOriginY) {
         x += xOffset;
         y += yOffset;
 
@@ -150,12 +170,12 @@ public class Animation {
             if (sharedKey == null) {
                 if (timeToChangeFrame()) {
                     lastFrameChange = System.currentTimeMillis();
-                    animIndex = (animIndex + 1) % animations.size();
+                    incrementAnimIndex();
                 }
             } else {
                 if (timeToChangeSharedFrame()) {
                     lastSharedFrameChange = System.currentTimeMillis();
-                    animIndex = (animIndex + 1) % animations.size();
+                    incrementAnimIndex();
                     try {
                         shared.get(sharedKey).forEach(anim -> {
                             anim.animIndex = animIndex;
@@ -167,11 +187,38 @@ public class Animation {
             }
         }
 
+        BufferedImage frame = getCurrentFrame();
+        if (rotationOriginX != null && rotationOriginY != null) {
+            // todo, multiple could probably be less than 2
+            BufferedImage rotated = new BufferedImage(Math.max(frame.getWidth(), frame.getHeight()) * 2, Math.max(frame.getWidth(), frame.getHeight()) * 2, frame.getType());
+            Graphics2D graphic = rotated.createGraphics();
+            graphic.setBackground(new Color(255, 255, 255, 150));
+//            graphic.clearRect(0, 0, rotated.getWidth(), rotated.getHeight());
+            graphic.translate(rotated.getWidth() / 2 - rotationOriginX, rotated.getHeight() / 2 - rotationOriginY);
+            graphic.rotate(Math.toRadians(angle), rotationOriginX, rotationOriginY);
+            graphic.drawImage(frame, null, 0, 0);
+            graphic.dispose();
+            frame = rotated;
+            //x -= rotated.getWidth() / 2;
+            //y -= rotated.getHeight() / 2;
+        }
+
         if (zoomable) {
             double zoom = Camera.getInstance().getZoom();
-            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX * zoom), (int) (getCurrentFrame().getHeight() * scaleY * zoom), null);
+            g.drawImage(frame, x, y, (int) (frame.getWidth() * scaleX * zoom), (int) (frame.getHeight() * scaleY * zoom), null);
         } else {
-            g.drawImage(getCurrentFrame(), x, y, (int) (getCurrentFrame().getWidth() * scaleX), (int) (getCurrentFrame().getHeight() * scaleY), null);
+            g.drawImage(frame, x, y, (int) (frame.getWidth() * scaleX), (int) (frame.getHeight() * scaleY), null);
+        }
+    }
+
+    private void incrementAnimIndex() {
+        if (reverse) {
+            animIndex--;
+            if (animIndex < 0) {
+                animIndex = animations.size() - 1;
+            }
+        } else {
+            animIndex = (animIndex + 1) % animations.size();
         }
     }
 

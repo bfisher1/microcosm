@@ -13,11 +13,14 @@ import playground.BlockLocation;
 import playground.Camera;
 import playground.World;
 import util.*;
+import util.Rectangle;
 import world.resource.BlockItem;
 import world.resource.WorldItem;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -27,7 +30,9 @@ import java.util.stream.Collectors;
 @Table(name = "block")
 public abstract class Block implements Collidable, Itemable, Container {
 
-    public static int BLOCK_WIDTH = 32;
+    public final static int BLOCK_WIDTH = 32;
+
+    public final static int BLOCK_SCREEN_WIDTH = Block.BLOCK_WIDTH - 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,6 +92,25 @@ public abstract class Block implements Collidable, Itemable, Container {
         }
     }
 
+    public void draw(Graphics2D graphics, IntLoc worldCenterScreenLoc) {
+        getAnimation().draw(graphics,
+                (int) (x * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom() + 0 * worldCenterScreenLoc.getX()),
+                (int) (y * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom() + 0 * worldCenterScreenLoc.getY())
+        );
+    }
+
+    public void drawItemsOnTopOf(Graphics2D graphics, IntLoc worldCenterScreenLoc) {
+        this.getItemsOn().values().stream().forEach(worldItem -> {
+            worldItem.getItem().getAnimation().draw(graphics,
+                    (int) ((worldItem.getLoc().getX() * Block.BLOCK_SCREEN_WIDTH) * Camera.getInstance().getZoom() + 0 * worldCenterScreenLoc.getX()),
+                    (int) ((worldItem.getLoc().getY() * Block.BLOCK_SCREEN_WIDTH) * Camera.getInstance().getZoom() + 0 * worldCenterScreenLoc.getY()));
+        });
+    }
+
+    public boolean hasSomethingOnTopOf() {
+        return !itemsOn.isEmpty();
+    }
+
 //    public void handleCollision(Mob mob) {
 //        mob.handleCollision(this);
 //    }
@@ -115,6 +139,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         Tray,
         Printer,
         Clay,
+        Arm,
         Unknown
     };
 

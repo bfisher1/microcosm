@@ -26,6 +26,9 @@ public class PrintRecipes {
             case Stick:
                 volume = 15.0;
                 break;
+            case Drill:
+                volume = 1;// 16
+                break;
         }
 
         switch (size) {

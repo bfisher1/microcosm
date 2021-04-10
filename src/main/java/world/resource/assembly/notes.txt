@@ -6,6 +6,15 @@ Robot physical system will be made of
         - axis
         - tires
         - motors
+        assembly process:
+            glue tires to wheels
+            weld wheel to each end of axis
+            weld motors to steer horizontal axis
+            weld vertical axis to steer horizontal axis
+            create gear system
+                - needs gears, smaller pegs, board
+            attach gears to motor, attatch to vertical axis
+            then attach to chasis at end
     chasis
         - welded / screwed metal panes together
         - contains batteries
@@ -21,5 +30,25 @@ Robot physical system will be made of
         - neck
             - motors
 
-assembly process:
-    
+
+
+Arms        Arms        Arms            Arms
+Treadmill   Treadmill   Treadmill       Treadmill
+Glue        Weld        Solder          Screw
+
+
+
+
+Arm         Arm         Arm             Arm
+Treadmill   Treadmill   Treadmill       Treadmill
+Arm         Arm         Arm             Arm
+
+
+
+arm animation:
+    1 contracted at arm block -> reaching on neighbor block
+        grab object on neighbor block -> retract to arm block with item
+        rotate arm
+        extend arm again to other neighbor
+        place item there
+    2 "working animation"

@@ -83,6 +83,9 @@ public class BlockFactory {
             case Clay:
                 block = new ClayBlock(x, y, world);
                 break;
+            case Arm:
+                block = new ArmBlock(x, y, world);
+                break;
             case Unknown:
             default:
                 block = new UnknownBlock(x, y, world);

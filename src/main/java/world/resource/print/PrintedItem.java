@@ -44,6 +44,8 @@ public class PrintedItem extends Item {
                 case Gear:
                     setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/gear.png").scaleX(scale).scaleY(scale).build());
                     break;
+                case Drill:
+                    setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/drill.png").scaleX(scale).scaleY(scale).build());
             }
         }
     }

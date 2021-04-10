@@ -27,6 +27,11 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder loop(boolean loop) {
+        getAnimation().setLoop(loop);
+        return this;
+    }
+
     public AnimationBuilder animation(Animation animation) {
         this.animation = animation;
         return this;
@@ -71,6 +76,11 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder reverse(boolean reverse) {
+        getAnimation().setReverse(reverse);
+        return this;
+    }
+
     public AnimationBuilder sharedKey(String sharedKey) {
         getAnimation().setSharedKey(sharedKey);
         return this;
@@ -83,4 +93,8 @@ public class AnimationBuilder {
         return animation;
     }
 
+    public AnimationBuilder onAnimationFinished(Runnable callback) {
+        getAnimation().setOnAnimationFinished(callback);
+        return this;
+    }
 }
