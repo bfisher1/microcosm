@@ -29,6 +29,8 @@ public class Animation {
     private long lastFrameChange;
     private int animIndex;
     private boolean loop = true;
+    private int loopTimes = 1;
+    private int timesLooped = 0;
     private boolean reverse = false;
     private Runnable onAnimationFinished = null;
 
@@ -133,6 +135,7 @@ public class Animation {
 
     public void reset() {
         this.animIndex = 0;
+        this.timesLooped = 0;
     }
 
     public void reverse() {
@@ -140,7 +143,10 @@ public class Animation {
     }
 
     public boolean timeToChangeFrame() {
-        if ( ((animIndex >= animations.size() - 1 && !reverse) || (animIndex <= 0 && reverse)) && !loop) {
+
+        boolean shouldLoop = loop || timesLooped < loopTimes - 1;
+
+        if ( ((animIndex >= animations.size() - 1 && !reverse) || (animIndex <= 0 && reverse)) && !shouldLoop) {
             if (onAnimationFinished != null) {
                 onAnimationFinished.run();
                 onAnimationFinished = null;
@@ -216,9 +222,13 @@ public class Animation {
             animIndex--;
             if (animIndex < 0) {
                 animIndex = animations.size() - 1;
+                timesLooped++;
             }
         } else {
             animIndex = (animIndex + 1) % animations.size();
+            if (animIndex == 0) {
+                timesLooped++;
+            }
         }
     }
 
@@ -226,4 +236,7 @@ public class Animation {
         return animations.get(animIndex);
     }
 
+    public void setAtEnd() {
+        this.animIndex = frames -1;
+    }
 }

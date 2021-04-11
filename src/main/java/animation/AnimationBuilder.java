@@ -32,6 +32,11 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder loop(int loopTimes) {
+        getAnimation().setLoopTimes(loopTimes);
+        return this;
+    }
+
     public AnimationBuilder animation(Animation animation) {
         this.animation = animation;
         return this;
@@ -73,6 +78,11 @@ public class AnimationBuilder {
 
     public AnimationBuilder zoomable(boolean zoomable) {
         getAnimation().setZoomable(zoomable);
+        return this;
+    }
+
+    public AnimationBuilder atEnd() {
+        getAnimation().setAnimIndex(getAnimation().getFrames() - 1);
         return this;
     }
 

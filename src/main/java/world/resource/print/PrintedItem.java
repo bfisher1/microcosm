@@ -2,15 +2,23 @@ package world.resource.print;
 
 import animation.AnimationBuilder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import world.resource.Item;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PrintedItem extends Item {
     private PrintedResourceCode resourceCode;
     private PrintDesignCode designCode;
     private Size size;
+
+    public PrintedItem(PrintedResourceCode resourceCode, PrintDesignCode designCode, Size size) {
+        setDesignCode(designCode);
+        setResourceCode(resourceCode);
+        setSize(size);
+    }
 
     public void setDesignCode(PrintDesignCode designCode) {
         this.designCode = designCode;

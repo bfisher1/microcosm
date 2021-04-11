@@ -14,6 +14,8 @@ public class MotorControl {
     private double goal;
     private double rate;
     private double threshold;
+    private Double min = 0.0;
+    private Double max = 360.0;
     //private boolean changing;
 
     public MotorControl(double value, double goal, double rate, double threshold) {
@@ -26,6 +28,12 @@ public class MotorControl {
 
     public void increment() {
         this.value += rate;
+        if (this.max != null && this.value >= this.max) {
+            this.value -= this.max;
+        }
+        if (this.min != null && this.value < this.min) {
+            this.value += this.max;
+        }
     }
 
     public boolean atGoal() {

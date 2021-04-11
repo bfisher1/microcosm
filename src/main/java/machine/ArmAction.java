@@ -25,6 +25,9 @@ public class ArmAction {
     }
 
     public <T> T getArgValue(String arg, Class<T> clazz) {
+        if (!hasArg(arg)) {
+            throw new IllegalArgumentException("Arg " + arg + " not provided for " + type + " action!");
+        }
         return (T) this.args.get(arg);
     }
 }

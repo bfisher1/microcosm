@@ -38,6 +38,10 @@ public class WorldItem {
     public boolean move(double xDiff, double yDiff) {
         // calculate new loc
         Loc newLoc = loc.plus(xDiff, yDiff);
+        return move(newLoc);
+    }
+
+    public boolean move(Loc newLoc) {
 
         // todo, see if new loc is possible (given walls, etc_)
         // if possible, make new move
@@ -105,5 +109,13 @@ public class WorldItem {
         corners.add(new Loc(loc.getX() - item.getSizePx().getX() / 2, loc.getY() - item.getSizePx().getY() / 2));
         corners.add(new Loc(loc.getX() - item.getSizePx().getX() / 2, loc.getY() + item.getSizePx().getY() / 2));
         return corners;
+    }
+
+    public void delete() {
+        blocksItemOn.stream().forEach(blockLoc -> {
+            world.getBlockAt(blockLoc).ifPresent(block -> {
+                block.removeItemOnTopOf(this);
+            });
+        });
     }
 }

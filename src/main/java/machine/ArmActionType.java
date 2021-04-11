@@ -4,5 +4,10 @@ public enum ArmActionType {
     Idle,
     Extend,
     Rotate,
-    Claw
+    Claw,
+    Screw,
+    Weld,
+    Grab,
+    Release,
+    Wait
 }

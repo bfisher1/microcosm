@@ -7,6 +7,7 @@ import machine.ArmAction;
 import playground.Camera;
 import playground.World;
 import util.IntLoc;
+import util.Loc;
 import world.block.execution.ConstantlyExecutable;
 
 import java.awt.*;
@@ -64,11 +65,27 @@ public class ArmBlock extends ElectronicDevice implements ConstantlyExecutable {
         int xShift = Block.BLOCK_SCREEN_WIDTH / 2;
         arm.getArmAnimation().draw(graphics,
                 (int) ((getX() - 1.60) * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom()),
-                (int) ((getY() - 1.25) * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom()),
+                (int) ((getY() - 1.5) * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom()),
                 (int) arm.getShoulderAngle().getValue(),
                 arm.getArmAnimation().getCurrentFrame().getWidth() / 2,
                 arm.getArmAnimation().getCurrentFrame().getHeight()
         );
+
+
+        arm.getItemsBeingHeld().forEach(item -> {
+            double radius = 1.8; // the arm's length is just under 2 blocks
+            double angle = Math.toRadians(arm.getShoulderAngle().getValue() - 90);
+            Loc loc = new Loc(getX() + radius * Math.cos(angle), getY() + radius * Math.sin(angle));
+
+            item.getAnimation().draw(graphics,
+                    (int) ((getX() + .5 + radius * Math.cos(angle)) * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom()),
+                    (int) ((getY() + .5 + radius * Math.sin(angle)) * Block.BLOCK_SCREEN_WIDTH * Camera.getInstance().getZoom())
+//                    (int) arm.getShoulderAngle().getValue(),
+//                    arm.getArmAnimation().getCurrentFrame().getWidth() / 2,
+//                    arm.getArmAnimation().getCurrentFrame().getHeight() / 2
+            );
+        });
+
     }
 
     public void drawItemsOnTopOf(Graphics2D graphics, IntLoc worldCenterScreenLoc) {

@@ -16,11 +16,9 @@ import world.block.*;
 import world.block.execution.ConstantlyExecutable;
 import world.resource.Item;
 import world.resource.WorldItem;
-import world.resource.print.PrintDesignCode;
-import world.resource.print.PrintItemRequest;
-import world.resource.print.PrintableResourceCode;
-import world.resource.print.Size;
+import world.resource.print.*;
 import world.resource.raw.IronRubble;
+import world.resource.smelt.SmeltedIron;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -368,6 +366,11 @@ public class World {
         PrinterBlock printerBlock = ((PrinterBlock) createBlockAt(0, -8, 2, Block.Type.Printer));
         createBlockAt(0, -9, 2, Block.Type.Treadmill);
         ArmBlock armBlock = (ArmBlock) createBlockAt(0, -10, 2, Block.Type.Arm);
+        createBlockAt(0, -12, 2, Block.Type.Tray);
+        createBlockAt(2, -10, 2, Block.Type.Tray);
+
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Gear, Size.Small), this, 0, -12, 2);
+
         printerBlock.changeResource(PrintableResourceCode.Iron);
         printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Drill, PrintableResourceCode.Iron, 1, Size.Medium));
         printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Gear, PrintableResourceCode.Iron, 1, Size.Small));
@@ -380,10 +383,24 @@ public class World {
         armBlock.beginSequence(
                 ArmActionSequenceBuilder.getBuilder()
                         .type(ArmActionType.Extend)
-                        .arg("goal", true)
+                            .arg("goal", true)
+                        .type(ArmActionType.Grab)
+//                            .arg()
                         .type(ArmActionType.Rotate)
-                        .arg("rate", .7)
-                        .arg("goal", 90.0)
+                            .arg("rate", .7)
+                            .arg("goal", 90.0)
+//                        .type(ArmActionType.Screw)
+//                            .arg("times", 3)
+//                        .type(ArmActionType.Weld)
+//                            .arg("duration", 1000L)
+                        .type(ArmActionType.Release)
+                        .type(ArmActionType.Rotate)
+                            .arg("rate", -.7)
+                            .arg("goal", 0.0)
+//                        .type(ArmActionType.Wait)
+//                            .arg("duration", 3000L)
+                        .type(ArmActionType.Extend)
+                            .arg("goal", false)
                         .build()
         );
 
