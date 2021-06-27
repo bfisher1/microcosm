@@ -27,7 +27,10 @@ public class PrintRecipes {
                 volume = 15.0;
                 break;
             case Drill:
-                volume = 1;// 16
+                volume = 16;
+                break;
+            case Panel:
+                volume = 4;
                 break;
         }
 

@@ -7,18 +7,22 @@ Robot physical system will be made of
         - tires
         - motors
         assembly process:
-            glue tires to wheels
-            weld wheel to each end of axis
-            weld motors to steer horizontal axis
-            weld vertical axis to steer horizontal axis
-            create gear system
-                - needs gears, smaller pegs, board
-            attach gears to motor, attatch to vertical axis
-            then attach to chasis at end
-    chasis
-        - welded / screwed metal panes together
-        - contains batteries
-        - motherboard
+
+
+            weld(disc, tire) => wheel
+            weld(wheel, largeGear) => gearedWheel
+
+            weld(motor, smallGear) => gearedMotor
+
+            weld(2 gearedMotor, 2 gearedWheel, siding) => chassis
+
+            weld(chassis, motor) => rotatableChassis
+
+
+
+    body
+        - weld(7 panel) => frame
+        - weld(batteries, motherboard, frame) => electronicFilledFrame
     arms
         - sticks
         - joints
@@ -43,12 +47,26 @@ Arm         Arm         Arm             Arm
 Treadmill   Treadmill   Treadmill       Treadmill
 Arm         Arm         Arm             Arm
 
+-------------------------------------------------------------------------------
 
+// todo remove, i don't like different sizes of gears, maybe just small. too complicated
 
-arm animation:
-    1 contracted at arm block -> reaching on neighbor block
-        grab object on neighbor block -> retract to arm block with item
-        rotate arm
-        extend arm again to other neighbor
-        place item there
-    2 "working animation"
+// how about right now, simple items
+// then later, make more complex recipes
+
+simplified assembly of core modules:
+        weld10Times(2 disc, 2 tire, 2 largeGear, 3 motor, 2 smallGear, 1 panel) => 1 chassis
+
+        weld10Times(6 panel, 2 battery, 1 motherboard) => 1 frame
+
+        weld20Times(2 stick, 3 joint, 3 motor, 2 small stick, 2 rubberGripper) => 1 arm
+
+        weld10Times(6 smallPanel, 1 camera, 2 motors) => 1 head
+
+        weldLong(drill, motor) => 1 drillTool
+
+bot assembly:
+        weldLong(2 chassis, 1 frame, 1 drillTool)
+        screw(2 arm, frame)
+        screw(camera, frame)
+

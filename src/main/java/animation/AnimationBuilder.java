@@ -66,6 +66,12 @@ public class AnimationBuilder {
         return this;
     }
 
+    public AnimationBuilder scale(double percent) {
+        getAnimation().setScaleX(percent);
+        getAnimation().setScaleY(percent);
+        return this;
+    }
+
     public AnimationBuilder xOffset(int xOffset) {
         getAnimation().setXOffset(xOffset);
         return this;

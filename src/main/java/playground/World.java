@@ -16,9 +16,9 @@ import world.block.*;
 import world.block.execution.ConstantlyExecutable;
 import world.resource.Item;
 import world.resource.WorldItem;
+import world.resource.assembly.*;
 import world.resource.print.*;
 import world.resource.raw.IronRubble;
-import world.resource.smelt.SmeltedIron;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import static world.resource.assembly.AssemblyAction.Weld;
 
 @Getter
 @Setter
@@ -344,10 +346,8 @@ public class World {
 
         }
 
-
-
         // Base hardwired in
-        createBlockAt(0, 0, 2, Block.Type.Computer);
+        createBlockAt(3, -9, 2, Block.Type.Computer);
         createBlockAt(0, -1, 2, Block.Type.Wire);
         TreadmillBlock treadmillBlock = (TreadmillBlock) createBlockAt(0, -2, 2, Block.Type.Treadmill);
         //treadmillBlock.placeItemsOnTopOf(Collections.singletonList(new IronRubble(2)));
@@ -365,11 +365,21 @@ public class World {
 //        ((TreadmillBlock) createBlockAt(0, -8, 2, Block.Type.Treadmill)).setOn(true);
         PrinterBlock printerBlock = ((PrinterBlock) createBlockAt(0, -8, 2, Block.Type.Printer));
         createBlockAt(0, -9, 2, Block.Type.Treadmill);
-        ArmBlock armBlock = (ArmBlock) createBlockAt(0, -10, 2, Block.Type.Arm);
-        createBlockAt(0, -12, 2, Block.Type.Tray);
-        createBlockAt(2, -10, 2, Block.Type.Tray);
+        List<TrayBlock> assemblyTrayBlocks = new ArrayList<>();
+        List<ArmBlock> armBlocks = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            assemblyTrayBlocks.add((TrayBlock) createBlockAt(i * 3, -11, 2, Block.Type.Tray));
+            assemblyTrayBlocks.get(i).setForAssembly(true);
+            armBlocks.add((ArmBlock) createBlockAt(i * 3, -10, 2, Block.Type.Arm));
+            armBlocks.get(i).scanForTrays();
+        }
 
-        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Gear, Size.Small), this, 0, -12, 2);
+        createBlockAt(-1, -11, 2, Block.Type.Tray);
+//        createBlockAt(1, -11, 2, Block.Type.Tray);
+        createBlockAt(-1, -10, 2, Block.Type.Tray);
+        createBlockAt(1, -10, 2, Block.Type.Tray);
+        createBlockAt(-1, -9, 2, Block.Type.Tray);
+        createBlockAt(1, -9, 2, Block.Type.Tray);
 
         printerBlock.changeResource(PrintableResourceCode.Iron);
         printerBlock.makeRequest(new PrintItemRequest(PrintDesignCode.Drill, PrintableResourceCode.Iron, 1, Size.Medium));
@@ -380,29 +390,99 @@ public class World {
 
 
 
+        // weld10Times(2 disc, 2 tire, 2 largeGear, 3 motor, 2 smallGear, 1 panel) => 1 chassis
+
+
+
+
+        List<Map<String, Integer>> inputItemTypeQuantities = new ArrayList<>();
+        List<AssemblyRequest> assemblyRequests = new ArrayList<>();
+
+        // ASSEMBLY TRAY 1 - CHASSIS
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Panel, Size.Small, 1), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Tire, Size.Small, 2), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Gear, Size.Small, 2), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Disc, Size.Small, 2), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+//        new WorldItem(new PrintedItem(PrintedResourceCode.Rubber, PrintDesignCode.Gear, Size.Medium, 2), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+        new WorldItem(new MotorItem(3), this, assemblyTrayBlocks.get(0).getX(), assemblyTrayBlocks.get(0).getY(), assemblyTrayBlocks.get(0).getZ());
+
+        inputItemTypeQuantities.add(new HashMap<>());
+
+        inputItemTypeQuantities.get(0).put("PRINTED_DISC", 2);
+        inputItemTypeQuantities.get(0).put("PRINTED_TIRE", 2);
+        inputItemTypeQuantities.get(0).put("PRINTED_GEAR", 2);
+        inputItemTypeQuantities.get(0).put("MOTOR", 3);
+        inputItemTypeQuantities.get(0).put("PRINTED_PANEL", 1);
+
+        List<AssemblyWork> assemblyWork = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) {
+            assemblyWork.add(AssemblyWork.builder().assemblyAction(AssemblyAction.Weld).duration(1000).build());
+            assemblyWork.add(AssemblyWork.builder().assemblyAction(AssemblyAction.Screw).times(3).build());
+        }
+
+        assemblyRequests.add(new AssemblyRequest(AssembledCode.RobotChassis, 1, assemblyWork, inputItemTypeQuantities.get(0)));
+
+        armBlocks.get(0).makeRequest(assemblyRequests.get(0));
+
+        // ASSEMBLY TRAY 2 - FRAME
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Panel, Size.Small, 6), this, assemblyTrayBlocks.get(1).getX(), assemblyTrayBlocks.get(1).getY(), assemblyTrayBlocks.get(1).getZ());
+
+        inputItemTypeQuantities.add(new HashMap<>());
+        inputItemTypeQuantities.get(1).put("PRINTED_PANEL", 6);
+
+        assemblyRequests.add(new AssemblyRequest(AssembledCode.RobotFrame, 1, assemblyWork, inputItemTypeQuantities.get(1)));
+
+        armBlocks.get(1).makeRequest(assemblyRequests.get(1));
+
+        // ASSEMBLY TRAY 3 - ARM
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Stick, Size.Small, 2), this, assemblyTrayBlocks.get(2).getX(), assemblyTrayBlocks.get(2).getY(), assemblyTrayBlocks.get(2).getZ());
+
+        inputItemTypeQuantities.add(new HashMap<>());
+        inputItemTypeQuantities.get(2).put("PRINTED_STICK", 2);
+
+        assemblyRequests.add(new AssemblyRequest(AssembledCode.RobotArm, 1, assemblyWork, inputItemTypeQuantities.get(2)));
+
+        armBlocks.get(2).makeRequest(assemblyRequests.get(2));
+
+        // ASSEMBLY TRAY 4 - HEAD
+        new WorldItem(new PrintedItem(PrintedResourceCode.Iron, PrintDesignCode.Panel, Size.Small, 6), this, assemblyTrayBlocks.get(3).getX(), assemblyTrayBlocks.get(3).getY(), assemblyTrayBlocks.get(3).getZ());
+
+        inputItemTypeQuantities.add(new HashMap<>());
+        inputItemTypeQuantities.get(3).put("PRINTED_PANEL", 6);
+
+        assemblyRequests.add(new AssemblyRequest(AssembledCode.RobotHead, 1, assemblyWork, inputItemTypeQuantities.get(3)));
+
+        armBlocks.get(3).makeRequest(assemblyRequests.get(3));
+
+
+        /*
         armBlock.beginSequence(
                 ArmActionSequenceBuilder.getBuilder()
                         .type(ArmActionType.Extend)
                             .arg("goal", true)
                         .type(ArmActionType.Grab)
 //                            .arg()
-                        .type(ArmActionType.Rotate)
+                        .type(ArmActionType.Face)
                             .arg("rate", .7)
-                            .arg("goal", 90.0)
+                            .arg("direction", Block.Direction.Right)
 //                        .type(ArmActionType.Screw)
 //                            .arg("times", 3)
 //                        .type(ArmActionType.Weld)
 //                            .arg("duration", 1000L)
                         .type(ArmActionType.Release)
-                        .type(ArmActionType.Rotate)
+                        .type(ArmActionType.Face)
                             .arg("rate", -.7)
-                            .arg("goal", 0.0)
+                            .arg("direction", Block.Direction.Up)
 //                        .type(ArmActionType.Wait)
 //                            .arg("duration", 3000L)
                         .type(ArmActionType.Extend)
                             .arg("goal", false)
                         .build()
         );
+         */
+
+
 
 //        smelterBlock.addItem(new IronRubble(4.0));
 //
@@ -520,6 +600,17 @@ public class World {
     public Optional<Block> getBlockAt(BlockLocation location) {
         if (blocks.containsKey(location)) {
             return Optional.of(blocks.get(location));
+        }
+        return Optional.empty();
+    }
+
+    public <T> Optional<T> getBlockAt(BlockLocation location, Class<T> clazz) {
+        if (blocks.containsKey(location)) {
+            try {
+                return Optional.of((T) (blocks.get(location)));
+            } catch (Exception e) {
+                return Optional.empty();
+            }
         }
         return Optional.empty();
     }

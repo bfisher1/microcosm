@@ -129,7 +129,7 @@ public class Animation {
             }
 
         } catch (IOException e) {
-            throw new IllegalArgumentException("Image could not be read");
+            throw new IllegalArgumentException("Image could not be read - " + this.filename);
         }
     }
 

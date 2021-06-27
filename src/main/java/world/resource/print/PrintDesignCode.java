@@ -10,5 +10,6 @@ public enum PrintDesignCode {
     Tire,
     Ball,
     Stick,
-    Drill
+    Drill,
+    Panel
 }

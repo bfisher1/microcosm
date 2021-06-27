@@ -12,7 +12,7 @@ public class Camera {
     private double x;
     private double y;
     private double orientation;
-    private double zoom = 1.0;
+    private double zoom = 3.23;
     private double zoomSpeed = 0.001;
     private PriorityQueue<Sprite> sprites = new PriorityQueue<>();
 
@@ -21,7 +21,7 @@ public class Camera {
 
     private static Camera instance;
 
-    private Camera(int x, int y) {
+    private Camera(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -29,11 +29,12 @@ public class Camera {
     public void move(double x, double y) {
         this.x += x;
         this.y += y;
+//        System.out.println(this.x + ", " + this.y + " " + zoom);
     }
 
     public static Camera getInstance() {
         if (instance == null) {
-            instance = new Camera(0, 0);
+            instance = new Camera(0, -8.25);
         }
         return instance;
     }

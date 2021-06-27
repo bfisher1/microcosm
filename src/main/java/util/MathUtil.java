@@ -9,4 +9,7 @@ public class MathUtil {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
+    public static double dist(Loc p1, Loc p2) {
+        return dist(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    }
 }

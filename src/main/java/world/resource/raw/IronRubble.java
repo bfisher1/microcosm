@@ -17,4 +17,9 @@ public class IronRubble extends SmeltableItem {
         setQuantity(quantity);
         setAnimation(AnimationBuilder.getBuilder().fileName("iron-rubble.png").build());
     }
+
+    @Override
+    public String getType() {
+        return "IRON_RUBBLE";
+    }
 }

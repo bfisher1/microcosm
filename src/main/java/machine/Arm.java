@@ -6,15 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import microcosm.BinaryMotorControl;
 import microcosm.MotorControl;
-import playground.BlockLocation;
-import playground.World;
 import util.Loc;
 import world.block.ArmBlock;
 import world.block.Block;
 import world.resource.Item;
 import world.resource.WorldItem;
-import world.resource.raw.IronRubble;
-import world.resource.smelt.SmeltedIron;
+import world.resource.assembly.AssemblyRequest;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -27,6 +24,7 @@ public class Arm {
     private MotorControl shoulderAngle;
     private BinaryMotorControl armExtended;
     private BinaryMotorControl working;
+    private LocMotorControl armOriginPositionInBlock = new LocMotorControl(new Loc(0, 0), new Loc(0, 0), .02, .1);
 
     private Animation armAnimation;
     private Animation armExtendAnimation;
@@ -47,11 +45,13 @@ public class Arm {
 
     private List<Item> itemsBeingHeld = new ArrayList();
 
+    private Block.Direction direction = Block.Direction.Up;
+
     public Arm(ArmBlock armBlock) {
         this.armBlock = armBlock;
         shoulderAngle = new MotorControl(0.0, 0.0, 0.0, 1.0);
         clawOpened = new BinaryMotorControl(false, false);
-        armExtended = new BinaryMotorControl(false, false);
+        armExtended = new BinaryMotorControl(true, true);
 
         armWorkAnimation = AnimationBuilder.getBuilder()
                 .fileName("arm/left-arm-work.png")
@@ -95,7 +95,9 @@ public class Arm {
                 .fileName("arm/left-arm-retracted.png")
                 .build();
 
-        armAnimation = armRetractedAnimation;
+        armAnimation = armExtendAnimation;
+        armOriginPositionInBlock.setGoal(getArmOriginPositionForDirection(Block.Direction.Up));
+        armOriginPositionInBlock.setValue(getArmOriginPositionForDirection(Block.Direction.Up));
 
     }
 
@@ -118,6 +120,7 @@ public class Arm {
                 if (!this.armExtended.isGoal()) {
                     this.armAnimation.setAtEnd();
                     this.armAnimation.reverse();
+                    this.getArmOriginPositionInBlock().setGoal(new Loc(0, 0));
                 }
                 this.armExtended.setChanging(true);
                 this.armAnimation.setOnAnimationFinished(() -> {
@@ -126,9 +129,11 @@ public class Arm {
                     switchToNextAction();
                 });
                 break;
-            case Rotate:
+            case Face:
+                Block.Direction newDirection = currentAction.getArgValue("direction", Block.Direction.class);
                 this.shoulderAngle.setRate(currentAction.getArgValue("rate", Double.class));
-                this.shoulderAngle.setGoal(currentAction.getArgValue("goal", Double.class));
+                this.shoulderAngle.setGoal(getAngleForDirection(newDirection));
+                this.armOriginPositionInBlock.setGoal(getArmOriginPositionForDirection(newDirection));
                 break;
             case Screw:
                 this.armAnimation = armScrewAnimation;
@@ -160,7 +165,11 @@ public class Arm {
                         Optional<Block> blockArmOver = getBlockArmIsAbove();
                         blockArmOver.ifPresent(block -> {
                             if (!block.getItemsOn().isEmpty()) {
-                                WorldItem worldItem = block.getItemsOn().values().stream().findAny().get();
+                                WorldItem worldItem = currentAction.hasArg("itemType") ?
+                                        block.getItemsOn().values().stream().filter(
+                                                wi -> currentAction.getArgValue("itemType", String.class).equals(wi.getItem().getType())
+                                        ).findAny().get() :
+                                        block.getItemsOn().values().stream().findAny().get();
                                 itemsBeingHeld.add(worldItem.getItem());
                                 worldItem.delete();
                             }
@@ -178,7 +187,7 @@ public class Arm {
                 this.armAnimation = armStillOpenAnimation;
                 this.itemsBeingHeld.stream().forEach(item -> {
                     getBlockArmIsAbove().ifPresent(block -> {
-                        new WorldItem(item, block.getWorld(), block.getX() + .4, block.getY() + .4, block.getZ());
+                        new WorldItem(item, block.getWorld(), block.getX() + 0.0, block.getY() + 0.0, block.getZ());
                     });
                 });
                 this.itemsBeingHeld = new ArrayList<>();
@@ -200,19 +209,54 @@ public class Arm {
         }
     }
 
-    private Optional<Block> getBlockArmIsAbove() {
-        double angle = shoulderAngle.getValue();
-        if (-12 <= angle && angle <= 12) {
-            return armBlock.blockRelative(0, -2, 0);
+    private Loc getArmOriginPositionForDirection(Block.Direction newDirection) {
+        double delta = .7;
+        double diagonalDelta = .7;
+        switch (newDirection) {
+            case Up:
+                return new Loc(0, delta);
+            case UpRight:
+                return new Loc(-diagonalDelta, diagonalDelta);
+            case Right:
+                return new Loc(-delta, 0);
+            case DownRight:
+                return new Loc(-diagonalDelta, -diagonalDelta);
+            case Down:
+                return new Loc(0, -delta);
+            case DownLeft:
+                return new Loc(diagonalDelta, -diagonalDelta);
+            case Left:
+                return new Loc(delta, 0);
+            case UpLeft:
+                return new Loc(diagonalDelta, diagonalDelta);
         }
-        else if (16 <= angle && angle <= 35) {
-            return armBlock.blockRelative(1, -2, 0);
-        } else if (57 <= angle && angle <= 75) {
-            return armBlock.blockRelative(2, -1, 0);
-        } else if (82 <= angle && angle <= 105) {
-            return armBlock.blockRelative(2, 0, 0);
+        throw new IllegalArgumentException("Invalid direction");
+    }
+
+    private double getAngleForDirection(Block.Direction newDirection) {
+        switch (newDirection) {
+            case Up:
+                return 0;
+            case UpRight:
+                return 45;
+            case Right:
+                return 90;
+            case DownRight:
+                return 135;
+            case Down:
+                return 180;
+            case DownLeft:
+                return 225;
+            case Left:
+                return 270;
+            case UpLeft:
+                return 315;
         }
-        return Optional.empty();
+        throw new IllegalArgumentException("Invalid direction");
+    }
+
+    public Optional<Block> getBlockArmIsAbove() {
+        return armBlock.getNeighbor(direction);
     }
 
     //next is going to be adding other actions
@@ -248,12 +292,28 @@ public class Arm {
     }
 
     public void execute() {
-        switch (currentAction.getType()) {
-            case Rotate:
-                this.shoulderAngle.increment();
-                if (this.shoulderAngle.atGoal()) {
+        System.out.println("Arm - " + currentAction.getType() + " " + currentAction.getArgsString());
+        switch(currentAction.getType()) {
+            case Face:
+                if (!this.shoulderAngle.atGoal()) {
+                    this.shoulderAngle.increment();
+                }
+                if (!this.armOriginPositionInBlock.atGoal()) {
+                    this.armOriginPositionInBlock.increment();
+                }
+                if (this.shoulderAngle.atGoal() && this.armOriginPositionInBlock.atGoal()) {
+                    this.setDirection(currentAction.getArgValue("direction", Block.Direction.class));
                     switchToNextAction();
                 }
+                break;
+            case Extend:
+                if (!this.armOriginPositionInBlock.atGoal()) {
+                    this.armOriginPositionInBlock.increment();
+                }
+                // todo, I think this is bad, because it runs at the same time as the other events
+//                if (this.armOriginPositionInBlock.atGoal()) {
+//                    switchToNextAction();
+//                }
                 break;
         }
     }
@@ -267,6 +327,7 @@ public class Arm {
            this.currentAction = this.actionSequence.remove();
         } else {
             this.currentAction = new ArmAction(ArmActionType.Idle);
+            this.armBlock.requestFinished();
         }
         this.armBlock.startExecuting();
     }
@@ -274,5 +335,11 @@ public class Arm {
     public void beginSequence(Queue<ArmAction> actionSequence) {
         this.actionSequence = actionSequence;
         switchToNextAction();
+    }
+
+    public void resetActionSequence(AssemblyRequest request, ArmActionSequenceBuilder sequence) {
+        Queue<ArmAction> armActions = sequence.build();
+        this.setActionSequence(armActions);
+        this.beginSequence(armActions);
     }
 }

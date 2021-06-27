@@ -14,10 +14,11 @@ public class PrintedItem extends Item {
     private PrintDesignCode designCode;
     private Size size;
 
-    public PrintedItem(PrintedResourceCode resourceCode, PrintDesignCode designCode, Size size) {
+    public PrintedItem(PrintedResourceCode resourceCode, PrintDesignCode designCode, Size size, int quantity) {
         setDesignCode(designCode);
         setResourceCode(resourceCode);
         setSize(size);
+        setQuantity(quantity);
     }
 
     public void setDesignCode(PrintDesignCode designCode) {
@@ -54,7 +55,26 @@ public class PrintedItem extends Item {
                     break;
                 case Drill:
                     setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/drill.png").scaleX(scale).scaleY(scale).build());
+                    break;
+                case Panel:
+                    setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/siding.png").scaleX(scale).scaleY(scale).build());
+                    break;
+                case Disc:
+                    setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/disc.png").scaleX(scale).scaleY(scale).build());
+                    break;
+                case Tire:
+                    setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/tire.png").scaleX(scale).scaleY(scale).build());
+                    break;
+                case Stick:
+                    setAnimation(AnimationBuilder.getBuilder().fileName("resourceItems/smallStick.png").scaleX(scale).scaleY(scale).build());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Could not find animation for " + designCode);
             }
         }
+    }
+
+    public String getType() {
+        return "PRINTED_" + designCode.toString().toUpperCase();
     }
 }

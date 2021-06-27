@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import util.BoundingBox;
 import util.Vector;
 import world.block.Block;
 
@@ -22,4 +21,6 @@ public abstract class Item {
 
     // TODO, eventually calculate this by analyzing animation for widest/tallest lines of non-alpha pixels
     private Vector sizePx = new Vector(Block.BLOCK_WIDTH, Block.BLOCK_WIDTH);
+
+    public abstract String getType();
 }

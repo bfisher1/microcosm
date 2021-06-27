@@ -13,4 +13,10 @@ public abstract class SmeltedItem extends Item {
     }
 
     public abstract SmeltedCode getSmeltedCode();
+
+
+    @Override
+    public String getType() {
+        return "SMELTED_" + getSmeltedCode().toString().toUpperCase();
+    }
 }

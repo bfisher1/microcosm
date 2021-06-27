@@ -16,6 +16,8 @@ import util.*;
 import util.Rectangle;
 import world.resource.BlockItem;
 import world.resource.WorldItem;
+import world.resource.assembly.AssembledItem;
+import world.resource.assembly.AssemblyRequest;
 
 import javax.persistence.*;
 import java.awt.*;
@@ -148,6 +150,10 @@ public abstract class Block implements Collidable, Itemable, Container {
         Down,
         Left,
         Right,
+        UpRight,
+        UpLeft,
+        DownRight,
+        DownLeft
     }
 
     private Direction direction = Direction.Up;
@@ -203,6 +209,9 @@ public abstract class Block implements Collidable, Itemable, Container {
     @JoinColumn(name = "world_id")
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private World world;
+
+    private Set<BlockLocation> blockReferences = new HashSet<>();
+    private Set<BlockLocation> blocksThatReferenceThis = new HashSet<>();
 
     @Transient
     private boolean loaded;
@@ -323,8 +332,16 @@ public abstract class Block implements Collidable, Itemable, Container {
         switch (direction) {
             case Up:
                 return blockRelative(0, -1, 0);
+            case UpLeft:
+                return blockRelative(-1, -1, 0);
+            case UpRight:
+                return blockRelative(1, -1, 0);
             case Down:
                 return blockRelative(0, 1, 0);
+            case DownLeft:
+                return blockRelative(-1, 1, 0);
+            case DownRight:
+                return blockRelative(1, 1, 0);
             case Right:
                 return blockRelative(1, 0, 0);
             case Left:
@@ -449,7 +466,6 @@ public abstract class Block implements Collidable, Itemable, Container {
         });
     }
 
-
     public void showItems() {
         Camera camera = Camera.getInstance();
         getItems().forEach(item -> {
@@ -506,6 +522,7 @@ public abstract class Block implements Collidable, Itemable, Container {
         return "{" + type.toString() + ": (" + getX() + "," + getY() + ", " + getZ() + ")}";
     }
 
+    // todo, this is deprecated
     public void addItem(Item item) {
         getItems().add(item);
         if (!displayItems) {
@@ -518,6 +535,78 @@ public abstract class Block implements Collidable, Itemable, Container {
         if (displayItems) {
             showItems();
         }
+    }
+
+    public void addBlockReference(BlockLocation blockLocation) {
+        this.blockReferences.add(blockLocation);
+        this.world.getBlockAt(blockLocation).get().getBlocksThatReferenceThis().add(this.getLocation());
+    }
+
+    /**
+     * When this block needs to delete the reference.
+     */
+    public void removeBlockReference(BlockLocation blockLocation) {
+        this.blockReferences.remove(blockLocation);
+        this.world.getBlockAt(blockLocation).get().getBlocksThatReferenceThis().remove(this.getLocation());
+    }
+
+    /**
+     * When the referenced block is deleted, should be overridden.
+     */
+    public void onReferencedBlockRemoved(BlockLocation blockLocation) {
+        this.blockReferences.remove(blockLocation);
+    }
+
+    public Direction getDirectionOfOtherBlock(BlockLocation itemLocation) {
+        int xDiff = itemLocation.getX() - getLocation().getX();
+        int yDiff = itemLocation.getY() - getLocation().getY();
+
+        if (yDiff == 0) {
+            if (xDiff == 0) {
+                throw new IllegalArgumentException("This is the same block");
+            }
+            if (xDiff < 0) {
+                return Direction.Left;
+            } else {
+                return Direction.Right;
+            }
+        }
+
+        if (xDiff == 0) {
+            if (yDiff == 0) {
+                throw new IllegalArgumentException("This is the same block");
+            }
+            if (yDiff < 0) {
+                return Direction.Up;
+            } else {
+                return Direction.Down;
+            }
+        }
+
+        if (yDiff > 0) {
+            if (xDiff < 0) {
+                return Direction.DownLeft;
+            } else {
+                return Direction.DownRight;
+            }
+        } else {
+            if (xDiff < 0) {
+                return Direction.UpLeft;
+            } else {
+                return Direction.UpRight;
+            }
+        }
+    }
+
+    public void replaceInputItemsWithAssembledItem(AssemblyRequest assemblyRequest) {
+        assemblyRequest.getInputItemTypeQuantities().keySet().stream().forEach(itemType -> {
+            for (int i = 0; i < assemblyRequest.getInputItemTypeQuantities().get(itemType); i++) {
+                this.getItemsOn().values().stream().filter(item -> item.getItem().getType().equals(itemType)).findAny().ifPresent(item -> {
+                    item.delete();
+                });
+            }
+        });
+        new WorldItem(new AssembledItem(assemblyRequest.getAssembledCode()), getWorld(), getX(), getY(), getZ());
     }
 
 }

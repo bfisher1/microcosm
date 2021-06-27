@@ -3,6 +3,7 @@ package machine;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Getter
@@ -29,5 +30,16 @@ public class ArmAction {
             throw new IllegalArgumentException("Arg " + arg + " not provided for " + type + " action!");
         }
         return (T) this.args.get(arg);
+    }
+
+    public String getArgsString() {
+        final StringBuilder ret = new StringBuilder("");
+        args.keySet().stream().forEach(key -> {
+            ret.append(key);
+            ret.append(" : ");
+            ret.append(args.get(key));
+            ret.append(", ");
+        });
+        return ret.toString();
     }
 }
